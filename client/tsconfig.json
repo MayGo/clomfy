@@ -1,26 +1,30 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2015",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "allowJs": true,
-    "sourceRoot": "./",
-    "baseUrl": "./",
-    "skipLibCheck": true,
+    "noEmit": true,
+    "target": "es6",
+    "module": "commonjs",
+    "noImplicitAny": false,
     "sourceMap": true,
-    "lib": [
-      "es2017",
-      "dom"
-    ]
+    "preserveConstEnums": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "jsx": "preserve",
+    "lib": ["dom","es5","es6","es7","es2017"],
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types"],
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "*"
+      ]
+    }
   },
   "exclude": [
-    "app",
-    "node_modules",
-    "node_modules/aurelia-validation/node_modules",
-    "dist",
-    "packaged",
-    "static"
-  ]
+    "node_modules"
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useBabel": true,
+    "forkChecker": true,
+    "useCache": false
+  }
 }
