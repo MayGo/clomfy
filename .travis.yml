@@ -1,0 +1,47 @@
+
+matrix:
+  include:
+  - os: osx
+  - os: linux
+    env: CC=clang CXX=clang++ npm_config_clang=1
+    compiler: clang
+
+addons:
+  apt:
+    packages:
+    - libgnome-keyring-dev
+    - icnsutils
+    - graphicsmagick
+
+sudo: true
+
+language: node_js
+node_js:
+  - "7"
+
+cache:
+  yarn: true
+  timeout: 600
+  directories:
+    - node_modules
+    - $HOME/.electron
+
+install:
+  - npm install yarn -g nps
+  - cd electron
+  - yarn install
+  - cd ..
+  - cd client
+  - yarn install
+
+script:
+  - cd client
+  - nps build.prod
+  - cd ..
+  - cd electron
+  - nps build.prod
+  - nps release
+
+branches:
+  only:
+    - master
