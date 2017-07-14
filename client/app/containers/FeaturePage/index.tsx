@@ -19,7 +19,7 @@ interface IFeaturePageProps {
   dispatch?: (action: RouterAction) => void;
 }
 
-export class FeaturePage extends React.Component<IFeaturePageProps, {}> {
+export class FeaturePage extends React.Component<IFeaturePageProps, undefined> {
 
   private openHomePage = () => {
     this.props.dispatch(push('/'));
@@ -89,4 +89,4 @@ export class FeaturePage extends React.Component<IFeaturePageProps, {}> {
   }
 }
 
-export default connect()(FeaturePage);
+export default connect(undefined, undefined)(FeaturePage);

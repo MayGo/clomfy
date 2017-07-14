@@ -1,5 +1,3 @@
-import { backgroundJob } from './background-job';
-import { backgroundService } from './background-service';
 import { app, ipcMain, powerMonitor } from "electron";
 import { logManager } from "./log-manager";
 
@@ -7,7 +5,7 @@ import AppManager from "./app-manager";
 AppManager.init();
 
 import windowManager from "./window-manager";
-import {extensionsManager} from "./extensions-manager";
+import { extensionsManager } from "./extensions-manager";
 import AppUpdater from "./app-updater";
 import config from './config';
 import * as path from 'path';
@@ -16,7 +14,7 @@ AppUpdater.init();
 
 if (config.isDev) {
     //const reloadFile = path.join(config.client);
-   // require('electron-reload')(reloadFile);
+    // require('electron-reload')(reloadFile);
 }
 
 let AutoLaunch = require('auto-launch');
@@ -57,17 +55,12 @@ app.on('ready', async () => {
 
     windowManager.initMenus();
 
-
-    backgroundJob.init();
-
     powerMonitor.on('suspend', function () {
         console.log('The system is going to sleep');
-        backgroundService.onSleep();
     });
 
     powerMonitor.on('resume', function () {
         console.log('The system is going to resume');
-        backgroundService.onResume();
     });
 });
 
@@ -96,7 +89,9 @@ ipcMain.on('close-app', function () {
 
 app.on('activate', () => {
     console.log("Show menubar.");
-    windowManager.menubar.window.show();
+    if (!config.isDev || config.trayEnabledInDev) {
+        windowManager.menubar.window.show();
+    }
 });
 
 /* Single Instance Check */

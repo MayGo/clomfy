@@ -49,7 +49,7 @@ export class HomePage extends React.Component<IHomePageProps, {}> {
   /**
    * when initial state username is not null, submit the form to load repos
    */
-  private componentDidMount() {
+  public componentDidMount() {
     if (this.props.username && this.props.username.trim().length > 0) {
       this.props.onSubmitForm();
     }
@@ -69,6 +69,10 @@ export class HomePage extends React.Component<IHomePageProps, {}> {
    */
   private openFeaturesPage = () => {
     this.openRoute('/features');
+  }
+
+  private openBuildpacksPage = () => {
+    this.openRoute('/buildpacks');
   }
 
   public render() {
@@ -129,6 +133,9 @@ export class HomePage extends React.Component<IHomePageProps, {}> {
           </section>
           <Button handleRoute={this.openFeaturesPage}>
             <FormattedMessage {...messages.featuresButton} />
+          </Button>
+          <Button handleRoute={this.openBuildpacksPage}>
+            <FormattedMessage {...messages.buildpacksButton} />
           </Button>
         </div>
       </article>

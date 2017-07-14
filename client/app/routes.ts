@@ -15,6 +15,7 @@ const loadModule = (cb) => (componentModule) => {
 
 export interface IExtendedRouteProps extends RouteProps {
   name?: string;
+  getComponent?: any;
 }
 
 export default function createRoutes(store): IExtendedRouteProps[] {
@@ -43,7 +44,30 @@ export default function createRoutes(store): IExtendedRouteProps[] {
 
         importModules.catch(errorLoading);
       },
-    }, {
+    },
+    {
+      path: '/buildpacks',
+      name: 'buildpacks',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('app/containers/BuildpacksPage/reducer'),
+          System.import('app/containers/BuildpacksPage/sagas'),
+          System.import('app/containers/BuildpacksPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('buildpacks', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      }
+    },
+    {
       path: '/features',
       name: 'features',
       getComponent(nextState, cb) {

@@ -18,7 +18,7 @@ interface IProps {
   children?: React.ReactNode;
 }
 
-export class LanguageProvider extends React.Component<IProps, {}> { // eslint-disable-line react/prefer-stateless-function
+export class LanguageProvider extends React.Component<IProps, any> { // eslint-disable-line react/prefer-stateless-function
   public render() {
     return (
       <IntlProvider locale={this.props.locale} messages={this.props.messages[this.props.locale]}>
@@ -32,4 +32,4 @@ const mapStateToProps = createStructuredSelector({
   locale: selectLocale(),
 });
 
-export default connect<{}, {}, IProps>(mapStateToProps)(LanguageProvider);
+export default connect<{}, {}, IProps>(mapStateToProps, undefined)(LanguageProvider);

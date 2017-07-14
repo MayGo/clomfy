@@ -41,12 +41,12 @@ module.exports = ({ production = false, server = false, extractCss = false, cove
     modules: [srcDir, 'node_modules']
   },
   entry: {
-    app: ['./app/app'].concat(hotDeps)
+    app: [path.resolve('./app/app')].concat(hotDeps)
   },
 
   devServer: {
     hot: true, // Tell the dev-server we're using HMR
-    contentBase: path.resolve(__dirname, 'dist'),
+    contentBase: outDir,
     publicPath: `http://localhost:${port}/`,
     port: port
   },

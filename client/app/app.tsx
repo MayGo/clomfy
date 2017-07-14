@@ -15,6 +15,9 @@ import '!file-loader?name=[name].[ext]!./manifest.json';
 import 'file-loader?name=[name].[ext]!./.htaccess';
 /* eslint-enable import/no-unresolved */
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import muiTheme from './muiTheme';
+
 // Import all the third party stuff
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -71,19 +74,21 @@ const rootRoute = {
 const render = (messages) => {
   ReactDOM.render(
     <Provider store={store}>
-      <LanguageProvider messages={messages}>
-        <Router
-          history={history}
-          routes={rootRoute}
-          render={
-            // Scroll to top when going to a new page, imitating default browser
-            // behaviour
-            applyRouterMiddleware(useScroll())
-          }
-        />
-      </LanguageProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <LanguageProvider messages={messages}>
+          <Router
+            history={history}
+            routes={rootRoute}
+            render={
+              // Scroll to top when going to a new page, imitating default browser
+              // behaviour
+              applyRouterMiddleware(useScroll())
+            }
+          />
+        </LanguageProvider>
+      </MuiThemeProvider>
     </Provider>,
-    document.getElementById('app'),
+    document.getElementById('root'),
   );
 };
 
@@ -94,6 +99,7 @@ if (module.hot) {
   module.hot.accept('./i18n', () => {
     render(translationMessages);
   });
+
 }
 
 // Chunked polyfill for browsers without Intl support

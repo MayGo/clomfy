@@ -13,15 +13,20 @@ import Helmet from 'react-helmet';
 import 'sanitize.css/sanitize.css';
 
 import Img from 'app/components/Img';
+import MenuBar from './MenuBar';
 import Footer from 'app/components/Footer';
-const Banner = require('./banner-metal.jpg');
 import A from 'app/components/A';
 
 const styles = require('./styles.css');
 
+
+import * as injectTapEventPlugin from 'react-tap-event-plugin';
+
 interface IAppProps {
   children?: React.ReactNode;
 }
+
+injectTapEventPlugin(); 
 
 class App extends React.Component<IAppProps, {}> {
   public render() {
@@ -32,9 +37,7 @@ class App extends React.Component<IAppProps, {}> {
         >
           <meta name="description" content="A React.js Boilerplate application" />
         </Helmet>
-        <A className={styles.logoWrapper} href="https://twitter.com/mxstbr">
-          <Img className={styles.logo} src={Banner} alt="react-boilerplate - Logo"/>
-        </A>
+        <MenuBar title='Title'/>
         {this.props.children}
         <Footer />
       </div>

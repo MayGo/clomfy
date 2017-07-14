@@ -30,4 +30,8 @@ export default defineMessages({
     id: 'boilerplate.containers.HomePage.features.Button',
     defaultMessage: 'Features',
   },
+  buildpacksButton: {
+    id: 'boilerplate.containers.Buildpacks.features.Button',
+    defaultMessage: 'Buildpacks',
+  },
 });
