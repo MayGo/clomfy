@@ -1,5 +1,5 @@
 
 
 export const HomeRoute = '/';
-export const CounterListRoute = '/counters';
+export const CounterListRoute = '/features';
 export const BuildpacksRoute = '/buildpacks';

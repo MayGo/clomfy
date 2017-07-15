@@ -68,14 +68,6 @@ export default function createRoutes(store): IExtendedRouteProps[] {
       }
     },
     {
-      path: '/features',
-      name: 'features',
-      getComponent(nextState, cb) {
-        System.import('app/containers/FeaturePage')
-          .then(loadModule(cb))
-          .catch(errorLoading);
-      },
-    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

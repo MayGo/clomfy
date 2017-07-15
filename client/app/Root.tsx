@@ -15,6 +15,10 @@ import '!file-loader?name=[name].[ext]!./manifest.json';
 import 'file-loader?name=[name].[ext]!./.htaccess';
 /* eslint-enable import/no-unresolved */
 
+
+import { I18nextProvider } from 'react-i18next';
+
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from './muiTheme';
 
@@ -30,9 +34,6 @@ import configureStore from './store';
 
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
-// Import Language Provider
-import LanguageProvider from 'app/containers/LanguageProvider';
-
 // Observe loading of Open Sans (to remove open sans, remove the <link> tag in
 // the index.html file and this observer)
 const styles = require('app/containers/App/styles.css');
@@ -44,9 +45,6 @@ openSansObserver.load().then(() => {
 }, () => {
   document.body.classList.remove(styles.fontLoaded);
 });
-
-// Import i18n messages
-import { translationMessages } from './i18n';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -65,64 +63,40 @@ const history = syncHistoryWithStore(browserHistory, store, {
 
 // Set up the router, wrapping all Routes in the App component
 import App from 'app/containers/App';
+import { i18nInstance } from './utils/i18n';
+
 import createRoutes from './routes';
 const rootRoute = {
   component: App,
   childRoutes: createRoutes(store),
 };
 
-const render = (messages) => {
-  ReactDOM.render(
-    <Provider store={store}>
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <LanguageProvider messages={messages}>
-          <Router
-            history={history}
-            routes={rootRoute}
-            render={
-              // Scroll to top when going to a new page, imitating default browser
-              // behaviour
-              applyRouterMiddleware(useScroll())
-            }
-          />
-        </LanguageProvider>
-      </MuiThemeProvider>
-    </Provider>,
-    document.getElementById('root'),
-  );
-};
-
-// Hot reloadable translation json files
-if (module.hot) {
-  // modules.hot.accept does not accept dynamic dependencies,
-  // have to be constants at compile-time
-  module.hot.accept('./i18n', () => {
-    render(translationMessages);
-  });
-
-}
-
-// Chunked polyfill for browsers without Intl support
-if (!window.Intl) {
-  (new Promise((resolve) => {
-    resolve(System.import('intl'));
-  }))
-    .then(() => Promise.all([
-      System.import('intl/locale-data/jsonp/en.js'),
-      System.import('intl/locale-data/jsonp/de.js'),
-    ]))
-    .then(() => render(translationMessages))
-    .catch((err) => {
-      throw err;
-    });
-} else {
-  render(translationMessages);
+export default class Root extends React.Component<any, any> {
+  render() {
+    return (
+      <Provider store={store}>
+        <MuiThemeProvider muiTheme={muiTheme}>
+          <I18nextProvider i18n={i18nInstance}>
+            <Router
+              history={history}
+              routes={rootRoute}
+              render={
+                // Scroll to top when going to a new page, imitating default browser
+                // behaviour
+                applyRouterMiddleware(useScroll())
+              }
+            />
+          </I18nextProvider>
+        </MuiThemeProvider>
+      </Provider>
+    );
+  }
 }
 
 // Install ServiceWorker and AppCache in the end since
 // it's not most important operation and if main code fails,
 // we do not want it installed
-if (process.env.NODE_ENV === 'production') {
+/*if (process.env.NODE_ENV === 'production') {
   OfflinePluginRuntime.install({
     onUpdating: () => {
       console.log('SW Event:', 'onUpdating');
@@ -136,4 +110,4 @@ if (process.env.NODE_ENV === 'production') {
       window.swUpdate = true;
     },
   });
-}
+}*/

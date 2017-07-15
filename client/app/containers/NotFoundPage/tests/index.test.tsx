@@ -6,7 +6,6 @@ import * as expect from 'expect';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { FormattedMessage } from 'react-intl';
 import { NotFound } from '../index';
 import H1 from 'app/components/H1';
 import Button from 'app/components/Button';
@@ -18,10 +17,7 @@ describe('<NotFound />', () => {
     );
     expect(renderedComponent.contains(
       <H1>
-        <FormattedMessage
-          id="boilerplate.containers.NotFoundPage.header"
-          defaultMessage={'Page not found.'}
-        />
+        Not found
       </H1>)).toEqual(true);
   });
 

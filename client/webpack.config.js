@@ -31,7 +31,7 @@ const cssRules = [
 
 const hotDeps = (process.env.server) ? [
   'react-hot-loader/patch',
-  `webpack-dev-server/client?http://localhost:${port}`, 'webpack/hot/only-dev-server'] : [];
+  `webpack-dev-server/client?index.html`, 'webpack/hot/only-dev-server'] : [];
 
 
 module.exports = ({ production = false, server = false, extractCss = false, coverage = false } = {}) => ({
@@ -41,7 +41,7 @@ module.exports = ({ production = false, server = false, extractCss = false, cove
     modules: [srcDir, 'node_modules']
   },
   entry: {
-    app: [path.resolve('./app/app')].concat(hotDeps)
+    app: [path.resolve('./app/index')].concat(hotDeps)
   },
 
   devServer: {
@@ -93,9 +93,10 @@ module.exports = ({ production = false, server = false, extractCss = false, cove
       },
       { test: /\.html$/i, loader: 'html-loader' },
       { test: /\.tsx?$/i, loader: 'awesome-typescript-loader', exclude: nodeModulesDir },
+      //{ test: /\.tsx$/i, loader: 'react-hot-loader/webpack"', exclude: nodeModulesDir },
       { test: /\.json$/i, loader: 'json-loader' },
 
-    
+
       // embed small images and fonts as Data Urls and larger ones as files:
       { test: /\.(ico|png|gif|jpg|cur)$/i, loader: 'url-loader', options: { limit: 8192 } },
       { test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff2' } },

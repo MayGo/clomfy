@@ -8,8 +8,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { push, RouterAction} from 'react-router-redux';
 
-import messages from './messages';
-import { FormattedMessage } from 'react-intl';
 import Button from 'app/components/Button';
 import H1 from 'app/components/H1';
 
@@ -32,12 +30,12 @@ export class NotFound extends React.Component<INotFoundProps, {}> {
     return (
       <article>
         <H1>
-          <FormattedMessage {...messages.header} />
+          Not Fount
         </H1>
         <Button
           handleRoute={this.redirect}
         >
-          <FormattedMessage {...messages.homeButton} />
+          Go home
         </Button>
       </article>
     );

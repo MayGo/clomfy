@@ -9,7 +9,6 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import Redux from 'redux';
 
 import globalReducer from 'app/containers/App/reducer';
-import languageProviderReducer from 'app/containers/LanguageProvider/reducer';
 
 /*
  * routeReducer
@@ -52,7 +51,7 @@ export default function createReducer(asyncReducers: Redux.ReducersMapObject = {
   const reducers = {
     route: routeReducer,
     global: globalReducer,
-    language: languageProviderReducer,
+   // language: languageProviderReducer,
     ...asyncReducers,
   };
 

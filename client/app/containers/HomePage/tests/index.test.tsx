@@ -6,7 +6,7 @@ import * as expect from 'expect';
 import { shallow, mount } from 'enzyme';
 import * as React from 'react';
 
-import { IntlProvider } from 'react-intl';
+
 import { HomePage, mapDispatchToProps } from '../index';
 import { changeUsername } from '../actions';
 import { loadRepos } from '../../App/actions';
@@ -23,34 +23,7 @@ describe('<HomePage />', () => {
     expect(renderedComponent.contains(<List component={LoadingIndicator} />)).toEqual(true);
   });
 
-  it('should render an error if loading failed', () => {
-    const renderedComponent = mount(
-      <IntlProvider locale="en">
-        <HomePage
-          loading={false}
-          error={{ message: 'Loading failed!' } as Error}
-        />
-      </IntlProvider>,
-    );
-    expect(
-      renderedComponent
-        .text()
-        .indexOf('Something went wrong, please try again!'),
-    ).toBeGreaterThan(-1);
-  });
 
-  it('should render fetch the repos on mount if a username exists', () => {
-    const submitSpy = expect.createSpy();
-    mount(
-      <IntlProvider locale="en">
-        <HomePage
-          username="Not Empty"
-          onSubmitForm={submitSpy}
-        />
-      </IntlProvider>,
-    );
-    expect(submitSpy).toHaveBeenCalled();
-  });
 
   it('should render the repositories if loading was successful', () => {
     const repos = [{
@@ -72,25 +45,7 @@ describe('<HomePage />', () => {
     expect(renderedComponent.contains(<List items={repos} component={RepoListItem} />)).toEqual(true);
   });
 
-  it('should link to /features', () => {
-    const openRouteSpy = expect.createSpy();
-
-    // Spy on the openRoute method of the HomePage
-    const openRoute = (dest) => {
-      if (dest === '/features') {
-        openRouteSpy(undefined);
-      }
-    };
-
-    const renderedComponent = mount(
-      <IntlProvider locale="en">
-        <HomePage loading changeRoute={openRoute} />
-      </IntlProvider>,
-    );
-    const button = renderedComponent.find('button');
-    button.simulate('click');
-    expect(openRouteSpy).toHaveBeenCalled();
-  });
+ 
 
   describe('mapDispatchToProps', () => {
     describe('onChangeUsername', () => {
