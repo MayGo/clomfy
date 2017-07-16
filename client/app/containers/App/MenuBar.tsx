@@ -7,7 +7,7 @@ import { connect, Dispatch } from 'react-redux';
 import { push, RouterAction } from 'react-router-redux';
 import { LocationDescriptor, LocationState } from 'history';
 import { IAppState } from './IAppState';
-import { BuildpacksRoute, CounterListRoute, HomeRoute } from '../../RoutePaths';
+import { BuildpacksRoute, CounterListRoute, HomeRoute, LoginRoute } from '../../RoutePaths';
 import { selectLocationState } from 'app/containers/App/selectors';
 
 import { createStructuredSelector } from 'reselect';
@@ -62,7 +62,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
           <MenuItem name='Home' path={HomeRoute} />
           <MenuItem name='Counter List' path={CounterListRoute} />
           <MenuItem name='Buildpacks' path={BuildpacksRoute} />
-          <MenuItem name='Link to nonexistent' path='foobar' />
+          <MenuItem name='Login' path={LoginRoute} />
         </MuiDrawer>
       </div>
     );
