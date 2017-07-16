@@ -14,9 +14,8 @@ import {
   REGISTER_REQUEST,
   SET_AUTH,
   LOGOUT,
-  CHANGE_PASSWORD,
-  REQUEST_ERROR,
-  CHANGE_USERNAME
+  CHANGE_FORM,
+  REQUEST_ERROR
 } from './constants'
 
 /**
@@ -92,7 +91,7 @@ export function* loginFlow() {
     if (winner.auth) {
       // ...we send Redux appropiate actions
       yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized)
-      yield put({ type: CHANGE_PASSWORD, newFormState: { username: 'f', password: 'f' } }) // Clear form
+      yield put({ type: CHANGE_FORM, newFormState: { username: 'f', password: 'f' } }) // Clear form
       forwardTo('/dashboard') // Go to dashboard page
     }
   }
@@ -130,8 +129,7 @@ export function* registerFlow() {
     // If we could register a user, we send the appropiate actions
     if (wasSuccessful) {
       yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized) after being registered
-      yield put({ type: CHANGE_USERNAME, newUsername: '' }) // Clear form
-      yield put({ type: CHANGE_PASSWORD, newPassword: '' }) // Clear form
+      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' }  }) // Clear form
       forwardTo('/dashboard') // Go to dashboard page
     }
   }

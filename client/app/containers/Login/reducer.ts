@@ -2,7 +2,7 @@
  * The reducer takes care of state changes in our app through actions
  */
 
-import { CHANGE_PASSWORD, CHANGE_USERNAME, CLEAR_ERROR, REQUEST_ERROR, SENDING_REQUEST, SET_AUTH } from './constants';
+import { CHANGE_FORM, CHANGE_USERNAME, CLEAR_ERROR, REQUEST_ERROR, SENDING_REQUEST, SET_AUTH } from './constants';
 
 import auth from '../../auth';
 
@@ -19,12 +19,10 @@ const loginState = fromJS({
 
 function loginReducer(state = loginState, action) {
   switch (action.type) {
-    case CHANGE_USERNAME:
+
+    case CHANGE_FORM:
       return state
-        .setIn(['formState', 'username'], action.newUsername);
-    case CHANGE_PASSWORD:
-      return state
-        .setIn(['formState', 'password'], action.newPassword);
+        .set('formState', state.get('formState').merge(action.newFormState));
     case SET_AUTH:
       return state
         .set('loading', true)

@@ -11,7 +11,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import LockIcon from 'material-ui/svg-icons/action/lock-outline';
 
-import { loginRequest, changeUsername, changePassword } from './actions';
+import { loginRequest, changeForm } from './actions';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import { cyan500, pinkA200 } from 'material-ui/styles/colors';
@@ -83,7 +83,6 @@ class LoginPage extends React.Component<ILoginPageProps, {}>  {
   }
   render() {
     const { submitting, formState } = this.props;
-    console.log(formState)
     return (
       <div >
         <Card style={styles.card}>
@@ -134,8 +133,8 @@ export function mapDispatchToProps(dispatch, ownProps) {
     onLogin: (username: string, password: string) => {
       dispatch(loginRequest({ username, password }));
     },
-    onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
-    onChangePassword: (evt) => dispatch(changePassword(evt.target.value)),
+    onChangeUsername: (evt) => dispatch(changeForm({ username: evt.target.value })),
+    onChangePassword: (evt) => dispatch(changeForm({ password: evt.target.value })),
 
     dispatch,
   };

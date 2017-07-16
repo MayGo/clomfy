@@ -4,23 +4,16 @@
 
 // We import constants to name our actions' type
 import {
-  CHANGE_PASSWORD,
+  CHANGE_FORM,
   SET_AUTH,
   SENDING_REQUEST,
   LOGIN_REQUEST,
   REGISTER_REQUEST,
   LOGOUT,
   REQUEST_ERROR,
-  CLEAR_ERROR,
-  CHANGE_USERNAME
+  CLEAR_ERROR
 } from './constants';
 
-export function changeUsername(newUsername) {
-  return {
-    type: CHANGE_USERNAME,
-    newUsername,
-  };
-}
 
 /**
  * Sets the form state
@@ -28,8 +21,8 @@ export function changeUsername(newUsername) {
  * @param  {string} newFormState.username The new text of the username input field of the form
  * @param  {string} newFormState.password The new text of the password input field of the form
  */
-export function changePassword (newPassword) {
-  return {type: CHANGE_PASSWORD, newPassword}
+export function changeForm (newFormState) {
+  return {type: CHANGE_FORM, newFormState}
 }
 
 /**
