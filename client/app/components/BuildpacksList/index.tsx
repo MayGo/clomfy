@@ -33,7 +33,7 @@ class BuildpacksList extends React.Component<IListProps, {}> {
       return <div>No buildpacks</div>;
     }
     console.log(buildpacks)
-    const enabledIcon = (enabled)=>(enabled)?<CheckBoxIcon/>:<CheckBoxIconOutline/>)
+    const enabledIcon = (enabled) => (enabled) ? <CheckBoxIcon /> : <CheckBoxIconOutline />
 
     const listItems = buildpacks.map((item) =>
       <TableRow>
@@ -44,23 +44,20 @@ class BuildpacksList extends React.Component<IListProps, {}> {
         <TableRowColumn>{enabledIcon(item.entity.locked)}</TableRowColumn>
       </TableRow>
     );
-    
 
-    if (buildpacks) {
-      return <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Filename</TableHeaderColumn>
-            <TableHeaderColumn>Enabled</TableHeaderColumn>
-            <TableHeaderColumn>Locked</TableHeaderColumn>
-          </TableRow>
-        </TableHeader><TableBody>{listItems}</TableBody>
-      </Table>;
-    }
 
-    return null;
+    return <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHeaderColumn>ID</TableHeaderColumn>
+          <TableHeaderColumn>Name</TableHeaderColumn>
+          <TableHeaderColumn>Filename</TableHeaderColumn>
+          <TableHeaderColumn>Enabled</TableHeaderColumn>
+          <TableHeaderColumn>Locked</TableHeaderColumn>
+        </TableRow>
+      </TableHeader><TableBody>{listItems}</TableBody>
+    </Table>;
+
   }
 }
 

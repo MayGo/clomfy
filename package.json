@@ -1,11 +1,11 @@
 {
-  "name": "tockler",
-  "version": "3.0.8",
-  "description": "Automatically track applications usage and working time",
+  "name": "clomfy",
+  "version": "0.0.1",
+  "description": "Cloud Foundy api admin",
   "author": "Maigo Erit <maigo.erit@gmail.com>",
   "license": "GPL-2.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:MayGo/tockler.git"
+    "url": "git@github.com:MayGo/clomfy.git"
   }
 }

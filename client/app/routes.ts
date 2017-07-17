@@ -1,3 +1,4 @@
+import { LoginRoute, BuildpacksRoute, HomeRoute }  from './RoutePaths';
 // These are the pages you can go to.
 // They are all wrapped in the App component, which should contain the navbar etc
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
@@ -24,7 +25,7 @@ export default function createRoutes(store): IExtendedRouteProps[] {
 
   return [
     {
-      path: '/',
+      path: HomeRoute,
       name: 'home',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -46,7 +47,7 @@ export default function createRoutes(store): IExtendedRouteProps[] {
       },
     },
     {
-      path: '/buildpacks',
+      path: BuildpacksRoute,
       name: 'buildpacks',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -68,7 +69,7 @@ export default function createRoutes(store): IExtendedRouteProps[] {
       }
     },
     {
-      path: '/login',
+      path: LoginRoute,
       name: 'login',
       getComponent(nextState, cb) {
         const importModules = Promise.all([

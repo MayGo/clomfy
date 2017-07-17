@@ -7,7 +7,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import Helmet from 'react-helmet';
 
 import { createStructuredSelector } from 'reselect';
 
@@ -23,11 +22,6 @@ import {
 
 import { changeUsername } from './actions';
 import { loadRepos } from '../App/actions';
-
-import RepoListItem from 'app/containers/RepoListItem';
-import Button from 'app/components/Button';
-import H2 from 'app/components/H2';
-import LoadingIndicator from 'app/components/LoadingIndicator';
 
 const styles = require('./styles.css');
 
@@ -87,10 +81,7 @@ export class HomePage extends React.Component<IHomePageProps, {}> {
 
     return (
       <article>
-        <Helmet>
-          <title>Home Page</title>
-          <meta name="description" content="A React.js Boilerplate application homepage" />
-        </Helmet>
+
         <div>
           <section className={`${styles.textSection} ${styles.centered}`}>
            {mainContent}

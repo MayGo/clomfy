@@ -1,3 +1,4 @@
+import muiTheme from '../../muiTheme';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -16,6 +17,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import { cyan500, pinkA200 } from 'material-ui/styles/colors';
 
+import { translate } from 'react-i18next';
+
 import { propTypes, reduxForm, Field } from 'redux-form';
 
 import { makeQueryFormState, makeQueryCurrentlySending } from "app/containers/Login/selectors";
@@ -28,6 +31,7 @@ interface ILoginPageProps {
   submitting?: any,
   error?: any,
   history?: any;
+  t?: any;
 
   onChangeUsername?: () => React.EventHandler<React.FormEvent<any>>;
   onChangePassword?: () => React.EventHandler<React.FormEvent<any>>;
@@ -42,13 +46,14 @@ const renderInput = ({ meta: { touched = false, error = '' } = {}, input: { ...i
     fullWidth
   />;
 
-const styles = {
+const styles: any = {
   main: {
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: muiTheme.palette.primary1Color
   },
   card: {
     minWidth: 300,
@@ -64,16 +69,6 @@ const styles = {
     display: 'flex',
   },
 };
-function getColorsFromTheme(theme) {
-  if (!theme) return { primary1Color: cyan500, accent1Color: pinkA200 };
-  const {
-        palette: {
-            primary1Color,
-    accent1Color,
-        },
-      } = theme;
-  return { primary1Color, accent1Color };
-}
 
 class LoginPage extends React.Component<ILoginPageProps, {}>  {
   constructor(props) {
@@ -82,44 +77,46 @@ class LoginPage extends React.Component<ILoginPageProps, {}>  {
     this.login = this.login.bind(this);
   }
   render() {
-    const { submitting, formState } = this.props;
+    const { submitting, formState, t } = this.props;
     return (
-      <div >
-        <Card style={styles.card}>
-          <div style={styles.avatar}>
-            <Avatar icon={<LockIcon />} size={60} />
-          </div>
-          <form onSubmit={this.login}>
-            <div style={styles.form}>
-              <div style={styles.input} >
-                <TextField
-                  hintText="Username"
-                  onChange={this.props.onChangeUsername}
-                  value={formState.username}
-                />
-
-              </div>
-              <div style={styles.input}>
-                <TextField
-                  hintText="Password"
-                  onChange={this.props.onChangePassword}
-                  type="password"
-                  value={formState.password}
-                />
-              </div>
+      <div>
+        <div style={styles.main}>
+          <Card style={styles.card}>
+            <div style={styles.avatar}>
+              <Avatar backgroundColor={muiTheme.palette.accent1Color} icon={<LockIcon />} size={60} />
             </div>
-            <CardActions>
-              <RaisedButton
-                type="submit"
-                primary
-                disabled={submitting}
-                icon={submitting && <CircularProgress size={25} thickness={2} />}
-                label="Sign in"
-                fullWidth
-              />
-            </CardActions>
-          </form>
-        </Card>
+            <form onSubmit={this.login}>
+              <div style={styles.form}>
+                <div style={styles.input} >
+                  <TextField
+                    floatingLabelText={t('login.username')}
+                    onChange={this.props.onChangeUsername}
+                    value={formState.username}
+                  />
+
+                </div>
+                <div style={styles.input}>
+                  <TextField
+                    floatingLabelText={t('login.password')}
+                    onChange={this.props.onChangePassword}
+                    type="password"
+                    value={formState.password}
+                  />
+                </div>
+              </div>
+              <CardActions>
+                <RaisedButton
+                  type="submit"
+                  primary
+                  disabled={submitting}
+                  icon={submitting && <CircularProgress size={25} thickness={2} />}
+                  label={t('login.signIn')}
+                  fullWidth
+                />
+              </CardActions>
+            </form>
+          </Card>
+        </div>
       </div>
     )
   }
@@ -149,4 +146,4 @@ const mapStateToProps = createStructuredSelector({
   error: selectError()
 });
 
-export default connect<{}, {}, ILoginPageProps>(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect<{}, {}, ILoginPageProps>(mapStateToProps, mapDispatchToProps)(translate()(LoginPage));

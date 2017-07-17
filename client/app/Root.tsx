@@ -34,6 +34,9 @@ import configureStore from './store';
 
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
+
+import 'typeface-berkshire-swash';
+
 // Observe loading of Open Sans (to remove open sans, remove the <link> tag in
 // the index.html file and this observer)
 const styles = require('app/containers/App/styles.css');

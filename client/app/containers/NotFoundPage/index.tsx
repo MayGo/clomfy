@@ -6,12 +6,12 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { push, RouterAction} from 'react-router-redux';
+import { push, RouterAction } from 'react-router-redux';
 
-import Button from 'app/components/Button';
-import H1 from 'app/components/H1';
+import { translate } from 'react-i18next';
 
 interface INotFoundProps {
+  t: any,
   dispatch?: (action: RouterAction) => void;
 }
 
@@ -29,18 +29,13 @@ export class NotFound extends React.Component<INotFoundProps, {}> {
   public render() {
     return (
       <article>
-        <H1>
-          Not Fount
-        </H1>
-        <Button
-          handleRoute={this.redirect}
-        >
-          Go home
-        </Button>
+        <h1>
+          {this.props.t('notFound')}
+        </h1>
       </article>
     );
   }
 }
 
 // Wrap the component to inject dispatch and state into it
-export default connect()(NotFound);
+export default connect()(translate()(NotFound));

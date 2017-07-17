@@ -1,6 +1,5 @@
 import { getBuildpacks } from '../containers/BuildpacksPage/sagas';
 import 'whatwg-fetch';
-import restful, { fetchBackend } from 'restful.js';
 
 export class ResponseError extends Error {
   public response: Response;

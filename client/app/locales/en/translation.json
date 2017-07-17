@@ -1,0 +1,13 @@
+{
+  "login": {
+    "signIn": "Sign in",
+    "username": "Username",
+    "password": "Password"
+  },
+  "notFound": "Page Not Found",
+  "routes": {
+    "home": "Home",
+    "buildpacks": "Buildpacks",
+    "login": "Login"
+  }
+}

@@ -5,8 +5,6 @@
  */
 import * as React from 'react';
 
-import Helmet from 'react-helmet';
-
 import {
   selectRepos
 } from 'app/containers/App/selectors';
@@ -46,13 +44,6 @@ export class BuildpacksPage extends React.Component<IBuildpacksPageProps, {}> { 
 
     return (
       <div>
-        <Helmet
-          title="Buildpacks"
-          meta={[
-            { name: 'description', content: 'Buildpacks' }
-          ]}
-        />
-
         <BuildpacksList {...buildpacksListProps} />
       </div>
     );

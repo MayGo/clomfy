@@ -7,13 +7,15 @@ import { connect, Dispatch } from 'react-redux';
 import { push, RouterAction } from 'react-router-redux';
 import { LocationDescriptor, LocationState } from 'history';
 import { IAppState } from './IAppState';
-import { BuildpacksRoute, CounterListRoute, HomeRoute, LoginRoute } from '../../RoutePaths';
+import { BuildpacksRoute, HomeRoute, LoginRoute } from '../../RoutePaths';
 import { selectLocationState } from 'app/containers/App/selectors';
 
 import { createStructuredSelector } from 'reselect';
 
+import { translate } from 'react-i18next';
+
 interface IMenuBarOwnProps {
-  title: string;
+  t?: any
 }
 interface IMenuBarStateProps {
   location: Location | null;
@@ -26,6 +28,14 @@ type IMenuBarProps = IMenuBarOwnProps & IMenuBarStateProps & IMenuBarDispatchPro
 interface IMenuBarReactState {
   open: boolean;
 }
+
+const styles: any = {
+  logo: {
+    fontFamily: " 'Berkshire Swash', cursive",
+    fontWeight: 200,
+    letterSpacing: 1
+  }
+};
 
 class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
 
@@ -49,6 +59,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
 
   public render(): JSX.Element {
 
+    let { t } = this.props;
     const MenuItem = (props: { name: string, path: string }): React.ReactElement<MuiMenuItem> => (
       <MuiMenuItem disabled={this.props.location!.pathname === props.path}
         onTouchTap={this.handleNavigate(props.path)}>{props.name}</MuiMenuItem>
@@ -56,13 +67,14 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
 
     return (
       <div>
-        <MuiAppBar onLeftIconButtonTouchTap={this.handleToggle} title={this.props.title} />
+        <MuiAppBar onLeftIconButtonTouchTap={this.handleToggle}
+          titleStyle={styles.logo}
+          title="Clomfy" />
         <MuiDrawer docked={false} width={250} open={this.state.open}
           onRequestChange={(open) => this.setState({ open })}>
-          <MenuItem name='Home' path={HomeRoute} />
-          <MenuItem name='Counter List' path={CounterListRoute} />
-          <MenuItem name='Buildpacks' path={BuildpacksRoute} />
-          <MenuItem name='Login' path={LoginRoute} />
+          <MenuItem name={t('routes.home')} path={HomeRoute} />
+          <MenuItem name={t('routes.buildpacks')} path={BuildpacksRoute} />
+          <MenuItem name={t('routes.login')} path={LoginRoute} />
         </MuiDrawer>
       </div>
     );
@@ -82,4 +94,4 @@ export function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect<IMenuBarStateProps, IMenuBarDispatchProps, IMenuBarOwnProps>(mapStateToProps, mapDispatchToProps)(MenuBar);
+export default connect<IMenuBarStateProps, IMenuBarDispatchProps, IMenuBarOwnProps>(mapStateToProps, mapDispatchToProps)(translate()(MenuBar));

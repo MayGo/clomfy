@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import A from 'app/components/A';
 const styles = require('./styles.css');
 
 class Footer extends React.Component<{}, {}> {
@@ -8,11 +7,9 @@ class Footer extends React.Component<{}, {}> {
     return (
       <footer className={styles.footer}>
         <section>
-          <p>This project is licensed under the MIT license.</p>
+          <p>Clomfy @ 2017</p>
         </section>
-        <section>
-          <p>Made with love by <A href="https://twitter.com/mxstbr">Max Stoiber</A>.</p>
-        </section>
+
       </footer>
     );
   }
