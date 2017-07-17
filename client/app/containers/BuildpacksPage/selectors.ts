@@ -5,6 +5,16 @@
 import { createSelector } from 'reselect';
 
 const selectBuildpacks = (state) => state.get('buildpacks');
+const selectLoading = () => createSelector(
+  selectBuildpacks,
+  (buildpacksState) => buildpacksState.get('loading'),
+);
+
+const selectError = () => createSelector(
+  selectBuildpacks,
+  (buildpacksState) => buildpacksState.get('error'),
+);
+
 
 const makeQueryBuildpacks = () => createSelector(
   selectBuildpacks,
@@ -14,4 +24,6 @@ const makeQueryBuildpacks = () => createSelector(
 export {
   selectBuildpacks,
   makeQueryBuildpacks,
+  selectLoading,
+  selectError
 };

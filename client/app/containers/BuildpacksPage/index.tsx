@@ -8,16 +8,16 @@ import * as React from 'react';
 import Helmet from 'react-helmet';
 
 import {
-  selectRepos,
-  selectLoading,
-  selectError,
+  selectRepos
 } from 'app/containers/App/selectors';
 
 import BuildpacksList from 'app/components/BuildpacksList';
 
 import { loadBuildpacks } from './actions';
 
-import { makeQueryBuildpacks } from './selectors';
+import { makeQueryBuildpacks,
+  selectLoading,
+  selectError, } from './selectors';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';

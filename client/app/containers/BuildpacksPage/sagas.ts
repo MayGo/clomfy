@@ -1,3 +1,4 @@
+import CfApi from '../../services/cfApi';
 /**
  * Gets the repositories of the user from Github
  */
@@ -16,14 +17,13 @@ import { makeQueryBuildpacks } from './selectors';
 export function* getBuildpacks(): IterableIterator<any> {
   // Select username from store
   const username = yield select(makeQueryBuildpacks());
-  const requestURL = 'https://api.run.pivotal.io/v2/buildpacks';
-
   try {
     // Call our request helper (see 'utils/request')
-    const repos = yield call(requestCf, requestURL);
+    const repos = yield call(CfApi.request, 'buildpacks');
     console.log(repos)
     yield put(buildpacksLoaded(repos.resources));
   } catch (err) {
+    console.error(err)
     yield put(buildpacksLoadingError(err));
   }
 }

@@ -1,4 +1,4 @@
-import { cfApi } from '../services/cfApi';
+import  CfApi  from '../services/cfApi';
 
 let localStorage = window.localStorage
 
@@ -10,9 +10,13 @@ let auth = {
   * @param  {string} password The password of the user
   */
   login(username, password) {
-    if (auth.loggedIn()) return Promise.resolve(true)
 
-    return cfApi.login(username, password)
+    if (auth.loggedIn()) {
+      console.log("loggedIn?")
+      return Promise.resolve(true)
+    }
+
+    return CfApi.login(username, password)
       .then(token => {
         // Save token to local storage
         localStorage.token = token;

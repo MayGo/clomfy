@@ -27,8 +27,6 @@ import { loadRepos } from '../App/actions';
 import RepoListItem from 'app/containers/RepoListItem';
 import Button from 'app/components/Button';
 import H2 from 'app/components/H2';
-import List from 'app/components/List';
-import ListItem from 'app/components/ListItem';
 import LoadingIndicator from 'app/components/LoadingIndicator';
 
 const styles = require('./styles.css');
@@ -78,19 +76,14 @@ export class HomePage extends React.Component<IHomePageProps, {}> {
 
     // Show a loading indicator when we're loading
     if (this.props.loading) {
-      mainContent = (<List component={LoadingIndicator} />);
+      mainContent = (<div>Loading</div>);
 
       // Show an error if there is one
     } else if (this.props.error !== false) {
-      const ErrorComponent = () => (
-        <ListItem item={'Something went wrong, please try again!'} />
-      );
-      mainContent = (<List component={ErrorComponent} />);
+       mainContent = (<div>Something went wrong, please try again!</div>);
 
       // If we're not loading, don't have an error and there are repos, show the repos
-    } else if (this.props.repos) {
-      mainContent = (<List items={this.props.repos} component={RepoListItem} />);
-    }
+    } 
 
     return (
       <article>
@@ -100,7 +93,7 @@ export class HomePage extends React.Component<IHomePageProps, {}> {
         </Helmet>
         <div>
           <section className={`${styles.textSection} ${styles.centered}`}>
-           sdfsf
+           {mainContent}
           </section>
         
         </div>

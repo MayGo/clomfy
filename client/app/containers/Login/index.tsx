@@ -103,6 +103,7 @@ class LoginPage extends React.Component<ILoginPageProps, {}>  {
                 <TextField
                   hintText="Password"
                   onChange={this.props.onChangePassword}
+                  type="password"
                   value={formState.password}
                 />
               </div>
@@ -123,8 +124,10 @@ class LoginPage extends React.Component<ILoginPageProps, {}>  {
     )
   }
 
-  login() {
+  login(e) {
+    console.log("Login submitted");
     this.props.onLogin(this.props.formState.username, this.props.formState.password);
+    e.preventDefault();
   }
 }
 

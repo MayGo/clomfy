@@ -32,12 +32,12 @@ export function* authorize({ username, password, isRegistering }) {
   // We then try to register or log in the user, depending on the request
   try {
 
-    console.log('hi')
+    console.log('authorize', username)
     let response = yield call(auth.login, username, password);
 
-    return response
+    return true;
   } catch (error) {
-    console.log('hi error', error)
+    console.log('authorize error', error)
     // If we get an error we send Redux the appropiate action and return
     yield put({ type: REQUEST_ERROR, error: error.message })
 
@@ -91,8 +91,8 @@ export function* loginFlow() {
     if (winner.auth) {
       // ...we send Redux appropiate actions
       yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized)
-      yield put({ type: CHANGE_FORM, newFormState: { username: 'f', password: 'f' } }) // Clear form
-      forwardTo('/dashboard') // Go to dashboard page
+      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
+      forwardTo('/') // Go to dashboard page
     }
   }
 }
@@ -129,7 +129,7 @@ export function* registerFlow() {
     // If we could register a user, we send the appropiate actions
     if (wasSuccessful) {
       yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized) after being registered
-      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' }  }) // Clear form
+      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
       forwardTo('/dashboard') // Go to dashboard page
     }
   }

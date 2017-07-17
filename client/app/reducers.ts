@@ -35,6 +35,7 @@ function routeReducer(state = routeInitialState, action) {
       });
       console.log("LOCATION_CHANGE", action, window.swUpdate);
       if (window.swUpdate) {
+        console.log("Reoading:swUpdate ")
         window.location.reload();
       }
       return mergeState;
@@ -51,7 +52,7 @@ export default function createReducer(asyncReducers: Redux.ReducersMapObject = {
   const reducers = {
     route: routeReducer,
     global: globalReducer,
-   // language: languageProviderReducer,
+    // language: languageProviderReducer,
     ...asyncReducers,
   };
 

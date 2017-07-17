@@ -48,9 +48,9 @@ export default class WindowManager {
         });
 
         this.mainWindow.webContents.on('did-finish-load', () => {
-            console.log("did-finish-load'");
-            this.mainWindow.show();
-            this.mainWindow.focus();
+            console.log("did-finish-load");
+            //this.mainWindow.show();
+            //this.mainWindow.focus();
         });
 
         this.mainWindow.on('close', () => {
