@@ -1,14 +1,16 @@
 import * as React from 'react';
 
-import { List, ListItem } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import Subheader from 'material-ui/Subheader';
-import Avatar from 'material-ui/Avatar';
-import { grey400, darkBlack, lightBlack } from 'material-ui/styles/colors';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
+
+import CheckBoxIcon from 'material-ui/svg-icons/toggle/check-box';
+import CheckBoxIconOutline from 'material-ui/svg-icons/toggle/check-box-outline-blank';
 
 interface IListProps {
   loading?: boolean;
@@ -24,29 +26,38 @@ class BuildpacksList extends React.Component<IListProps, {}> {
     }
 
     if (error !== false) {
-    
+
       return <div>Something went wrong, please try again!</div>;
     }
-    if(!buildpacks){
+    if (!buildpacks) {
       return <div>No buildpacks</div>;
     }
     console.log(buildpacks)
-    const listItems = buildpacks.map((item) =>
-      <ListItem
-        primaryText={item.name}
-        secondaryText={
-          <p>
-            <span style={{ color: darkBlack }}>{item.filename}</span> --
-              Enabled:{item.enabled} Locked: {item.locked}
-          </p>
-        }
-        secondaryTextLines={2}
-      />
-    );
+    const enabledIcon = (enabled)=>(enabled)?<CheckBoxIcon/>:<CheckBoxIconOutline/>)
 
+    const listItems = buildpacks.map((item) =>
+      <TableRow>
+        <TableRowColumn>{item.entity.position}</TableRowColumn>
+        <TableRowColumn>{item.entity.name}</TableRowColumn>
+        <TableRowColumn>{item.entity.filename}</TableRowColumn>
+        <TableRowColumn>{enabledIcon(item.entity.enabled)}</TableRowColumn>
+        <TableRowColumn>{enabledIcon(item.entity.locked)}</TableRowColumn>
+      </TableRow>
+    );
+    
 
     if (buildpacks) {
-      return <List>{listItems}</List>;
+      return <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHeaderColumn>ID</TableHeaderColumn>
+            <TableHeaderColumn>Name</TableHeaderColumn>
+            <TableHeaderColumn>Filename</TableHeaderColumn>
+            <TableHeaderColumn>Enabled</TableHeaderColumn>
+            <TableHeaderColumn>Locked</TableHeaderColumn>
+          </TableRow>
+        </TableHeader><TableBody>{listItems}</TableBody>
+      </Table>;
     }
 
     return null;

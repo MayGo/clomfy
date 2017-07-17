@@ -112,29 +112,6 @@ export function* logoutFlow() {
   }
 }
 
-/**
- * Register saga
- * Very similar to log in saga!
- */
-export function* registerFlow() {
-  while (true) {
-    // We always listen to `REGISTER_REQUEST` actions
-    let request = yield take(REGISTER_REQUEST)
-    let { username, password } = request.data
-
-    // We call the `authorize` task with the data, telling it that we are registering a user
-    // This returns `true` if the registering was successful, `false` if not
-    let wasSuccessful = yield call(authorize, { username, password, isRegistering: true })
-
-    // If we could register a user, we send the appropiate actions
-    if (wasSuccessful) {
-      yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized) after being registered
-      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
-      forwardTo('/dashboard') // Go to dashboard page
-    }
-  }
-}
-
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -142,7 +119,6 @@ export function* registerFlow() {
 export function* root() {
   yield fork(loginFlow)
   yield fork(logoutFlow)
-  yield fork(registerFlow)
 }
 
 // Bootstrap sagas

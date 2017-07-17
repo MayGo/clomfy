@@ -11,10 +11,10 @@ let auth = {
   */
   login(username, password) {
 
-    if (auth.loggedIn()) {
+   /* if (auth.loggedIn()) {
       console.log("loggedIn?")
       return Promise.resolve(true)
-    }
+    }*/
 
     return CfApi.login(username, password)
       .then(token => {
