@@ -9,6 +9,7 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 
+import LinearProgress from 'material-ui/LinearProgress';
 import CheckBoxIcon from 'material-ui/svg-icons/toggle/check-box';
 import CheckBoxIconOutline from 'material-ui/svg-icons/toggle/check-box-outline-blank';
 
@@ -22,21 +23,21 @@ class BuildpacksList extends React.Component<IListProps, {}> {
   public render() {
     const { loading, error, buildpacks } = this.props;
     if (loading) {
-      return <div>Loading</div>;
+      return <LinearProgress mode="indeterminate" />;
     }
 
     if (error !== false) {
 
-      return <div>Something went wrong, please try again!</div>;
+      return <p>Something went wrong, please try again!</p>;
     }
     if (!buildpacks) {
-      return <div>No buildpacks</div>;
+      return <p>No buildpacks</p>;
     }
     console.log(buildpacks)
     const enabledIcon = (enabled) => (enabled) ? <CheckBoxIcon /> : <CheckBoxIconOutline />
 
     const listItems = buildpacks.map((item) =>
-      <TableRow>
+      <TableRow key={item.metadata.guid}>
         <TableRowColumn>{item.entity.position}</TableRowColumn>
         <TableRowColumn>{item.entity.name}</TableRowColumn>
         <TableRowColumn>{item.entity.filename}</TableRowColumn>
