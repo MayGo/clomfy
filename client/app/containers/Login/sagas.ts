@@ -122,9 +122,7 @@ export function* root() {
 }
 
 // Bootstrap sagas
-export default [
-  root,
-];
+export default root;
 
 // Little helper function to abstract going to different pages
 function forwardTo(location) {

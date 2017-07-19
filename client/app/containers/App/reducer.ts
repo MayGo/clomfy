@@ -14,6 +14,7 @@ import {
   LOAD_REPOS_SUCCESS,
   LOAD_REPOS,
   LOAD_REPOS_ERROR,
+  SET_REDIRECT_URL,
 } from './constants';
 import { fromJS } from 'immutable';
 
@@ -43,6 +44,10 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
+
+    case SET_REDIRECT_URL:
+      return state
+        .set('redirectUrl', action.payload);
     default:
       return state;
   }

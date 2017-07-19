@@ -105,6 +105,10 @@ export default class CfApi {
     if (response.status >= 200 && response.status < 300) {
       return response;
     }
+    
+    if(response.status == 401){
+
+    }
 
     throw new ResponseError(response);
   }

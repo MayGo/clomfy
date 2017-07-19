@@ -39,6 +39,7 @@ function loginReducer(state = loginState, action) {
     case CLEAR_ERROR:
       return state
         .set('error', '');
+
     default:
       return state
   }

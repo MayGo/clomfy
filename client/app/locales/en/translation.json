@@ -8,6 +8,7 @@
   "routes": {
     "home": "Home",
     "buildpacks": "Buildpacks",
+    "apps": "Apps",
     "login": "Login"
   }
 }

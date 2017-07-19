@@ -11,7 +11,6 @@ const makeQueryFormState = () => createSelector(
   (loginState) => loginState.get('formState').toObject()
 );
 
-
 const makeQueryCurrentlySending = () => createSelector(
   selectLoginState(),
   (loginState) => loginState.get('currentlySending')

@@ -7,7 +7,7 @@ import { connect, Dispatch } from 'react-redux';
 import { push, RouterAction } from 'react-router-redux';
 import { LocationDescriptor, LocationState } from 'history';
 import { IAppState } from './IAppState';
-import { BuildpacksRoute, HomeRoute, LoginRoute } from '../../RoutePaths';
+import { AppsRoute, BuildpacksRoute, HomeRoute, LoginRoute } from '../../RoutePaths';
 import { selectLocationState } from 'app/containers/App/selectors';
 
 import { createStructuredSelector } from 'reselect';
@@ -44,7 +44,6 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
     this.state = { open: false };
   }
 
-
   /**
    * Changes the route
    *
@@ -74,6 +73,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
           onRequestChange={(open) => this.setState({ open })}>
           <MenuItem name={t('routes.home')} path={HomeRoute} />
           <MenuItem name={t('routes.buildpacks')} path={BuildpacksRoute} />
+          <MenuItem name={t('routes.apps')} path={AppsRoute} />
           <MenuItem name={t('routes.login')} path={LoginRoute} />
         </MuiDrawer>
       </div>
