@@ -34,7 +34,7 @@ function routeReducer(state = routeInitialState, action) {
       const mergeState = state.merge({
         locationBeforeTransitions: action.payload,
       });
-      console.log("LOCATION_CHANGE", action, window.swUpdate);
+      console.log("LOCATION_CHANGE", action.payload.pathname);
       if (window.swUpdate) {
         console.log("Reoading:swUpdate ")
         window.location.reload();

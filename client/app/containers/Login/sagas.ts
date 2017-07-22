@@ -18,6 +18,8 @@ import {
   REQUEST_ERROR
 } from './constants'
 import { selectRedirectUrl } from "app/containers/App/selectors";
+import { Path } from "history";
+import { push } from "react-router-redux";
 
 /**
  * Effect to handle authorization
@@ -93,8 +95,6 @@ export function* loginFlow() {
       // ...we send Redux appropiate actions
       yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized)
       yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
-      const redirectUrl = yield select(selectRedirectUrl());
-      forwardTo((redirectUrl) ? redirectUrl : '/')
     }
   }
 }
@@ -110,7 +110,8 @@ export function* logoutFlow() {
     yield put({ type: SET_AUTH, newAuthState: false })
 
     yield call(logout)
-    forwardTo('/logout')
+    let url: Path = "/login";
+    yield put(push(url))
   }
 }
 

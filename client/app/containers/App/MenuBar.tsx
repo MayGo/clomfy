@@ -1,27 +1,34 @@
+import { logout } from '../Login/actions';
 import * as React from 'react';
 import MuiAppBar from 'material-ui/AppBar';
 import MuiDrawer from 'material-ui/Drawer';
 import MuiMenuItem from 'material-ui/MenuItem';
 
 import { connect, Dispatch } from 'react-redux';
+import { Link } from 'react-router';
 import { push, RouterAction } from 'react-router-redux';
 import { LocationDescriptor, LocationState } from 'history';
 import { IAppState } from './IAppState';
-import { AppsRoute, BuildpacksRoute, HomeRoute, LoginRoute } from '../../RoutePaths';
+import { AppsRoute, BuildpacksRoute, HomeRoute, LoginRoute, EventsRoute } from '../../RoutePaths';
 import { selectLocationState } from 'app/containers/App/selectors';
+import { selectIsAuthenticated } from 'app/containers/Login/selectors';
+
 
 import { createStructuredSelector } from 'reselect';
 
 import { translate } from 'react-i18next';
+import { FlatButton } from "material-ui";
 
 interface IMenuBarOwnProps {
   t?: any
 }
 interface IMenuBarStateProps {
   location: Location | null;
+  isAuthenticated: boolean;
 }
 interface IMenuBarDispatchProps {
   changeRoute?: (route: string) => void;
+  onLogout?: () => React.EventHandler<React.FormEvent<any>>;
 }
 type IMenuBarProps = IMenuBarOwnProps & IMenuBarStateProps & IMenuBarDispatchProps;
 
@@ -58,7 +65,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
 
   public render(): JSX.Element {
 
-    let { t } = this.props;
+    let { t, isAuthenticated, onLogout } = this.props;
     const MenuItem = (props: { name: string, path: string }): React.ReactElement<MuiMenuItem> => (
       <MuiMenuItem disabled={this.props.location!.pathname === props.path}
         onTouchTap={this.handleNavigate(props.path)}>{props.name}</MuiMenuItem>
@@ -68,12 +75,14 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
       <div>
         <MuiAppBar onLeftIconButtonTouchTap={this.handleToggle}
           titleStyle={styles.logo}
+          iconElementRight={isAuthenticated ? <FlatButton label={t('routes.logout')} onClick={onLogout} /> : <FlatButton label={t('routes.login')} containerElement={<Link to="/login" />} />}
           title="Clomfy" />
         <MuiDrawer docked={false} width={250} open={this.state.open}
           onRequestChange={(open) => this.setState({ open })}>
           <MenuItem name={t('routes.home')} path={HomeRoute} />
           <MenuItem name={t('routes.buildpacks')} path={BuildpacksRoute} />
           <MenuItem name={t('routes.apps')} path={AppsRoute} />
+          <MenuItem name={t('routes.events')} path={EventsRoute} />
           <MenuItem name={t('routes.login')} path={LoginRoute} />
         </MuiDrawer>
       </div>
@@ -84,12 +93,16 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
 }
 
 const mapStateToProps = createStructuredSelector({
-  location: selectLocationState()
+  location: selectLocationState(),
+  isAuthenticated: selectIsAuthenticated()
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
     changeRoute: (url) => dispatch(push(url)),
+    onLogout: () => {
+      dispatch(logout());
+    },
     dispatch,
   };
 }

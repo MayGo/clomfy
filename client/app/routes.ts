@@ -1,4 +1,4 @@
-import EnsureLoggedInContainer from './containers/App/EnsureLoggedInContainer';
+import auth from './auth';
 import { AppsRoute, BuildpacksRoute, HomeRoute, LoginRoute, EventsRoute } from './RoutePaths';
 // These are the pages you can go to.
 // They are all wrapped in the App component, which should contain the navbar etc
@@ -21,7 +21,19 @@ export interface IExtendedRouteProps extends RouteProps {
   getComponent?: any;
 }
 
-export default function createRoutes(store): any {
+function requireAuth(nextState, replace, callback) {
+
+  if (!auth.isAuthenticated()) {
+    console.log("ON_ENTER: redirecting to login");
+    replace('/login')
+  }
+  return callback()
+}
+
+export default function createRoutes(store): IExtendedRouteProps[] {
+  // create reusable async injectors using getAsyncInjectors factory
+  const { injectReducer, injectSagas } = getAsyncInjectors(store);
+
   return [
     {
       path: LoginRoute,
@@ -29,30 +41,15 @@ export default function createRoutes(store): any {
       component: Login
     },
     {
-      path: HomeRoute,
-      name: 'home',
-      component: EnsureLoggedInContainer,
-      childRoutes: createPrivateRoutes(store)
+      path: '*index.html',
+      name: 'login',
+      component: Login
     },
-    {
-      path: '*',
-      name: 'notfound',
-      getComponent(nextState, cb) {
-        System.import('app/containers/NotFoundPage')
-          .then(loadModule(cb))
-          .catch(errorLoading);
-      },
-    },
-  ];
-}
-export function createPrivateRoutes(store): IExtendedRouteProps[] {
-  // create reusable async injectors using getAsyncInjectors factory
-  const { injectReducer, injectSagas } = getAsyncInjectors(store);
 
-  return [
     {
       path: HomeRoute,
       name: 'home',
+      onEnter: requireAuth,
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           System.import('app/containers/HomePage/reducer'),
@@ -75,6 +72,7 @@ export function createPrivateRoutes(store): IExtendedRouteProps[] {
     {
       path: BuildpacksRoute,
       name: 'buildpacks',
+      onEnter: requireAuth,
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           System.import('app/containers/BuildpacksPage/reducer'),
@@ -97,6 +95,7 @@ export function createPrivateRoutes(store): IExtendedRouteProps[] {
     {
       path: AppsRoute,
       name: 'apps',
+      onEnter: requireAuth,
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           System.import('app/containers/AppsPage/reducer'),
@@ -116,9 +115,10 @@ export function createPrivateRoutes(store): IExtendedRouteProps[] {
         importModules.catch(errorLoading);
       }
     },
-     {
+    {
       path: EventsRoute,
       name: 'events',
+      onEnter: requireAuth,
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           System.import('app/containers/EventsPage/reducer'),
@@ -137,6 +137,15 @@ export function createPrivateRoutes(store): IExtendedRouteProps[] {
 
         importModules.catch(errorLoading);
       }
+    },
+    {
+      path: '*',
+      name: 'notfound',
+      getComponent(nextState, cb) {
+        System.import('app/containers/NotFoundPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
     },
   ];
 }

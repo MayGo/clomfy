@@ -8,7 +8,6 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOAD_BUILDPACKS } from './constants';
 import { buildpacksLoaded, buildpacksLoadingError } from './actions';
 
-import { requestCf } from '../../utils/request';
 import { makeQueryBuildpacks } from './selectors';
 
 /**

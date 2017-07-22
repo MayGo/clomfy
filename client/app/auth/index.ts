@@ -27,12 +27,14 @@ let auth = {
   * Logs the current user out
   */
   logout() {
+    console.log("Logging out");
+    delete localStorage.token
     /*return request.post('/logout')*/
   },
   /**
   * Checks if a user is logged in
   */
-  loggedIn() {
+  isAuthenticated() {
     return !!localStorage.token
   },
   /**

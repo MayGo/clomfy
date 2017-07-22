@@ -8,7 +8,6 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOAD_EVENTS } from './constants';
 import { eventsLoaded, eventsLoadingError } from './actions';
 
-import { requestCf } from '../../utils/request';
 import { makeQueryEvents } from './selectors';
 
 /**

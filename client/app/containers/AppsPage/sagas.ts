@@ -8,7 +8,6 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOAD_APPS } from './constants';
 import { appsLoaded, appsLoadingError } from './actions';
 
-import { requestCf } from '../../utils/request';
 import { makeQueryApps } from './selectors';
 
 /**
