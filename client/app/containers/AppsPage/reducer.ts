@@ -6,7 +6,7 @@ import {
 
 // The initial state of the App
 const initialState = fromJS({
-  buildpacks: false,
+  apps: false,
 });
 
 function buildpacksReducer(state = initialState, action) {

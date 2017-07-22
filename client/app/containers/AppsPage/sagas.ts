@@ -14,7 +14,7 @@ import { makeQueryApps } from './selectors';
 /**
  * CF apps request/response handler
  */
-export function* getBuildpacks(): IterableIterator<any> {
+export function* getApps(): IterableIterator<any> {
   // Select username from store
   const username = yield select(makeQueryApps());
   try {
@@ -35,7 +35,7 @@ export function* appsData(): IterableIterator<any> {
   // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
-  const watcher = yield takeLatest(LOAD_APPS, getBuildpacks);
+  const watcher = yield takeLatest(LOAD_APPS, getApps);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
