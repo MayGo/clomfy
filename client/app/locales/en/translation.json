@@ -9,6 +9,8 @@
     "home": "Home",
     "buildpacks": "Buildpacks",
     "apps": "Apps",
-    "login": "Login"
+    "events": "Events",
+    "login": "Login",
+    "logout": "Logout"
   }
 }

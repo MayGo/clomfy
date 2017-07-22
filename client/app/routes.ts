@@ -1,4 +1,5 @@
-import { AppsRoute, BuildpacksRoute, HomeRoute, LoginRoute } from './RoutePaths';
+import EnsureLoggedInContainer from './containers/App/EnsureLoggedInContainer';
+import { AppsRoute, BuildpacksRoute, HomeRoute, LoginRoute, EventsRoute } from './RoutePaths';
 // These are the pages you can go to.
 // They are all wrapped in the App component, which should contain the navbar etc
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
@@ -20,7 +21,31 @@ export interface IExtendedRouteProps extends RouteProps {
   getComponent?: any;
 }
 
-export default function createRoutes(store): IExtendedRouteProps[] {
+export default function createRoutes(store): any {
+  return [
+    {
+      path: LoginRoute,
+      name: 'login',
+      component: Login
+    },
+    {
+      path: HomeRoute,
+      name: 'home',
+      component: EnsureLoggedInContainer,
+      childRoutes: createPrivateRoutes(store)
+    },
+    {
+      path: '*',
+      name: 'notfound',
+      getComponent(nextState, cb) {
+        System.import('app/containers/NotFoundPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    },
+  ];
+}
+export function createPrivateRoutes(store): IExtendedRouteProps[] {
   // create reusable async injectors using getAsyncInjectors factory
   const { injectReducer, injectSagas } = getAsyncInjectors(store);
 
@@ -91,19 +116,27 @@ export default function createRoutes(store): IExtendedRouteProps[] {
         importModules.catch(errorLoading);
       }
     },
-    {
-      path: LoginRoute,
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '*',
-      name: 'notfound',
+     {
+      path: EventsRoute,
+      name: 'events',
       getComponent(nextState, cb) {
-        System.import('app/containers/NotFoundPage')
-          .then(loadModule(cb))
-          .catch(errorLoading);
-      },
+        const importModules = Promise.all([
+          System.import('app/containers/EventsPage/reducer'),
+          System.import('app/containers/EventsPage/sagas'),
+          System.import('app/containers/EventsPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('events', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      }
     },
   ];
 }
