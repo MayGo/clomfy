@@ -14,7 +14,7 @@ const loginState = fromJS({
     username: '',
     password: ''
   },
-  loggedIn: auth.loggedIn()
+  isAuthenticated: auth.isAuthenticated()
 });
 
 function loginReducer(state = loginState, action) {
@@ -27,7 +27,7 @@ function loginReducer(state = loginState, action) {
       return state
         .set('loading', true)
         .set('error', false)
-        .set('loggedIn', action.newAuthState);
+        .set('isAuthenticated', action.newAuthState);
     case SENDING_REQUEST:
       return state
         .set('loading', true)

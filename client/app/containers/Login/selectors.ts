@@ -16,8 +16,14 @@ const makeQueryCurrentlySending = () => createSelector(
   (loginState) => loginState.get('currentlySending')
 );
 
+const selectIsAuthenticated = () => createSelector(
+  selectLoginState(),
+  (loginState) => loginState.get('isAuthenticated')
+);
+
 export {
   selectLoginState,
+  selectIsAuthenticated,
   makeQueryFormState,
   makeQueryCurrentlySending
 };

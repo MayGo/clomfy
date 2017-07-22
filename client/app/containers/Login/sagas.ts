@@ -5,7 +5,7 @@
 // Sagas help us gather all our side effects (network requests in this case) in one place
 
 import { browserHistory } from 'react-router'
-import { take, call, put, fork, race } from 'redux-saga/effects'
+import { take, call, put, fork, race, select } from 'redux-saga/effects'
 import auth from '../../auth'
 
 import {
@@ -17,6 +17,7 @@ import {
   CHANGE_FORM,
   REQUEST_ERROR
 } from './constants'
+import { selectRedirectUrl } from "app/containers/App/selectors";
 
 /**
  * Effect to handle authorization
@@ -92,7 +93,8 @@ export function* loginFlow() {
       // ...we send Redux appropiate actions
       yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized)
       yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
-      forwardTo('/') // Go to dashboard page
+      const redirectUrl = yield select(selectRedirectUrl());
+      forwardTo((redirectUrl) ? redirectUrl : '/')
     }
   }
 }
@@ -108,7 +110,7 @@ export function* logoutFlow() {
     yield put({ type: SET_AUTH, newAuthState: false })
 
     yield call(logout)
-    forwardTo('/')
+    forwardTo('/logout')
   }
 }
 
@@ -126,6 +128,6 @@ export default root;
 
 // Little helper function to abstract going to different pages
 function forwardTo(location) {
-  console.log("forwasdTo:", location)
+  console.log("forwardTo:", location)
   browserHistory.push(location)
 }
