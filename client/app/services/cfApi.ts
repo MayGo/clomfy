@@ -9,6 +9,16 @@ export class ResponseError extends Error {
     this.response = response;
   }
 }
+export class AuthError extends Error {
+  public response: Response;
+
+  constructor(response: Response) {
+    super(response.statusText);
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, AuthError.prototype);
+    this.response = response;
+  }
+}
 
 export default class CfApi {
   static apiUrl = 'https://api.run.pivotal.io/v2/';
@@ -16,11 +26,11 @@ export default class CfApi {
 
   constructor() {
 
-   /* Cf.api = restful('https://api.run.pivotal.io/v2', fetchBackend(fetch));
-    if (window.localStorage.token) {
-      console.log("Token found in local storage");
-      CfApi.setToken(window.localStorage.token);
-    }*/
+    /* Cf.api = restful('https://api.run.pivotal.io/v2', fetchBackend(fetch));
+     if (window.localStorage.token) {
+       console.log("Token found in local storage");
+       CfApi.setToken(window.localStorage.token);
+     }*/
   }
 
   static request(url: string) {
@@ -72,7 +82,8 @@ export default class CfApi {
     console.log("Response json:", jsonData);
 
     let token = jsonData.access_token;
-    if (token !== null) {
+    if (token) {
+   
       // save access token and username in session storage
       /* localStorage.setItem('accessToken', response.access_token);
        localStorage.setItem('refreshToken', response.refresh_token);
@@ -84,7 +95,8 @@ export default class CfApi {
       return token;
     } else {
       // log in failed
-      new ResponseError(response);
+      console.error("Token not found");
+      throw new ResponseError(response);
     }
 
   }
@@ -102,14 +114,14 @@ export default class CfApi {
 
 
   static checkStatus(response): Response {
+
     if (response.status >= 200 && response.status < 300) {
       return response;
     }
-    
-    if(response.status == 401){
 
+    if (response.status == 401) {
+      throw new AuthError(response);
     }
-
     throw new ResponseError(response);
   }
   static parseJSON(response) {

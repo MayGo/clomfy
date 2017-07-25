@@ -7,12 +7,12 @@ import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
-import loginSaga from './containers/Login/sagas'
 import Middleware = Redux.Middleware;
 
 const sagaMiddleware = createSagaMiddleware();
 
-import {Task, SagaIterator} from 'redux-saga';
+import { Task, SagaIterator } from 'redux-saga';
+import Sagas from './sagas';
 
 export interface IStore<T> extends Redux.Store<T> {
   runSaga?: (saga: (...args: any[]) => SagaIterator, ...args: any[]) => Task; // TODO: cleanup
@@ -42,7 +42,7 @@ export default function configureStore<T>(initialState: object = {}, history): I
     ),
   );
 
-sagaMiddleware.run(loginSaga);
+  sagaMiddleware.run(Sagas);
   // Extensions
   store.runSaga = sagaMiddleware.run;
   store.asyncReducers = {}; // Async reducer registry

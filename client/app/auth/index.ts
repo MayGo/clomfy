@@ -1,6 +1,6 @@
-import  CfApi  from '../services/cfApi';
+import CfApi from '../services/cfApi';
 
-let localStorage = window.localStorage
+let localStorage = window.localStorage;
 
 
 let auth = {
@@ -9,19 +9,21 @@ let auth = {
   * @param  {string} username The username of the user
   * @param  {string} password The password of the user
   */
-  login(username, password) {
+  async login(username, password) {
 
-   /* if (auth.loggedIn()) {
-      console.log("loggedIn?")
-      return Promise.resolve(true)
-    }*/
+    /* if (auth.loggedIn()) {
+       console.log("loggedIn?")
+       return Promise.resolve(true)
+     }*/
 
-    return CfApi.login(username, password)
-      .then(token => {
-        // Save token to local storage
-        localStorage.token = token;
-        return Promise.resolve(true)
-      })
+    let token = await CfApi.login(username, password)
+    
+    // Save token to local storage
+    localStorage.token = token;
+    localStorage.username = username;
+    localStorage.password = password;
+
+    return true;
   },
   /**
   * Logs the current user out
@@ -36,6 +38,13 @@ let auth = {
   */
   isAuthenticated() {
     return !!localStorage.token
+  },
+
+   getSavedUsername() {
+    return localStorage.username || ''
+  },
+  getSavedPassword() {
+    return localStorage.password || ''
   },
   /**
   * Registers a user and then logs them in

@@ -31,7 +31,7 @@ const cssRules = [
 
 const hotDeps = (process.env.server) ? [
   'react-hot-loader/patch',
-  `webpack-dev-server/client?index.html`, 'webpack/hot/only-dev-server'] : [];
+  `webpack-dev-server/client?index.html`, 'webpack-hot-middleware/client'] : [];
 
 
 module.exports = ({ production = false, server = false, extractCss = false, coverage = false } = {}) => ({
@@ -114,6 +114,7 @@ module.exports = ({ production = false, server = false, extractCss = false, cove
     new webpack.NamedModulesPlugin(),
     // prints more readable module names in the browser console on HMR updates
     new FriendlyErrorsWebpackPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
 
     new TsConfigPathsPlugin(),
     new CheckerPlugin(),

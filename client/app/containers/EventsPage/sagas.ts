@@ -1,14 +1,16 @@
-import CfApi from '../../services/cfApi';
+import { LoginRoute } from '../../RoutePaths';
+import { AuthError, default as CfApi } from '../../services/cfApi';
 /**
  * Gets the repositories of the user from Github
  */
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { LOCATION_CHANGE, push } from 'react-router-redux';
 import { LOAD_EVENTS } from './constants';
 import { eventsLoaded, eventsLoadingError } from './actions';
 
 import { makeQueryEvents } from './selectors';
+import { logout } from "app/containers/Login/actions";
 
 /**
  * CF events request/response handler
@@ -22,8 +24,13 @@ export function* getEvents(): IterableIterator<any> {
     console.log(repos)
     yield put(eventsLoaded(repos.resources));
   } catch (err) {
-    console.error(err)
-    yield put(eventsLoadingError(err));
+    if (err instanceof AuthError) {
+      console.error("Auth error, logging out and redirecting to login")
+      yield put(logout())
+    } else {
+      console.error("Error loading events:", err);
+      yield put(eventsLoadingError(err));
+    }
   }
 }
 

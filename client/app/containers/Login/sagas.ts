@@ -40,14 +40,11 @@ export function* authorize({ username, password, isRegistering }) {
 
     return true;
   } catch (error) {
-    console.log('authorize error', error)
+    console.error('authorize error', error.message)
     // If we get an error we send Redux the appropiate action and return
     yield put({ type: REQUEST_ERROR, error: error.message })
 
     return false
-  } finally {
-    // When done, we tell Redux we're not in the middle of a request any more
-    yield put({ type: SENDING_REQUEST, sending: false })
   }
 }
 
@@ -91,10 +88,16 @@ export function* loginFlow() {
     })
 
     // If `authorize` was the winner...
+    console.log(winner.auth)
     if (winner.auth) {
-      // ...we send Redux appropiate actions
       yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized)
-      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
+      let url: Path = "/";
+
+      yield put(push(url));
+      console.log("Redirecting to:", url);
+      // ...we send Redux appropiate actions
+
+      // yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
     }
   }
 }

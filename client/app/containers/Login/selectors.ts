@@ -21,9 +21,21 @@ const selectIsAuthenticated = () => createSelector(
   (loginState) => loginState.get('isAuthenticated')
 );
 
+const selectError = () => createSelector(
+  selectLoginState(),
+  (loginState) => loginState.get('error')
+);
+
+const selectLoading = () => createSelector(
+  selectLoginState(),
+  (loginState) => loginState.get('loading')
+);
+
 export {
   selectLoginState,
   selectIsAuthenticated,
+  selectError,
+  selectLoading,
   makeQueryFormState,
   makeQueryCurrentlySending
 };

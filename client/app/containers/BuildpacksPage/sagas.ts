@@ -1,4 +1,4 @@
-import CfApi from '../../services/cfApi';
+import { AuthError, default as CfApi } from '../../services/cfApi';
 /**
  * Gets the repositories of the user from Github
  */
@@ -9,6 +9,7 @@ import { LOAD_BUILDPACKS } from './constants';
 import { buildpacksLoaded, buildpacksLoadingError } from './actions';
 
 import { makeQueryBuildpacks } from './selectors';
+import { logout } from "app/containers/Login/actions";
 
 /**
  * CF buildpacks request/response handler
@@ -22,8 +23,13 @@ export function* getBuildpacks(): IterableIterator<any> {
     console.log(repos)
     yield put(buildpacksLoaded(repos.resources));
   } catch (err) {
-    console.error(err)
-    yield put(buildpacksLoadingError(err));
+    if (err instanceof AuthError) {
+      console.error("Auth error, logging out and redirecting to login")
+      yield put(logout())
+    } else {
+      console.error("Error loading buildpacks:", err);
+      yield put(buildpacksLoadingError(err));
+    }
   }
 }
 

@@ -10,9 +10,11 @@ import { fromJS } from 'immutable';
 
 // The initial state of the App
 const loginState = fromJS({
+  loading: false,
+  error: false,
   formState: {
-    username: '',
-    password: ''
+    username: auth.getSavedUsername(),
+    password: auth.getSavedPassword()
   },
   isAuthenticated: auth.isAuthenticated()
 });
@@ -25,7 +27,7 @@ function loginReducer(state = loginState, action) {
         .set('formState', state.get('formState').merge(action.newFormState));
     case SET_AUTH:
       return state
-        .set('loading', true)
+        .set('loading', false)
         .set('error', false)
         .set('isAuthenticated', action.newAuthState);
     case SENDING_REQUEST:

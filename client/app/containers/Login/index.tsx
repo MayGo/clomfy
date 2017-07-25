@@ -15,14 +15,14 @@ import LockIcon from 'material-ui/svg-icons/action/lock-outline';
 import { loginRequest, changeForm } from './actions';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import { cyan500, pinkA200 } from 'material-ui/styles/colors';
+import { cyan500, pinkA200, red900 } from 'material-ui/styles/colors';
 
 import { translate } from 'react-i18next';
 
 import { propTypes, reduxForm, Field } from 'redux-form';
 
-import { makeQueryFormState, makeQueryCurrentlySending } from "app/containers/Login/selectors";
-import { selectError } from "app/containers/App/selectors";
+import { selectError, makeQueryFormState, makeQueryCurrentlySending, selectLoading } from "./selectors";
+import { LinearProgress } from "material-ui";
 
 interface ILoginPageProps {
   dispatch?: (route: string) => void;
@@ -30,6 +30,7 @@ interface ILoginPageProps {
   formState?: any,
   submitting?: any,
   error?: any,
+  loading?: boolean,
   history?: any;
   t?: any;
 
@@ -68,6 +69,10 @@ const styles: any = {
   input: {
     display: 'flex',
   },
+  error: {
+    color: red900,
+    paddingTop: 5
+  }
 };
 
 class LoginPage extends React.Component<ILoginPageProps, {}>  {
@@ -77,13 +82,17 @@ class LoginPage extends React.Component<ILoginPageProps, {}>  {
     this.login = this.login.bind(this);
   }
   render() {
-    const { submitting, formState, t } = this.props;
+    const { submitting, formState, t, error, loading } = this.props;
+
     return (
       <div>
         <div style={styles.main}>
           <Card style={styles.card}>
+            {loading && <LinearProgress mode="indeterminate" />}
+
             <div style={styles.avatar}>
               <Avatar backgroundColor={muiTheme.palette.accent1Color} icon={<LockIcon />} size={60} />
+              <div style={styles.error}>{error}</div>
             </div>
             <form onSubmit={this.login}>
               <div style={styles.form}>
@@ -143,7 +152,8 @@ export function mapDispatchToProps(dispatch, ownProps) {
 const mapStateToProps = createStructuredSelector({
   formState: makeQueryFormState(),
   submitting: makeQueryCurrentlySending(),
-  error: selectError()
+  error: selectError(),
+  loading: selectLoading()
 });
 
 export default connect<{}, {}, ILoginPageProps>(mapStateToProps, mapDispatchToProps)(translate()(LoginPage));
