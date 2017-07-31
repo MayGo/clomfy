@@ -6,18 +6,9 @@
 
 import { browserHistory } from 'react-router'
 import { take, call, put, fork, race, select } from 'redux-saga/effects'
-import auth from '../../auth'
+import auth from '../../auth';
+import { fetchLogin, fetchLogout } from './routines';
 
-import {
-  SENDING_REQUEST,
-  LOGIN_REQUEST,
-  REGISTER_REQUEST,
-  SET_AUTH,
-  LOGOUT,
-  CHANGE_FORM,
-  REQUEST_ERROR
-} from './constants'
-import { selectRedirectUrl } from "app/containers/App/selectors";
 import { Path } from "history";
 import { push } from "react-router-redux";
 
@@ -25,26 +16,27 @@ import { push } from "react-router-redux";
  * Effect to handle authorization
  * @param  {string} username               The username of the user
  * @param  {string} password               The password of the user
- * @param  {object} options                Options
- * @param  {boolean} options.isRegistering Is this a register request?
  */
-export function* authorize({ username, password, isRegistering }) {
-  // We send an action that tells Redux we're sending a request
-  yield put({ type: SENDING_REQUEST, sending: true })
+export function* authorize({ username, password }) {
+  yield put(fetchLogin.request());
 
-  // We then try to register or log in the user, depending on the request
   try {
 
-    console.log('authorize', username)
-    let response = yield call(auth.login, username, password);
+    console.log('Authorizing user:', username)
+    if (username && password) {
+      let data = yield call(auth.login, username, password);
+      yield put(fetchLogin.success(data));
+    } else {
+      console.error("No username and password");
+    }
 
-    return true;
+
   } catch (error) {
-    console.error('authorize error', error.message)
-    // If we get an error we send Redux the appropiate action and return
-    yield put({ type: REQUEST_ERROR, error: error.message })
-
-    return false
+    console.error('Authorizing error:', error.message);
+    yield put(fetchLogin.failure(error.error));
+  } finally {
+    yield put(fetchLogin.fulfill());
+    return true;
   }
 }
 
@@ -52,19 +44,21 @@ export function* authorize({ username, password, isRegistering }) {
  * Effect to handle logging out
  */
 export function* logout() {
-  // We tell Redux we're in the middle of a request
-  yield put({ type: SENDING_REQUEST, sending: true })
+  yield put(fetchLogout.request());
 
-  // Similar to above, we try to log out by calling the `logout` function in the
-  // `auth` module. If we get an error, we send an appropiate action. If we don't,
-  // we return the response.
   try {
-    let response = yield call(auth.logout)
-    yield put({ type: SENDING_REQUEST, sending: false })
+    console.info('Logging out.');
+    yield call(auth.logout)
+    yield put(fetchLogout.success());
 
-    return response
   } catch (error) {
-    yield put({ type: REQUEST_ERROR, error: error.message })
+
+    console.error('Logout error:', error.message);
+    yield put(fetchLogout.error(error.message));
+  } finally {
+    yield put(fetchLogout.fulfill());
+    console.log("Fulfill");
+    return true;
   }
 }
 
@@ -72,32 +66,31 @@ export function* logout() {
  * Log in saga
  */
 export function* loginFlow() {
-  // Because sagas are generators, doing `while (true)` doesn't block our program
-  // Basically here we say "this saga is always listening for actions"
+
   while (true) {
-    // And we're listening for `LOGIN_REQUEST` actions and destructuring its payload
-    let request = yield take(LOGIN_REQUEST)
-    let { username, password } = request.data
+
+    let { payload } = yield take(fetchLogin.TRIGGER);
+    let { username, password } = payload;
 
     // A `LOGOUT` action may happen while the `authorize` effect is going on, which may
     // lead to a race condition. This is unlikely, but just in case, we call `race` which
     // returns the "winner", i.e. the one that finished first
     let winner = yield race({
-      auth: call(authorize, { username, password, isRegistering: false }),
-      logout: take(LOGOUT)
+      auth: call(authorize, { username, password }),
+      logout: take(fetchLogout.SUCCESS)
     })
 
     // If `authorize` was the winner...
-    console.log(winner.auth)
     if (winner.auth) {
-      yield put({ type: SET_AUTH, newAuthState: true }) // User is logged in (authorized)
       let url: Path = "/";
 
-      yield put(push(url));
       console.log("Redirecting to:", url);
-      // ...we send Redux appropiate actions
+      yield put(push(url));
 
+      // ...we send Redux appropiate actions
       // yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
+    } else {
+      console.log("Logout was before Auth");
     }
   }
 }
@@ -109,11 +102,12 @@ export function* loginFlow() {
  */
 export function* logoutFlow() {
   while (true) {
-    yield take(LOGOUT)
-    yield put({ type: SET_AUTH, newAuthState: false })
+    yield take(fetchLogout.TRIGGER);
 
-    yield call(logout)
+    yield call(logout);
     let url: Path = "/login";
+
+    console.log("Redirecting to:", url);
     yield put(push(url))
   }
 }

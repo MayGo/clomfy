@@ -12,7 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import LockIcon from 'material-ui/svg-icons/action/lock-outline';
 
-import { loginRequest, changeForm } from './actions';
+import { changeForm } from './actions';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import { cyan500, pinkA200, red900 } from 'material-ui/styles/colors';
@@ -21,13 +21,18 @@ import { translate } from 'react-i18next';
 
 import { propTypes, reduxForm, Field } from 'redux-form';
 
-import { selectError, makeQueryFormState, makeQueryCurrentlySending, selectLoading } from "./selectors";
+import {  makeQueryFormState } from "./selectors";
 import { LinearProgress } from "material-ui";
+
+
+import { bindRoutineCreators } from 'redux-saga-routines';
+import { fetchLogin } from './routines'; 
+import { selectLoading } from './selectors';
 
 interface ILoginPageProps {
   dispatch?: (route: string) => void;
-  onLogin?: (username: string, password: string) => React.EventHandler<React.FormEvent<any>>;
   formState?: any,
+  fetchLogin: any;
   submitting?: any,
   error?: any,
   loading?: boolean,
@@ -81,6 +86,14 @@ class LoginPage extends React.Component<ILoginPageProps, {}>  {
 
     this.login = this.login.bind(this);
   }
+
+  login(e) {
+    console.log("Login submitted:", this.props.formState);
+
+    this.props.fetchLogin.trigger(this.props.formState);
+    e.preventDefault();
+  }
+
   render() {
     const { submitting, formState, t, error, loading } = this.props;
 
@@ -129,19 +142,11 @@ class LoginPage extends React.Component<ILoginPageProps, {}>  {
       </div>
     )
   }
-
-  login(e) {
-    console.log("Login submitted");
-    this.props.onLogin(this.props.formState.username, this.props.formState.password);
-    e.preventDefault();
-  }
 }
 
 export function mapDispatchToProps(dispatch, ownProps) {
   return {
-    onLogin: (username: string, password: string) => {
-      dispatch(loginRequest({ username, password }));
-    },
+    ...bindRoutineCreators({ fetchLogin }, dispatch),
     onChangeUsername: (evt) => dispatch(changeForm({ username: evt.target.value })),
     onChangePassword: (evt) => dispatch(changeForm({ password: evt.target.value })),
 
@@ -151,8 +156,6 @@ export function mapDispatchToProps(dispatch, ownProps) {
 
 const mapStateToProps = createStructuredSelector({
   formState: makeQueryFormState(),
-  submitting: makeQueryCurrentlySending(),
-  error: selectError(),
   loading: selectLoading()
 });
 

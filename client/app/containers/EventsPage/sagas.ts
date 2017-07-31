@@ -1,3 +1,4 @@
+import { fetchLogout } from '../Login/routines';
 import { LoginRoute } from '../../RoutePaths';
 import { AuthError, default as CfApi } from '../../services/cfApi';
 /**
@@ -6,31 +7,33 @@ import { AuthError, default as CfApi } from '../../services/cfApi';
 
 import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
 import { LOCATION_CHANGE, push } from 'react-router-redux';
-import { LOAD_EVENTS } from './constants';
-import { eventsLoaded, eventsLoadingError } from './actions';
 
-import { makeQueryEvents } from './selectors';
-import { logout } from "app/containers/Login/actions";
+import {  selectPage } from './selectors';
+import { fetchEvents } from "app/containers/EventsPage/routines";
 
 /**
  * CF events request/response handler
  */
 export function* getEvents(): IterableIterator<any> {
-  // Select username from store
-  const username = yield select(makeQueryEvents());
+  yield put(fetchEvents.request());
+
+  const page = yield select(selectPage());
+
   try {
-    // Call our request helper (see 'utils/request')
-    const repos = yield call(CfApi.request, 'events');
-    console.log(repos)
-    yield put(eventsLoaded(repos.resources));
-  } catch (err) {
-    if (err instanceof AuthError) {
+    const events = yield call(CfApi.request, 'events', { page });
+    console.log("Events requested:", events)
+    yield put(fetchEvents.success(events));
+  } catch (error) {
+    if (error instanceof AuthError) {
       console.error("Auth error, logging out and redirecting to login")
-      yield put(logout())
+      yield put(fetchLogout.trigger())
     } else {
-      console.error("Error loading events:", err);
-      yield put(eventsLoadingError(err));
+      console.error("Error loading events:", error);
+      yield put(fetchEvents.failure(error.error));
     }
+  } finally {
+    yield put(fetchEvents.fulfill());
+    return true;
   }
 }
 
@@ -38,10 +41,8 @@ export function* getEvents(): IterableIterator<any> {
  * Root saga manages watcher lifecycle
  */
 export function* eventsData(): IterableIterator<any> {
-  // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
-  // By using `takeLatest` only the result of the latest API call is applied.
-  // It returns task descriptor (just like fork) so we can continue execution
-  const watcher = yield takeLatest(LOAD_EVENTS, getEvents);
+
+  const watcher = yield takeLatest(fetchEvents.TRIGGER, getEvents);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);

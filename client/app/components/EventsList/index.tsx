@@ -14,14 +14,29 @@ import CheckBoxIcon from 'material-ui/svg-icons/toggle/check-box';
 import CheckBoxIconOutline from 'material-ui/svg-icons/toggle/check-box-outline-blank';
 
 import TimeAgo from 'timeago-react';
+import Pagination from 'material-ui-pagination';
 
 interface IListProps {
   loading?: boolean;
   error?: Error | boolean;
   events?: any[];
+  page?:number;
+  total?:number;
+  changePage: any;
+}
+interface IListState {
+  display: number;
 }
 
-class EventsList extends React.Component<IListProps, {}> {
+class EventsList extends React.Component<IListProps, IListState> {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      display: 7,
+    };
+  }
+
   public render() {
     const { loading, error, events } = this.props;
     if (loading) {
@@ -55,18 +70,26 @@ class EventsList extends React.Component<IListProps, {}> {
     );
 
 
-    return <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHeaderColumn>Type</TableHeaderColumn>
-          <TableHeaderColumn>Actor type</TableHeaderColumn>
-          <TableHeaderColumn>Actor name</TableHeaderColumn>
-          <TableHeaderColumn>Actee type</TableHeaderColumn>
-          <TableHeaderColumn>Actee name</TableHeaderColumn>
-          <TableHeaderColumn>Last push</TableHeaderColumn>
-        </TableRow>
-      </TableHeader><TableBody>{listItems}</TableBody>
-    </Table>;
+    return <div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHeaderColumn>Type</TableHeaderColumn>
+            <TableHeaderColumn>Actor type</TableHeaderColumn>
+            <TableHeaderColumn>Actor name</TableHeaderColumn>
+            <TableHeaderColumn>Actee type</TableHeaderColumn>
+            <TableHeaderColumn>Actee name</TableHeaderColumn>
+            <TableHeaderColumn>Last push</TableHeaderColumn>
+          </TableRow>
+        </TableHeader><TableBody>{listItems}</TableBody>
+      </Table>
+      <Pagination
+        total={this.props.total}
+        current={this.props.page}
+        display={this.state.display}
+        onChange={page => this.props.changePage(page)}
+      />
+    </div>;
 
   }
 }

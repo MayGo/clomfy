@@ -9,7 +9,7 @@ import { LOAD_BUILDPACKS } from './constants';
 import { buildpacksLoaded, buildpacksLoadingError } from './actions';
 
 import { makeQueryBuildpacks } from './selectors';
-import { logout } from "app/containers/Login/actions";
+import { fetchLogout } from "app/containers/Login/routines";
 
 /**
  * CF buildpacks request/response handler
@@ -25,7 +25,7 @@ export function* getBuildpacks(): IterableIterator<any> {
   } catch (err) {
     if (err instanceof AuthError) {
       console.error("Auth error, logging out and redirecting to login")
-      yield put(logout())
+      yield put(fetchLogout.trigger());
     } else {
       console.error("Error loading buildpacks:", err);
       yield put(buildpacksLoadingError(err));

@@ -1,5 +1,5 @@
-import { getBuildpacks } from '../containers/BuildpacksPage/sagas';
 import 'whatwg-fetch';
+import * as queryString from 'query-string';
 
 export class ResponseError extends Error {
   public response: Response;
@@ -33,7 +33,12 @@ export default class CfApi {
      }*/
   }
 
-  static request(url: string) {
+  static request(url: string, query: any = {}) {
+
+    const stringified = queryString.stringify(query);
+
+    console.log("Requesting " + url + " with query " + stringified);
+
     const options = {
       method: 'GET',
       headers: {
@@ -41,10 +46,12 @@ export default class CfApi {
         Authorization: CfApi.getToken(),
       },
     };
-    return fetch(CfApi.apiUrl + url, options)
+
+    return fetch(CfApi.apiUrl + url + '?' + stringified, options)
       .then(CfApi.checkStatus)
       .then(CfApi.parseJSON)
   }
+
   static setToken(token: string) {
     //this.api.header('Authorization', 'Bearer ' + token);
   }
@@ -83,7 +90,7 @@ export default class CfApi {
 
     let token = jsonData.access_token;
     if (token) {
-   
+
       // save access token and username in session storage
       /* localStorage.setItem('accessToken', response.access_token);
        localStorage.setItem('refreshToken', response.refresh_token);

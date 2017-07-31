@@ -11,19 +11,14 @@ let auth = {
   */
   async login(username, password) {
 
-    /* if (auth.loggedIn()) {
-       console.log("loggedIn?")
-       return Promise.resolve(true)
-     }*/
-
     let token = await CfApi.login(username, password)
-    
+
     // Save token to local storage
     localStorage.token = token;
     localStorage.username = username;
     localStorage.password = password;
 
-    return true;
+    return { token };
   },
   /**
   * Logs the current user out
@@ -40,7 +35,7 @@ let auth = {
     return !!localStorage.token
   },
 
-   getSavedUsername() {
+  getSavedUsername() {
     return localStorage.username || ''
   },
   getSavedPassword() {

@@ -1,4 +1,3 @@
-import { logout } from '../Login/actions';
 import * as React from 'react';
 import MuiAppBar from 'material-ui/AppBar';
 import MuiDrawer from 'material-ui/Drawer';
@@ -14,6 +13,9 @@ import { selectLocationState } from 'app/containers/App/selectors';
 import { selectIsAuthenticated } from 'app/containers/Login/selectors';
 
 
+import { bindRoutineCreators } from 'redux-saga-routines';
+import { fetchLogout } from '../Login/routines';
+
 import { createStructuredSelector } from 'reselect';
 
 import { translate } from 'react-i18next';
@@ -28,7 +30,7 @@ interface IMenuBarStateProps {
 }
 interface IMenuBarDispatchProps {
   changeRoute?: (route: string) => void;
-  onLogout?: () => React.EventHandler<React.FormEvent<any>>;
+  fetchLogout?: any;
 }
 type IMenuBarProps = IMenuBarOwnProps & IMenuBarStateProps & IMenuBarDispatchProps;
 
@@ -65,7 +67,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
 
   public render(): JSX.Element {
 
-    let { t, isAuthenticated, onLogout } = this.props;
+    let { t, isAuthenticated, fetchLogout } = this.props;
     const MenuItem = (props: { name: string, path: string }): React.ReactElement<MuiMenuItem> => (
       <MuiMenuItem disabled={this.props.location!.pathname === props.path}
         onTouchTap={this.handleNavigate(props.path)}>{props.name}</MuiMenuItem>
@@ -75,7 +77,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
       <div>
         <MuiAppBar onLeftIconButtonTouchTap={this.handleToggle}
           titleStyle={styles.logo}
-          iconElementRight={isAuthenticated ? <FlatButton label={t('routes.logout')} onClick={onLogout} /> : <FlatButton label={t('routes.login')} containerElement={<Link to="/login" />} />}
+          iconElementRight={isAuthenticated ? <FlatButton label={t('routes.logout')} onClick={fetchLogout.trigger} /> : <FlatButton label={t('routes.login')} containerElement={<Link to="/login" />} />}
           title="Clomfy" />
         <MuiDrawer docked={false} width={250} open={this.state.open}
           onRequestChange={(open) => this.setState({ open })}>
@@ -99,11 +101,8 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    changeRoute: (url) => dispatch(push(url)),
-    onLogout: () => {
-      dispatch(logout());
-    },
-    dispatch,
+    ...bindRoutineCreators({ fetchLogout }, dispatch),
+    changeRoute: (url) => dispatch(push(url))
   };
 }
 

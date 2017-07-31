@@ -2,9 +2,10 @@
  * The reducer takes care of state changes in our app through actions
  */
 
-import { CHANGE_FORM, CHANGE_USERNAME, CLEAR_ERROR, REQUEST_ERROR, SENDING_REQUEST, SET_AUTH } from './constants';
+import { CHANGE_FORM } from './constants';
 
 import auth from '../../auth';
+import { fetchLogin, fetchLogout } from './routines';
 
 import { fromJS } from 'immutable';
 
@@ -12,6 +13,7 @@ import { fromJS } from 'immutable';
 const loginState = fromJS({
   loading: false,
   error: false,
+  data: null,
   formState: {
     username: auth.getSavedUsername(),
     password: auth.getSavedPassword()
@@ -21,29 +23,35 @@ const loginState = fromJS({
 
 function loginReducer(state = loginState, action) {
   switch (action.type) {
+    case CHANGE_FORM:
+      return state
+        .set('formState', state.get('formState').merge(action.newFormState));
+
+    case fetchLogin.TRIGGER:
+      return state
+        .set('loading', true)
+    case fetchLogin.SUCCESS:
+      return state
+        .set('data', action.payload)
+        .set('isAuthenticated', true)
+    case fetchLogin.FAILURE:
+      return state
+        .set('error', action.payload);
+    case fetchLogin.FULFILL:
+      return state
+        .set('loading', false)
 
     case CHANGE_FORM:
       return state
         .set('formState', state.get('formState').merge(action.newFormState));
-    case SET_AUTH:
+
+    case fetchLogout.SUCCESS:
       return state
-        .set('loading', false)
-        .set('error', false)
-        .set('isAuthenticated', action.newAuthState);
-    case SENDING_REQUEST:
-      return state
-        .set('loading', true)
-        .set('error', false);
-    case REQUEST_ERROR:
-      return state
-        .set('error', action.error)
-        .set('loading', false);
-    case CLEAR_ERROR:
-      return state
-        .set('error', '');
+        .set('isAuthenticated', false)
 
     default:
-      return state
+      return state;
+
   }
 }
 

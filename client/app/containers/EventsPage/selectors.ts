@@ -15,6 +15,15 @@ const selectError = () => createSelector(
   (eventsState) => eventsState.get('error'),
 );
 
+const selectPage = () => createSelector(
+  selectEvents,
+  (eventsState) => eventsState.get('page'),
+);
+
+const selectTotal = () => createSelector(
+  selectEvents,
+  (eventsState) => eventsState.get('total'),
+);
 
 const makeQueryEvents = () => createSelector(
   selectEvents,
@@ -25,5 +34,7 @@ export {
   selectEvents,
   makeQueryEvents,
   selectLoading,
-  selectError
+  selectError,
+  selectPage,
+  selectTotal
 };

@@ -1,29 +1,34 @@
-import {fromJS} from 'immutable';
-
-import {
-  LOAD_EVENTS, LOAD_EVENTS_ERROR, LOAD_EVENTS_SUCCESS,
-} from './constants';
+import { fetchEvents } from './routines';
+import { fromJS } from 'immutable';
+import { changePage } from "app/containers/EventsPage/actions";
 
 // The initial state of the App
 const initialState = fromJS({
-  events: false,
+  loading: false,
+  error: false,
+  total: 0, 
+  page: 1,
+  events: null
 });
 
 function eventsReducer(state = initialState, action) {
   switch (action.type) {
-    case LOAD_EVENTS:
+
+    case fetchEvents.TRIGGER:
       return state
         .set('loading', true)
-        .set('error', false)
-        .set('events', false);
-    case LOAD_EVENTS_SUCCESS:
+        .set('page', action.payload.page)
+    case fetchEvents.SUCCESS:
       return state
-        .set('events', action.events)
+        .set('events', action.payload.resources)
+        .set('total', action.payload.total_pages)
+    case fetchEvents.FAILURE:
+      return state
+        .set('error', action.payload);
+    case fetchEvents.FULFILL:
+      return state
         .set('loading', false)
-    case LOAD_EVENTS_ERROR:
-      return state
-        .set('error', action.error)
-        .set('loading', false);
+
     default:
       return state;
   }

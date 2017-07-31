@@ -11,10 +11,6 @@ const makeQueryFormState = () => createSelector(
   (loginState) => loginState.get('formState').toObject()
 );
 
-const makeQueryCurrentlySending = () => createSelector(
-  selectLoginState(),
-  (loginState) => loginState.get('currentlySending')
-);
 
 const selectIsAuthenticated = () => createSelector(
   selectLoginState(),
@@ -23,19 +19,19 @@ const selectIsAuthenticated = () => createSelector(
 
 const selectError = () => createSelector(
   selectLoginState(),
-  (loginState) => loginState.get('error')
+  (loginState) => loginState.get('error'),
 );
 
 const selectLoading = () => createSelector(
   selectLoginState(),
-  (loginState) => loginState.get('loading')
+  (loginState) => loginState.get('loading'),
 );
 
 export {
   selectLoginState,
   selectIsAuthenticated,
-  selectError,
-  selectLoading,
   makeQueryFormState,
-  makeQueryCurrentlySending
+
+  selectLoading,
+  selectError,
 };

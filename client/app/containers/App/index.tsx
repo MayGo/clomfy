@@ -20,8 +20,6 @@ import Notifications from '../Notifications';
 
 import { browserHistory } from 'react-router';
 
-import { selectRedirectUrl } from "app/containers/App/selectors";
-
 const styles = require('./styles.css');
 
 interface IAppProps {

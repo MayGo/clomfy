@@ -1,3 +1,4 @@
+import { fetchLogout } from '../Login/routines';
 import { AuthError, default as CfApi } from '../../services/cfApi';
 /**
  * Gets the repositories of the user from Github
@@ -9,7 +10,6 @@ import { LOAD_APPS } from './constants';
 import { appsLoaded, appsLoadingError } from './actions';
 
 import { makeQueryApps } from './selectors';
-import { logout } from "app/containers/Login/actions";
 
 /**
  * CF apps request/response handler
@@ -25,7 +25,7 @@ export function* getApps(): IterableIterator<any> {
   } catch (err) {
     if (err instanceof AuthError) {
       console.error("Auth error, logging out and redirecting to login")
-      yield put(logout())
+      yield put(fetchLogout.trigger())
     } else {
       console.error("Error loading apps:", err);
       yield put(appsLoadingError(err));
