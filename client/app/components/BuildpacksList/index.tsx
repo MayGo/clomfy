@@ -1,17 +1,15 @@
 import * as React from 'react';
 
-import {
-  Table,
+import Table, {
   TableBody,
-  TableHeader,
-  TableHeaderColumn,
+  TableCell,
+  TableHead,
   TableRow,
-  TableRowColumn,
 } from 'material-ui/Table';
 
-import LinearProgress from 'material-ui/LinearProgress';
-import CheckBoxIcon from 'material-ui/svg-icons/toggle/check-box';
-import CheckBoxIconOutline from 'material-ui/svg-icons/toggle/check-box-outline-blank';
+import { LinearProgress } from 'material-ui/Progress';
+import CheckBoxIcon from 'material-ui-icons/CheckBox';
+import CheckBoxIconOutline from 'material-ui-icons/CheckBoxOutlineBlank';
 
 interface IListProps {
   loading?: boolean;
@@ -27,40 +25,52 @@ class BuildpacksList extends React.Component<IListProps, {}> {
     }
 
     if (error !== false) {
-
       return <p>Something went wrong, please try again!</p>;
     }
     if (!buildpacks) {
       return <p>No buildpacks</p>;
     }
-    console.log(buildpacks)
-    const enabledIcon = (enabled) => (enabled) ? <CheckBoxIcon /> : <CheckBoxIconOutline />
+    console.log(buildpacks);
+    const enabledIcon = enabled =>
+      enabled ? <CheckBoxIcon /> : <CheckBoxIconOutline />;
 
-    const listItems = buildpacks.map((item) =>
+    const listItems = buildpacks.map(item =>
       <TableRow key={item.metadata.guid}>
-        <TableRowColumn>{item.entity.position}</TableRowColumn>
-        <TableRowColumn>{item.entity.name}</TableRowColumn>
-        <TableRowColumn>{item.entity.filename}</TableRowColumn>
-        <TableRowColumn>{enabledIcon(item.entity.enabled)}</TableRowColumn>
-        <TableRowColumn>{enabledIcon(item.entity.locked)}</TableRowColumn>
-      </TableRow>
+        <TableCell>
+          {item.entity.position}
+        </TableCell>
+        <TableCell>
+          {item.entity.name}
+        </TableCell>
+        <TableCell>
+          {item.entity.filename}
+        </TableCell>
+        <TableCell>
+          {enabledIcon(item.entity.enabled)}
+        </TableCell>
+        <TableCell>
+          {enabledIcon(item.entity.locked)}
+        </TableCell>
+      </TableRow>,
     );
 
-
-    return <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHeaderColumn>ID</TableHeaderColumn>
-          <TableHeaderColumn>Name</TableHeaderColumn>
-          <TableHeaderColumn>Filename</TableHeaderColumn>
-          <TableHeaderColumn>Enabled</TableHeaderColumn>
-          <TableHeaderColumn>Locked</TableHeaderColumn>
-        </TableRow>
-      </TableHeader><TableBody>{listItems}</TableBody>
-    </Table>;
-
+    return (
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Filename</TableCell>
+            <TableCell>Enabled</TableCell>
+            <TableCell>Locked</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {listItems}
+        </TableBody>
+      </Table>
+    );
   }
 }
-
 
 export default BuildpacksList;

@@ -4,38 +4,39 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import compose from 'recompose/compose';
 
+import { withStyles, createStyleSheet } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 
 import Avatar from 'material-ui/Avatar';
-import { Card, CardActions } from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
-import CircularProgress from 'material-ui/CircularProgress';
-import LockIcon from 'material-ui/svg-icons/action/lock-outline';
+
+import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import Button from 'material-ui/Button';
+import { CircularProgress } from 'material-ui/Progress';
+import LockIcon from 'material-ui-icons/LockOutline';
 
 import { changeForm } from './actions';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import { cyan500, pinkA200, red900 } from 'material-ui/styles/colors';
+import { red900 } from 'material-ui/colors';
 
 import { translate } from 'react-i18next';
 
 import { propTypes, reduxForm, Field } from 'redux-form';
 
-import {  makeQueryFormState } from "./selectors";
-import { LinearProgress } from "material-ui";
-
+import { makeQueryFormState } from './selectors';
+import { LinearProgress } from 'material-ui';
 
 import { bindRoutineCreators } from 'redux-saga-routines';
-import { fetchLogin } from './routines'; 
+import { fetchLogin } from './routines';
 import { selectLoading } from './selectors';
 
 interface ILoginPageProps {
+  classes: any;
   dispatch?: (route: string) => void;
-  formState?: any,
+  formState?: any;
   fetchLogin: any;
-  submitting?: any,
-  error?: any,
-  loading?: boolean,
+  submitting?: any;
+  error?: any;
+  loading?: boolean;
   history?: any;
   t?: any;
 
@@ -44,7 +45,11 @@ interface ILoginPageProps {
 }
 
 // see http://redux-form.com/6.4.3/examples/material-ui/
-const renderInput = ({ meta: { touched = false, error = '' } = {}, input: { ...inputProps }, ...props }) =>
+const renderInput = ({
+  meta: { touched = false, error = '' } = {},
+  input: { ...inputProps },
+  ...props,
+}) =>
   <TextField
     errorText={touched && error}
     {...inputProps}
@@ -52,103 +57,123 @@ const renderInput = ({ meta: { touched = false, error = '' } = {}, input: { ...i
     fullWidth
   />;
 
-const styles: any = {
+const styleSheet = createStyleSheet({
   main: {
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: muiTheme.palette.primary1Color
+    backgroundColor: muiTheme.palette.primary1Color,
   },
   card: {
     minWidth: 300,
   },
   avatar: {
     margin: '1em',
-    textAlign: 'center ',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   form: {
     padding: '0 1em 1em 1em',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   input: {
     display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  submit: {
+    width: '100%',
   },
   error: {
     color: red900,
-    paddingTop: 5
-  }
-};
+    paddingTop: 5,
+  },
+});
 
-class LoginPage extends React.Component<ILoginPageProps, {}>  {
-  constructor(props) {
-    super(props)
+class LoginPage extends React.Component<ILoginPageProps, {}> {
+  constructor(props: any) {
+    super(props);
 
     this.login = this.login.bind(this);
   }
 
-  login(e) {
-    console.log("Login submitted:", this.props.formState);
+  login(e: any) {
+    console.log('Login submitted:', this.props.formState);
 
     this.props.fetchLogin.trigger(this.props.formState);
     e.preventDefault();
   }
 
   render() {
-    const { submitting, formState, t, error, loading } = this.props;
+    const { classes, submitting, formState, t, error, loading } = this.props;
 
     return (
       <div>
-        <div style={styles.main}>
-          <Card style={styles.card}>
-            {loading && <LinearProgress mode="indeterminate" />}
-
-            <div style={styles.avatar}>
-              <Avatar backgroundColor={muiTheme.palette.accent1Color} icon={<LockIcon />} size={60} />
-              <div style={styles.error}>{error}</div>
-            </div>
+        <div className={classes.main}>
+          <Card className={classes.card}>
+            <CardMedia className={classes.avatar}>
+              <Avatar>
+                <LockIcon />
+              </Avatar>
+              <div className={classes.error}>
+                {error}
+              </div>
+            </CardMedia>
             <form onSubmit={this.login}>
-              <div style={styles.form}>
-                <div style={styles.input} >
+              <CardContent>
+                <div className={classes.form}>
                   <TextField
-                    floatingLabelText={t('login.username')}
+                    label={t('login.username')}
                     onChange={this.props.onChangeUsername}
                     value={formState.username}
+                    margin="normal"
+                    fullWidth
                   />
 
-                </div>
-                <div style={styles.input}>
                   <TextField
-                    floatingLabelText={t('login.password')}
+                    label={t('login.password')}
                     onChange={this.props.onChangePassword}
                     type="password"
+                    margin="normal"
                     value={formState.password}
+                    fullWidth
                   />
                 </div>
-              </div>
+              </CardContent>
+
               <CardActions>
-                <RaisedButton
+                {loading && <LinearProgress mode="indeterminate" />}
+
+                <Button
+                  raised
                   type="submit"
-                  primary
-                  disabled={submitting}
-                  icon={submitting && <CircularProgress size={25} thickness={2} />}
-                  label={t('login.signIn')}
-                  fullWidth
-                />
+                  color="primary"
+                  className={classes.submit}
+                  disabled={loading}
+                >
+                  {t('login.signIn')}
+                </Button>
               </CardActions>
             </form>
           </Card>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export function mapDispatchToProps(dispatch, ownProps) {
+export function mapDispatchToProps(dispatch: any, ownProps: any) {
   return {
     ...bindRoutineCreators({ fetchLogin }, dispatch),
-    onChangeUsername: (evt) => dispatch(changeForm({ username: evt.target.value })),
-    onChangePassword: (evt) => dispatch(changeForm({ password: evt.target.value })),
+    onChangeUsername: evt =>
+      dispatch(changeForm({ username: evt.target.value })),
+    onChangePassword: evt =>
+      dispatch(changeForm({ password: evt.target.value })),
 
     dispatch,
   };
@@ -156,7 +181,10 @@ export function mapDispatchToProps(dispatch, ownProps) {
 
 const mapStateToProps = createStructuredSelector({
   formState: makeQueryFormState(),
-  loading: selectLoading()
+  loading: selectLoading(),
 });
 
-export default connect<{}, {}, ILoginPageProps>(mapStateToProps, mapDispatchToProps)(translate()(LoginPage));
+export default connect<{}, {}, ILoginPageProps>(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withStyles(styleSheet)(translate()(LoginPage)));

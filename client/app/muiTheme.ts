@@ -1,26 +1,20 @@
 
-import {MuiTheme, getMuiTheme, spacing, colors} from 'material-ui/styles';
-import {fade} from 'material-ui/utils/colorManipulator';
+import { MuiTheme, createMuiTheme } from 'material-ui/styles';
+import createPalette from 'material-ui/styles/palette';
+import purple from 'material-ui/colors/purple';
+import green from 'material-ui/colors/green';
+import red from 'material-ui/colors/red';
 
-const muiTheme:MuiTheme = getMuiTheme({
-    spacing: spacing,
+const muiTheme: MuiTheme = createMuiTheme({
     fontFamily: 'Roboto, sans-serif',
-    palette: {
-        primary1Color: colors.cyan500,
-        primary2Color: colors.cyan700,
-        primary3Color: colors.grey400,
-        accent1Color: colors.pinkA200,
-        accent2Color: colors.grey100,
-        accent3Color: colors.grey500,
-        textColor: colors.darkBlack,
-        alternateTextColor: colors.white,
-        canvasColor: colors.white,
-        borderColor: colors.grey300,
-        disabledColor: fade(colors.darkBlack, 0.3),
-        pickerHeaderColor: colors.cyan500,
-        clockCircleColor: fade(colors.darkBlack, 0.07),
-        shadowColor: colors.fullBlack,
-    },
+    palette: createPalette({
+        primary: purple,
+        accent: {
+            ...green,
+            A400: '#00e677',
+        },
+        error: red,
+    }),
 });
 
 export default muiTheme;

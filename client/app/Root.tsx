@@ -15,11 +15,9 @@ import '!file-loader?name=[name].[ext]!./manifest.json';
 import 'file-loader?name=[name].[ext]!./.htaccess';
 /* eslint-enable import/no-unresolved */
 
-
 import { I18nextProvider } from 'react-i18next';
 
-
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { MuiThemeProvider } from 'material-ui/styles';
 import muiTheme from './muiTheme';
 
 // Import all the third party stuff
@@ -34,7 +32,6 @@ import configureStore from './store';
 
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
-
 import 'typeface-berkshire-swash';
 
 // Observe loading of Open Sans (to remove open sans, remove the <link> tag in
@@ -43,11 +40,14 @@ const styles = require('app/containers/App/styles.css');
 const openSansObserver = new FontFaceObserver('Open Sans', {});
 
 // When Open Sans is loaded, add a font-family using Open Sans to the body
-openSansObserver.load().then(() => {
-  document.body.classList.add(styles.fontLoaded);
-}, () => {
-  document.body.classList.remove(styles.fontLoaded);
-});
+openSansObserver.load().then(
+  () => {
+    document.body.classList.add(styles.fontLoaded);
+  },
+  () => {
+    document.body.classList.remove(styles.fontLoaded);
+  },
+);
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -78,16 +78,14 @@ export default class Root extends React.Component<any, any> {
   render() {
     return (
       <Provider store={store}>
-        <MuiThemeProvider muiTheme={muiTheme}>
+        <MuiThemeProvider theme={muiTheme}>
           <I18nextProvider i18n={i18nInstance}>
             <Router
               history={history}
               routes={rootRoute}
-              render={
-                // Scroll to top when going to a new page, imitating default browser
-                // behaviour
-                applyRouterMiddleware(useScroll())
-              }
+              render={// Scroll to top when going to a new page, imitating default browser
+              // behaviour
+              applyRouterMiddleware(useScroll())}
             />
           </I18nextProvider>
         </MuiThemeProvider>

@@ -4,13 +4,13 @@
 
 // Sagas help us gather all our side effects (network requests in this case) in one place
 
-import { browserHistory } from 'react-router'
-import { take, call, put, fork, race, select } from 'redux-saga/effects'
+import { browserHistory } from 'react-router';
+import { take, call, put, fork, race, select } from 'redux-saga/effects';
 import auth from '../../auth';
 import { fetchLogin, fetchLogout } from './routines';
 
-import { Path } from "history";
-import { push } from "react-router-redux";
+import { Path } from 'history';
+import { push } from 'react-router-redux';
 
 /**
  * Effect to handle authorization
@@ -21,16 +21,13 @@ export function* authorize({ username, password }) {
   yield put(fetchLogin.request());
 
   try {
-
-    console.log('Authorizing user:', username)
+    console.log('Authorizing user:', username);
     if (username && password) {
       let data = yield call(auth.login, username, password);
       yield put(fetchLogin.success(data));
     } else {
-      console.error("No username and password");
+      console.error('No username and password');
     }
-
-
   } catch (error) {
     console.error('Authorizing error:', error.message);
     yield put(fetchLogin.failure(error.error));
@@ -48,16 +45,14 @@ export function* logout() {
 
   try {
     console.info('Logging out.');
-    yield call(auth.logout)
+    yield call(auth.logout);
     yield put(fetchLogout.success());
-
   } catch (error) {
-
     console.error('Logout error:', error.message);
     yield put(fetchLogout.error(error.message));
   } finally {
     yield put(fetchLogout.fulfill());
-    console.log("Fulfill");
+    console.log('Fulfill');
     return true;
   }
 }
@@ -66,9 +61,7 @@ export function* logout() {
  * Log in saga
  */
 export function* loginFlow() {
-
   while (true) {
-
     let { payload } = yield take(fetchLogin.TRIGGER);
     let { username, password } = payload;
 
@@ -77,20 +70,20 @@ export function* loginFlow() {
     // returns the "winner", i.e. the one that finished first
     let winner = yield race({
       auth: call(authorize, { username, password }),
-      logout: take(fetchLogout.SUCCESS)
-    })
+      logout: take(fetchLogout.SUCCESS),
+    });
 
     // If `authorize` was the winner...
     if (winner.auth) {
-      let url: Path = "/";
+      let url: Path = '/';
 
-      console.log("Redirecting to:", url);
+      console.log('Redirecting to:', url);
       yield put(push(url));
 
       // ...we send Redux appropiate actions
       // yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }) // Clear form
     } else {
-      console.log("Logout was before Auth");
+      console.log('Logout was before Auth');
     }
   }
 }
@@ -105,10 +98,10 @@ export function* logoutFlow() {
     yield take(fetchLogout.TRIGGER);
 
     yield call(logout);
-    let url: Path = "/login";
+    let url: Path = '/login';
 
-    console.log("Redirecting to:", url);
-    yield put(push(url))
+    console.log('Redirecting to:', url);
+    yield put(push(url));
   }
 }
 
@@ -117,8 +110,8 @@ export function* logoutFlow() {
 // Sagas are fired once at the start of an app and can be thought of as processes running
 // in the background, watching actions dispatched to the store.
 export function* root() {
-  yield fork(loginFlow)
-  yield fork(logoutFlow)
+  yield fork(loginFlow);
+  yield fork(logoutFlow);
 }
 
 // Bootstrap sagas
@@ -126,6 +119,6 @@ export default root;
 
 // Little helper function to abstract going to different pages
 function forwardTo(location) {
-  console.log("forwardTo:", location)
-  browserHistory.push(location)
+  console.log('forwardTo:', location);
+  browserHistory.push(location);
 }

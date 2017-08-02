@@ -4,7 +4,14 @@ import { AuthError, default as CfApi } from '../../services/cfApi';
  * Gets the repositories of the user from Github
  */
 
-import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
+import {
+  take,
+  call,
+  put,
+  select,
+  cancel,
+  takeLatest,
+} from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOAD_APPS } from './constants';
 import { appsLoaded, appsLoadingError } from './actions';
@@ -20,14 +27,14 @@ export function* getApps(): IterableIterator<any> {
   try {
     // Call our request helper (see 'utils/request')
     const repos = yield call(CfApi.request, 'apps');
-    console.log(repos)
+    console.log(repos);
     yield put(appsLoaded(repos.resources));
   } catch (err) {
     if (err instanceof AuthError) {
-      console.error("Auth error, logging out and redirecting to login")
-      yield put(fetchLogout.trigger())
+      console.error('Auth error, logging out and redirecting to login');
+      yield put(fetchLogout.trigger());
     } else {
-      console.error("Error loading apps:", err);
+      console.error('Error loading apps:', err);
       yield put(appsLoadingError(err));
     }
   }
@@ -48,6 +55,4 @@ export function* appsData(): IterableIterator<any> {
 }
 
 // Bootstrap sagas
-export default [
-  appsData,
-];
+export default [appsData];
