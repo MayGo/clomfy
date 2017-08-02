@@ -1,5 +1,6 @@
+import { AuthError } from '../../services/auth-error';
 import { fetchLogout } from '../Login/routines';
-import { AuthError, default as CfApi } from '../../services/cfApi';
+import { default as CfApi } from '../../services/cfApi';
 /**
  * Gets the repositories of the user from Github
  */

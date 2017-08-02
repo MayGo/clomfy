@@ -5,6 +5,7 @@ import Table, {
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
 } from 'material-ui/Table';
 
 import { LinearProgress } from 'material-ui/Progress';
@@ -20,7 +21,10 @@ interface IListProps {
   events?: any[];
   page?: number;
   total?: number;
+  orderDirection: string;
+  orderBy: string;
   changePage: any;
+  onRequestSort: any;
 }
 interface IListState {
   display: number;
@@ -34,8 +38,16 @@ class EventsList extends React.Component<IListProps, IListState> {
     };
   }
 
+  createSortHandler = (orderBy: string, orderDirection: string) => event => {
+    console.log('Sorting events:', orderBy, orderDirection);
+    this.props.onRequestSort(
+      orderBy,
+      orderDirection === 'desc' ? 'asc' : 'desc',
+    );
+  };
+
   public render() {
-    const { loading, error, events } = this.props;
+    const { loading, error, events, orderDirection, orderBy } = this.props;
     if (loading) {
       return <LinearProgress mode="indeterminate" />;
     }
@@ -85,7 +97,15 @@ class EventsList extends React.Component<IListProps, IListState> {
               <TableCell>Actor name</TableCell>
               <TableCell>Actee type</TableCell>
               <TableCell>Actee name</TableCell>
-              <TableCell>Last push</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'timestamp'}
+                  direction={orderDirection}
+                  onClick={this.createSortHandler('timestamp', orderDirection)}
+                >
+                  Last push
+                </TableSortLabel>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

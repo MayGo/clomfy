@@ -1,43 +1,15 @@
+import { AuthError } from './auth-error';
+import { ResponseError } from './response-error';
 import 'whatwg-fetch';
 import * as queryString from 'query-string';
 
-export class ResponseError extends Error {
-  public response: Response;
-
-  constructor(response: Response) {
-    super(response.statusText);
-    this.response = response;
-  }
-}
-export class AuthError extends Error {
-  public response: Response;
-
-  constructor(response: Response) {
-    super(response.statusText);
-    // Set the prototype explicitly.
-    Object.setPrototypeOf(this, AuthError.prototype);
-    this.response = response;
-  }
-}
-
 export default class CfApi {
-  static apiUrl = 'https://api.run.pivotal.io/v2/';
-  static api;
-
-  constructor() {
-
-    /* Cf.api = restful('https://api.run.pivotal.io/v2', fetchBackend(fetch));
-     if (window.localStorage.token) {
-       console.log("Token found in local storage");
-       CfApi.setToken(window.localStorage.token);
-     }*/
-  }
+  static apiUrl: any = 'https://api.run.pivotal.io/v2/';
 
   static request(url: string, query: any = {}) {
-
     const stringified = queryString.stringify(query);
 
-    console.log("Requesting " + url + " with query " + stringified);
+    console.log('Requesting ' + url + ' with query ' + stringified);
 
     const options = {
       method: 'GET',
@@ -47,9 +19,9 @@ export default class CfApi {
       },
     };
 
-    return fetch(CfApi.apiUrl + url + '?' + stringified, options)
+    return fetch(CfApi.apiUrl + url, options)
       .then(CfApi.checkStatus)
-      .then(CfApi.parseJSON)
+      .then(CfApi.parseJSON);
   }
 
   static setToken(token: string) {
@@ -61,36 +33,35 @@ export default class CfApi {
   }
 
   static async login(username: string, password: string): Promise<string> {
-    console.log("login")
+    console.log('login');
 
     //"authorization_endpoint": "https://login.run.pivotal.io",
     //const requestURL = 'https://api.run.pivotal.io/v2/info';
     const uuaEndpoint = 'https://login.run.pivotal.io';
 
-    var data = new URLSearchParams()
-    data.append('grant_type', 'password')
-    data.append('username', username)
-    data.append('password', password)
-    data.append('response_type', 'token')
+    const data = new URLSearchParams();
+    data.append('grant_type', 'password');
+    data.append('username', username);
+    data.append('password', password);
+    data.append('response_type', 'token');
 
     const options = {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic Y2Y6',
-        'X-UAA-Endpoint': uuaEndpoint
+        Authorization: 'Basic Y2Y6',
+        'X-UAA-Endpoint': uuaEndpoint,
       },
-      body: data
+      body: data,
     };
-    let response = await fetch(uuaEndpoint + "/oauth/token", options)
+    let response = await fetch(uuaEndpoint + '/oauth/token', options);
     let jsonData = await response.json();
 
-    console.log("Response json:", jsonData);
+    console.log('Response json:', jsonData);
 
     let token = jsonData.access_token;
     if (token) {
-
       // save access token and username in session storage
       /* localStorage.setItem('accessToken', response.access_token);
        localStorage.setItem('refreshToken', response.refresh_token);
@@ -102,26 +73,12 @@ export default class CfApi {
       return token;
     } else {
       // log in failed
-      console.error("Token not found");
+      console.error('Token not found');
       throw new ResponseError(response);
     }
-
   }
-
-  static getBuildpacks() {
-    console.log("getBuildpacks")
-    const buildpacksCollection = this.api.all('buildpacks');
-    console.log(buildpacksCollection)
-    const repos = buildpacksCollection.getAll().then((repos2) => {
-      console.log(repos2)
-    })
-    console.log("Buildpacks:", repos);
-    return repos
-  }
-
 
   static checkStatus(response): Response {
-
     if (response.status >= 200 && response.status < 300) {
       return response;
     }
@@ -131,9 +88,8 @@ export default class CfApi {
     }
     throw new ResponseError(response);
   }
+
   static parseJSON(response) {
     return response.json();
   }
 }
-
-

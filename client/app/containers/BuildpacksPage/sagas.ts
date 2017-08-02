@@ -1,15 +1,23 @@
-import { AuthError, default as CfApi } from '../../services/cfApi';
+import { AuthError } from '../../services/auth-error';
+import { default as CfApi } from '../../services/cfApi';
 /**
  * Gets the repositories of the user from Github
  */
 
-import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
+import {
+  take,
+  call,
+  put,
+  select,
+  cancel,
+  takeLatest,
+} from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOAD_BUILDPACKS } from './constants';
 import { buildpacksLoaded, buildpacksLoadingError } from './actions';
 
 import { makeQueryBuildpacks } from './selectors';
-import { fetchLogout } from "app/containers/Login/routines";
+import { fetchLogout } from 'app/containers/Login/routines';
 
 /**
  * CF buildpacks request/response handler
@@ -20,14 +28,14 @@ export function* getBuildpacks(): IterableIterator<any> {
   try {
     // Call our request helper (see 'utils/request')
     const repos = yield call(CfApi.request, 'buildpacks');
-    console.log(repos)
+    console.log(repos);
     yield put(buildpacksLoaded(repos.resources));
   } catch (err) {
     if (err instanceof AuthError) {
-      console.error("Auth error, logging out and redirecting to login")
+      console.error('Auth error, logging out and redirecting to login');
       yield put(fetchLogout.trigger());
     } else {
-      console.error("Error loading buildpacks:", err);
+      console.error('Error loading buildpacks:', err);
       yield put(buildpacksLoadingError(err));
     }
   }
@@ -48,6 +56,4 @@ export function* buildpacksData(): IterableIterator<any> {
 }
 
 // Bootstrap sagas
-export default [
-  buildpacksData,
-];
+export default [buildpacksData];
