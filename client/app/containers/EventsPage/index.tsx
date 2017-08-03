@@ -13,6 +13,7 @@ import {
   selectTotal,
   selectOrderBy,
   selectOrderDirection,
+  selectPage,
 } from './selectors';
 
 import { connect } from 'react-redux';
@@ -28,22 +29,17 @@ interface IEventsPageProps {
   orderBy: string;
   events?: any[];
   onRequestSort: any;
+  changePage: any;
   onSubmitForm?: () => React.EventHandler<React.FormEvent<any>>;
 }
 
 export class EventsPage extends React.Component<IEventsPageProps, {}> {
   constructor(props) {
     super(props);
-    this.changePage.bind(this);
   }
   public componentDidMount() {
     console.log('Load initial events');
-    this.changePage(1);
-  }
-
-  public changePage(page) {
-    console.log('Changing page to:', page);
-    this.props.fetchEvents.trigger({ page });
+    this.props.changePage(1);
   }
 
   public render() {
@@ -73,7 +69,7 @@ export class EventsPage extends React.Component<IEventsPageProps, {}> {
       <div>
         <EventsList
           {...eventsListProps}
-          changePage={currentPage => this.changePage(currentPage)}
+          changePage={currentPage => this.props.changePage(currentPage)}
         />
       </div>
     );
@@ -85,6 +81,7 @@ export function mapDispatchToProps(dispatch) {
     ...bindRoutineCreators({ fetchEvents }, dispatch),
     onRequestSort: (orderBy: string, orderDirection: string) =>
       dispatch(order({ orderBy, orderDirection })),
+    changePage: (page: number) => dispatch(changePage({ page })),
   };
 }
 
@@ -94,6 +91,7 @@ const mapStateToProps = createStructuredSelector({
   events: makeQueryEvents(),
   total: selectTotal(),
   orderBy: selectOrderBy(),
+  page: selectPage(),
   orderDirection: selectOrderDirection(),
 });
 

@@ -1,4 +1,4 @@
-import { ORDER } from './constants';
+import { CHANGE_PAGE, ORDER } from './constants';
 
 export function order(payload: any) {
   return {
@@ -9,7 +9,7 @@ export function order(payload: any) {
 
 export function changePage(payload: any) {
   return {
-    type: ORDER,
+    type: CHANGE_PAGE,
     payload,
   };
 }

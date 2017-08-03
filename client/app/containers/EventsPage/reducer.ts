@@ -22,6 +22,7 @@ function eventsReducer(state = initialState, action) {
         .set('orderDirection', action.payload.orderDirection);
 
     case CHANGE_PAGE:
+      console.log('Changing page:', action.payload.page);
       return state.set('page', action.payload.page);
     case fetchEvents.TRIGGER:
       return state.set('loading', true);

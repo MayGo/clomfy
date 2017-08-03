@@ -1,5 +1,5 @@
 import { AuthError } from '../../services/auth-error';
-import { ORDER } from './constants';
+import { CHANGE_PAGE, ORDER } from './constants';
 import { fetchLogout } from '../Login/routines';
 import { LoginRoute } from '../../RoutePaths';
 import { default as CfApi } from '../../services/cfApi';
@@ -73,6 +73,13 @@ export function* watchForSort(): IterableIterator<any> {
     yield put(fetchEvents.trigger());
   }
 }
+export function* watchForPage(): IterableIterator<any> {
+  while (true) {
+    yield take(CHANGE_PAGE);
+
+    yield put(fetchEvents.trigger());
+  }
+}
 
 // Bootstrap sagas
-export default [eventsData, watchForSort];
+export default [eventsData, watchForSort, watchForPage];

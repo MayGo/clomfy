@@ -13,7 +13,7 @@ import CheckBoxIcon from 'material-ui-icons/CheckBox';
 import CheckBoxIconOutline from 'material-ui-icons/CheckBoxOutlineBlank';
 
 import TimeAgo from 'timeago-react';
-import Pagination from 'material-ui-pagination';
+import Pagination from '../Pagination';
 
 interface IListProps {
   loading?: boolean;
@@ -112,6 +112,12 @@ class EventsList extends React.Component<IListProps, IListState> {
             {listItems}
           </TableBody>
         </Table>
+        <Pagination
+          total={this.props.total}
+          current={this.props.page}
+          display={this.state.display}
+          onChange={page => this.props.changePage(page)}
+        />
       </div>
     );
   }
