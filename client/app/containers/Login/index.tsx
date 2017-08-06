@@ -44,19 +44,6 @@ interface ILoginPageProps {
   onChangePassword?: () => React.EventHandler<React.FormEvent<any>>;
 }
 
-// see http://redux-form.com/6.4.3/examples/material-ui/
-const renderInput = ({
-  meta: { touched = false, error = '' } = {},
-  input: { ...inputProps },
-  ...props,
-}) =>
-  <TextField
-    errorText={touched && error}
-    {...inputProps}
-    {...props}
-    fullWidth
-  />;
-
 const styleSheet = createStyleSheet({
   main: {
     display: 'flex',

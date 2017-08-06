@@ -1,6 +1,4 @@
-
-
-import { Path } from "history";
+import { Path } from 'history';
 
 export const HomeRoute = '/';
 export const BuildpacksRoute = '/buildpacks';

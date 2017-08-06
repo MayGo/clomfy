@@ -36,7 +36,7 @@ import { withStyles, createStyleSheet } from 'material-ui/styles';
 
 interface IMenuBarOwnProps {
   t?: any;
-  classes: any;
+  classes?: any;
 }
 interface IMenuBarStateProps {
   location: Location | null;

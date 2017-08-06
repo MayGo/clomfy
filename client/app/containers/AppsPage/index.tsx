@@ -1,71 +1,101 @@
-/*
- * AppsPage
- *
- * List all the features
- */
+import { changePage, order } from './actions';
+
+import { bindRoutineCreators } from 'redux-saga-routines';
+import { fetchApps } from './routines';
+
 import * as React from 'react';
-
-import {
-  selectRepos
-} from 'app/containers/App/selectors';
-
 import AppsList from 'app/components/AppsList';
 
-import { loadApps } from './actions';
-
-import { makeQueryApps,
+import {
+  makeQueryApps,
   selectLoading,
-  selectError, } from './selectors';
+  selectError,
+  selectTotal,
+  selectOrderBy,
+  selectOrderDirection,
+  selectPage,
+} from './selectors';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 interface IAppsPageProps {
-  changeRoute?: (route: string) => void;
+  fetchApps: any;
   loading?: boolean;
   error?: Error | false;
+  page: number;
+  total: number;
+  orderDirection: string;
+  orderBy: string;
   apps?: any[];
-  onSubmitForm?: () => React.EventHandler<React.FormEvent<any>>;
+  onRequestSort: any;
+  changePage: any;
 }
 
-export class AppsPage extends React.Component<IAppsPageProps, {}> { // eslint-disable-line react/prefer-stateless-function
-
+export class AppsPage extends React.Component<IAppsPageProps, {}> {
+  constructor(props) {
+    super(props);
+  }
   public componentDidMount() {
-    this.props.onSubmitForm();
+    console.log('Load initial apps');
+    this.props.changePage(1);
   }
 
   public render() {
-    const { loading, error, apps } = this.props;
+    const {
+      loading,
+      error,
+      page,
+      apps,
+      total,
+      orderDirection,
+      orderBy,
+      onRequestSort,
+    } = this.props;
+
     const appsListProps = {
       loading,
       error,
       apps,
+      page,
+      total,
+      orderDirection,
+      orderBy,
+      onRequestSort,
     };
 
     return (
       <div>
-        <AppsList {...appsListProps} />
+        <AppsList
+          {...appsListProps}
+          changePage={currentPage => this.props.changePage(currentPage)}
+        />
       </div>
     );
   }
 }
 
-export function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch: any) {
   return {
-
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(loadApps());
-    },
+    changePage: (page: number) => dispatch(changePage({ page })),
+    ...bindRoutineCreators({ fetchApps }, dispatch),
+    onRequestSort: (orderBy: string, orderDirection: string) =>
+      dispatch(order({ orderBy, orderDirection })),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-
   loading: selectLoading(),
   error: selectError(),
   apps: makeQueryApps(),
+  total: selectTotal(),
+  orderBy: selectOrderBy(),
+  page: selectPage(),
+  orderDirection: selectOrderDirection(),
 });
 
 // Wrap the component to inject dispatch and state into it
-export default connect<{}, {}, IAppsPageProps>(mapStateToProps, mapDispatchToProps)(AppsPage);
+export default connect<{}, {}, IAppsPageProps>(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AppsPage);

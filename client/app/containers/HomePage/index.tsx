@@ -16,77 +16,29 @@ import {
   selectError,
 } from 'app/containers/App/selectors';
 
-import {
-  selectUsername,
-} from './selectors';
+import { selectUsername } from './selectors';
 
 import { changeUsername } from './actions';
 import { loadRepos } from '../App/actions';
-
-const styles = require('./styles.css');
+import { makeQueryApps } from 'app/containers/AppsPage/selectors';
 
 interface IHomePageProps {
   changeRoute?: (route: string) => void;
   loading?: boolean;
   error?: Error | false;
-  repos?: any[];
-  onSubmitForm?: () => React.EventHandler<React.FormEvent<any>>;
-  username?: string;
-  onChangeUsername?: () => React.EventHandler<React.FormEvent<any>>;
+  apps?: any[];
 }
 
 export class HomePage extends React.Component<IHomePageProps, {}> {
-  /**
-   * when initial state username is not null, submit the form to load repos
-   */
-  public componentDidMount() {
-    if (this.props.username && this.props.username.trim().length > 0) {
-      this.props.onSubmitForm();
-    }
-  }
-
-  /**
-   * Changes the route
-   *
-   * @param  {string} route The route we want to go to
-   */
-  private openRoute = (route) => {
-    this.props.changeRoute(route);
-  }
-
-  /**
-   * Changed route to '/features'
-   */
-  private openFeaturesPage = () => {
-    this.openRoute('/features');
-  }
-
-  private openBuildpacksPage = () => {
-    this.openRoute('/buildpacks');
-  }
-
   public render() {
-    let mainContent = null;
-
-    // Show a loading indicator when we're loading
-    if (this.props.loading) {
-      mainContent = (<div>Loading</div>);
-
-      // Show an error if there is one
-    } else if (this.props.error !== false) {
-       mainContent = (<div>Something went wrong, please try again!</div>);
-
-      // If we're not loading, don't have an error and there are repos, show the repos
-    } 
+    const { apps } = this.props;
 
     return (
       <article>
-
         <div>
-          <section className={`${styles.textSection} ${styles.centered}`}>
-           {mainContent}
+          <section>
+            {apps}
           </section>
-        
         </div>
       </article>
     );
@@ -95,23 +47,19 @@ export class HomePage extends React.Component<IHomePageProps, {}> {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
-    changeRoute: (url) => dispatch(push(url)),
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) { evt.preventDefault(); }
-      dispatch(loadRepos());
-    },
-
+    changeRoute: url => dispatch(push(url)),
     dispatch,
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  repos: selectRepos(),
-  username: selectUsername(),
+  apps: makeQueryApps(),
   loading: selectLoading(),
   error: selectError(),
 });
 
 // Wrap the component to inject dispatch and state into it
-export default connect<{}, {}, IHomePageProps>(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect<{}, {}, IHomePageProps>(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomePage);

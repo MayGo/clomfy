@@ -1,5 +1,6 @@
 import loginReducer from './containers/Login/reducer';
 import notificationsReducer from './containers/Notifications/reducer';
+import appsReducer from './containers/AppsPage/reducer';
 /**
  * Combine all reducers in this file and export the combined reducers.
  * If we were to do this in store.js, reducers wouldn't be hot reloadable.
@@ -35,9 +36,9 @@ function routeReducer(state = routeInitialState, action) {
       const mergeState = state.merge({
         locationBeforeTransitions: action.payload,
       });
-      console.log("LOCATION_CHANGE", action.payload.pathname);
+      console.log('LOCATION_CHANGE', action.payload.pathname);
       if (window.swUpdate) {
-        console.log("Reoading:swUpdate ")
+        console.log('Reoading:swUpdate ');
         window.location.reload();
       }
       return mergeState;
@@ -49,13 +50,15 @@ function routeReducer(state = routeInitialState, action) {
 /**
  * Creates the main reducer with the asynchronously loaded ones
  */
-export default function createReducer(asyncReducers: Redux.ReducersMapObject = {}): Redux.Reducer<any> {
-
+export default function createReducer(
+  asyncReducers: Redux.ReducersMapObject = {},
+): Redux.Reducer<any> {
   const reducers = {
     route: routeReducer,
     login: loginReducer,
     notifications: notificationsReducer,
     global: globalReducer,
+    apps: appsReducer,
     // language: languageProviderReducer,
     ...asyncReducers,
   };

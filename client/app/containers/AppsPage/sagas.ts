@@ -1,43 +1,65 @@
 import { AuthError } from '../../services/auth-error';
+import { CHANGE_PAGE, ORDER } from './constants';
 import { fetchLogout } from '../Login/routines';
+import { LoginRoute } from '../../RoutePaths';
 import { default as CfApi } from '../../services/cfApi';
-/**
- * Gets the repositories of the user from Github
- */
+
+import * as withQuery from 'with-query';
 
 import {
-  take,
   call,
+  cancel,
+  fork,
   put,
   select,
-  cancel,
+  take,
   takeLatest,
 } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
-import { LOAD_APPS } from './constants';
-import { appsLoaded, appsLoadingError } from './actions';
 
-import { makeQueryApps } from './selectors';
+import { LOCATION_CHANGE, push } from 'react-router-redux';
+
+import {
+  makeQueryApps,
+  selectPage,
+  selectOrderBy,
+  selectOrderDirection,
+} from './selectors';
+
+import { fetchApps } from './routines';
 
 /**
  * CF apps request/response handler
  */
 export function* getApps(): IterableIterator<any> {
-  // Select username from store
-  const username = yield select(makeQueryApps());
+  console.log('getting apps');
+  yield put(fetchApps.request());
+
+  const page = yield select(selectPage());
+  const orderBy = yield select(selectOrderBy());
+  const orderDirection = yield select(selectOrderDirection());
+
   try {
-    // Call our request helper (see 'utils/request')
-    const repos = yield call(CfApi.request, 'apps');
-    console.log(repos);
-    yield put(appsLoaded(repos.resources));
-  } catch (err) {
-    if (err instanceof AuthError) {
+    const apps = yield call(
+      CfApi.request,
+      withQuery('apps', {
+        page,
+        'order-direction': orderDirection,
+      }),
+    );
+
+    console.log('Apps requested:', apps);
+    yield put(fetchApps.success(apps));
+    return true;
+  } catch (error) {
+    if (error instanceof AuthError) {
       console.error('Auth error, logging out and redirecting to login');
       yield put(fetchLogout.trigger());
     } else {
-      console.error('Error loading apps:', err);
-      yield put(appsLoadingError(err));
+      console.error('Error loading apps:', error);
+      yield put(fetchApps.failure(error.error));
     }
+  } finally {
+    yield put(fetchApps.fulfill());
   }
 }
 
@@ -45,15 +67,34 @@ export function* getApps(): IterableIterator<any> {
  * Root saga manages watcher lifecycle
  */
 export function* appsData(): IterableIterator<any> {
-  // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
-  // By using `takeLatest` only the result of the latest API call is applied.
-  // It returns task descriptor (just like fork) so we can continue execution
-  const watcher = yield takeLatest(LOAD_APPS, getApps);
+  while (true) {
+    const watcher = yield takeLatest(fetchApps.TRIGGER, getApps);
 
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+    // Suspend execution until location changes
+    yield take(LOCATION_CHANGE);
+    yield cancel(watcher);
+  }
+}
+
+export function* watchForSort(): IterableIterator<any> {
+  while (true) {
+    yield take(ORDER);
+
+    yield put(fetchApps.trigger());
+  }
+}
+export function* watchForPage(): IterableIterator<any> {
+  while (true) {
+    yield take(CHANGE_PAGE);
+    yield put(fetchApps.trigger());
+  }
+}
+
+export function* root() {
+  yield fork(appsData);
+  yield fork(watchForSort);
+  yield fork(watchForPage);
 }
 
 // Bootstrap sagas
-export default [appsData];
+export default root;

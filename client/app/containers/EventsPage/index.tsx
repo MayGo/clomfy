@@ -30,7 +30,6 @@ interface IEventsPageProps {
   events?: any[];
   onRequestSort: any;
   changePage: any;
-  onSubmitForm?: () => React.EventHandler<React.FormEvent<any>>;
 }
 
 export class EventsPage extends React.Component<IEventsPageProps, {}> {

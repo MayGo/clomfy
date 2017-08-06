@@ -58,11 +58,11 @@ class BuildpacksList extends React.Component<IListProps, {}> {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
+            <TableCell>State</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Filename</TableCell>
-            <TableCell>Enabled</TableCell>
-            <TableCell>Locked</TableCell>
+            <TableCell>Instances</TableCell>
+            <TableCell>Memory</TableCell>
+            <TableCell>Last push</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -16,42 +16,39 @@ const loginState = fromJS({
   data: null,
   formState: {
     username: auth.getSavedUsername(),
-    password: auth.getSavedPassword()
+    password: auth.getSavedPassword(),
   },
-  isAuthenticated: auth.isAuthenticated()
+  isAuthenticated: auth.isAuthenticated(),
 });
 
 function loginReducer(state = loginState, action) {
   switch (action.type) {
     case CHANGE_FORM:
-      return state
-        .set('formState', state.get('formState').merge(action.newFormState));
+      return state.set(
+        'formState',
+        state.get('formState').merge(action.newFormState),
+      );
 
     case fetchLogin.TRIGGER:
-      return state
-        .set('loading', true)
+      return state.set('loading', true);
     case fetchLogin.SUCCESS:
-      return state
-        .set('data', action.payload)
-        .set('isAuthenticated', true)
+      return state.set('data', action.payload).set('isAuthenticated', true);
     case fetchLogin.FAILURE:
-      return state
-        .set('error', action.payload);
+      return state.set('error', action.payload);
     case fetchLogin.FULFILL:
-      return state
-        .set('loading', false)
+      return state.set('loading', false);
 
     case CHANGE_FORM:
-      return state
-        .set('formState', state.get('formState').merge(action.newFormState));
+      return state.set(
+        'formState',
+        state.get('formState').merge(action.newFormState),
+      );
 
     case fetchLogout.SUCCESS:
-      return state
-        .set('isAuthenticated', false)
+      return state.set('isAuthenticated', false);
 
     default:
       return state;
-
   }
 }
 

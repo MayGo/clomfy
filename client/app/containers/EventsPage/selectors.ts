@@ -1,7 +1,3 @@
-/**
- * Events selectors
- */
-
 import { createSelector } from 'reselect';
 
 const selectEvents = state => state.get('events');

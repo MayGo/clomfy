@@ -17,7 +17,7 @@ import {
 import { LOCATION_CHANGE, push } from 'react-router-redux';
 
 import { selectPage, selectOrderBy, selectOrderDirection } from './selectors';
-import { fetchEvents } from 'app/containers/EventsPage/routines';
+import { fetchEvents } from './routines';
 
 /**
  * CF events request/response handler
@@ -41,6 +41,7 @@ export function* getEvents(): IterableIterator<any> {
 
     console.log('Events requested:', events);
     yield put(fetchEvents.success(events));
+    return true;
   } catch (error) {
     if (error instanceof AuthError) {
       console.error('Auth error, logging out and redirecting to login');
@@ -51,7 +52,6 @@ export function* getEvents(): IterableIterator<any> {
     }
   } finally {
     yield put(fetchEvents.fulfill());
-    return true;
   }
 }
 
