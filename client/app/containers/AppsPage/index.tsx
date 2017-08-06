@@ -5,6 +5,7 @@ import { fetchApps } from './routines';
 
 import * as React from 'react';
 import AppsList from 'app/components/AppsList';
+import AppsBoard from 'app/components/AppsBoard';
 
 import {
   makeQueryApps,
@@ -66,7 +67,7 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
 
     return (
       <div>
-        <AppsList
+        <AppsBoard
           {...appsListProps}
           changePage={currentPage => this.props.changePage(currentPage)}
         />

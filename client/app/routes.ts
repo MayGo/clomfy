@@ -57,7 +57,7 @@ export default function createRoutes(store): IExtendedRouteProps[] {
       path: HomeRoute,
       name: 'home',
       onEnter: requireAuth,
-      component: HomePage,
+      component: AppsPage,
     },
     {
       path: BuildpacksRoute,
