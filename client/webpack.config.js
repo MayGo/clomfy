@@ -3,14 +3,18 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const { optimize: { CommonsChunkPlugin }, ProvidePlugin } = require('webpack')
-const { TsConfigPathsPlugin, CheckerPlugin } = require('awesome-typescript-loader');
+const { optimize: { CommonsChunkPlugin }, ProvidePlugin } = require('webpack');
+const {
+  TsConfigPathsPlugin,
+  CheckerPlugin,
+} = require('awesome-typescript-loader');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 // config helpers:
-const ensureArray = (config) => config && (Array.isArray(config) ? config : [config]) || []
+const ensureArray = config =>
+  (config && (Array.isArray(config) ? config : [config])) || [];
 const when = (condition, config, negativeConfig) =>
-  condition ? ensureArray(config) : ensureArray(negativeConfig)
+  condition ? ensureArray(config) : ensureArray(negativeConfig);
 
 // primary config:
 const title = 'Clomfy';
@@ -25,15 +29,22 @@ const cssRules = [
   { loader: 'css-loader' },
   {
     loader: 'postcss-loader',
-    options: { plugins: () => [require('autoprefixer')({ browsers: ['last 2 versions'] })] }
-  }
-]
+    options: {
+      plugins: () => [
+        require('autoprefixer')({ browsers: ['last 2 versions'] }),
+      ],
+    },
+  },
+];
 
-const hotDeps = (process.env.server) ? [
+const hotDeps = [
   'react-hot-loader/patch',
-  `webpack-dev-server/client?index.html`, 'webpack-hot-middleware/client'] : [];
+  `webpack-dev-server/client?http://localhost:${port}`,
+  'webpack/hot/only-dev-server',
+];
+const deps = [path.resolve('./app/index')];
 
-
+// prettier-ignore
 module.exports = ({ production = false, server = false, extractCss = false, coverage = false } = {}) => ({
   target: 'electron-renderer',
   resolve: {
@@ -41,7 +52,7 @@ module.exports = ({ production = false, server = false, extractCss = false, cove
     modules: [srcDir, 'node_modules']
   },
   entry: {
-    app: [path.resolve('./app/index')].concat(hotDeps)
+    app: (server)?hotDeps.concat(deps):deps
   },
 
   devServer: {

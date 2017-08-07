@@ -52,6 +52,7 @@ type IMenuBarProps = IMenuBarOwnProps &
 
 interface IMenuBarReactState {
   open: boolean;
+  openNotif: boolean;
 }
 
 const styleSheet = createStyleSheet({
@@ -73,7 +74,7 @@ const styleSheet = createStyleSheet({
 class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
   constructor(props: IMenuBarProps, context: any) {
     super(props, context);
-    this.state = { open: false };
+    this.state = { open: false, openNotif: false };
   }
 
   public render(): JSX.Element {
@@ -112,6 +113,9 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
               : <Button href="#login" color="contrast">
                   {t('routes.login')}
                 </Button>}
+            <IconButton color="contrast" aria-label="Menu">
+              <MenuIcon onClick={this.handleNotifToggle} />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -130,6 +134,16 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
             <MenuItemCustom name={t('routes.login')} path={LoginRoute} />
           </div>
         </Drawer>
+        <Drawer
+          anchor="right"
+          docked={false}
+          open={this.state.openNotif}
+          onRequestClose={this.handleNotifClose}
+        >
+          <div className={classes.menu}>
+            <MenuItemCustom name={t('routes.home')} path={HomeRoute} />
+          </div>
+        </Drawer>
       </div>
     );
   }
@@ -146,7 +160,10 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
   };
 
   private handleToggle = () => this.setState({ open: !this.state.open });
+  private handleNotifToggle = () =>
+    this.setState({ openNotif: !this.state.openNotif });
   private handleClose = () => this.setState({ open: false });
+  private handleNotifClose = () => this.setState({ openNotif: false });
 }
 
 const mapStateToProps = createStructuredSelector({

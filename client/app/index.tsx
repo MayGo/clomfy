@@ -1,4 +1,3 @@
-import 'react-hot-loader/patch';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
@@ -8,22 +7,16 @@ import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const rootEl = document.getElementById('root');
-ReactDOM.render(
-  <AppContainer>
-    <Root />
-  </AppContainer>,
-  rootEl,
-);
+const render = Component =>
+  ReactDOM.render(
+    <AppContainer>
+      <Component />
+    </AppContainer>,
+    rootEl,
+  );
 
+render(Root);
 // Hot Module Replacement API
 if (module.hot) {
-  module.hot.accept('./Root', () => {
-    const NextRoot = require('./Root').default;
-    ReactDOM.render(
-      <AppContainer>
-        <NextRoot />
-      </AppContainer>,
-      rootEl,
-    );
-  });
+  module.hot.accept('./Root', () => render(Root));
 }

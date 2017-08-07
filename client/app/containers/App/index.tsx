@@ -1,4 +1,3 @@
-
 /**
  *
  * App.react.js
@@ -20,18 +19,15 @@ import Notifications from '../Notifications';
 
 import { browserHistory } from 'react-router';
 
-const styles = require('./styles.css');
-
 interface IAppProps {
   children?: React.ReactNode;
 }
 
 class App extends React.Component<IAppProps, {}> {
-
   public render() {
     return (
-      <div className={styles.wrapper}>
-        <Notifications/>
+      <div>
+        <Notifications />
         <MenuBar />
         {this.props.children}
         <Footer />
