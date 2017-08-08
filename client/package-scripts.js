@@ -5,7 +5,7 @@ module.exports = {
     default: 'nps run',
     clean: rimraf('dist'),
     serve:
-      "webpack-dev-server -d --devtool '#source-map' --inline --env.server",
+      "webpack-dev-server -d --devtool '#source-map' --inline --hot --env.server",
 
     run: {
       default: 'nps run.hot',
