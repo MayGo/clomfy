@@ -3,11 +3,13 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 
 import Menu, { MenuItem } from 'material-ui/Menu';
+import Badge from 'material-ui/Badge';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
+import NotificationIcon from 'material-ui-icons/Notifications';
 
 import { connect, Dispatch } from 'react-redux';
 import { Link } from 'react-router';
@@ -33,6 +35,7 @@ import { translate } from 'react-i18next';
 import { FlatButton } from 'material-ui';
 
 import { withStyles, createStyleSheet } from 'material-ui/styles';
+import Notifications from '../Notifications';
 
 interface IMenuBarOwnProps {
   t?: any;
@@ -113,9 +116,14 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
               : <Button href="#login" color="contrast">
                   {t('routes.login')}
                 </Button>}
-            <IconButton color="contrast" aria-label="Menu">
-              <MenuIcon onClick={this.handleNotifToggle} />
-            </IconButton>
+
+            <Badge
+              badgeContent={4}
+              color="accent"
+              onClick={this.handleNotifToggle}
+            >
+              <NotificationIcon />
+            </Badge>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -141,7 +149,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
           onRequestClose={this.handleNotifClose}
         >
           <div className={classes.menu}>
-            <MenuItemCustom name={t('routes.home')} path={HomeRoute} />
+            <Notifications />
           </div>
         </Drawer>
       </div>

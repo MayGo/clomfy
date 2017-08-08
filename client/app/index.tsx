@@ -18,5 +18,11 @@ const render = Component =>
 render(Root);
 // Hot Module Replacement API
 if (module.hot) {
-  module.hot.accept('./Root', () => render(Root));
+  console.log('Hot reloading enabled in index');
+  module.hot.accept('./Root', () => {
+    const NextRoot = require('./Root').default;
+
+    console.log('Hot reloading Root');
+    render(NextRoot);
+  });
 }

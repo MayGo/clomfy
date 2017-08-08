@@ -68,9 +68,7 @@ export default class Root extends React.Component<any, any> {
             <Router
               history={history}
               routes={rootRoute}
-              render={// Scroll to top when going to a new page, imitating default browser
-              // behaviour
-              applyRouterMiddleware(useScroll())}
+              render={applyRouterMiddleware(useScroll())}
             />
           </I18nextProvider>
         </MuiThemeProvider>
