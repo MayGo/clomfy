@@ -16,24 +16,25 @@ import { push } from 'react-router-redux';
  * Effect to handle authorization
  * @param  {string} username               The username of the user
  * @param  {string} password               The password of the user
+ * @param  {string} cfUrl               The CF api url
  */
-export function* authorize({ username, password }) {
+export function* authorize({ username, password, cfUrl }: any) {
   yield put(fetchLogin.request());
 
   try {
     console.log('Authorizing user:', username);
-    if (username && password) {
-      let data = yield call(auth.login, username, password);
+    if (username && password && cfUrl) {
+      const data = yield call(auth.login, username, password, cfUrl);
       yield put(fetchLogin.success(data));
     } else {
       console.error('No username and password');
     }
+    return true;
   } catch (error) {
     console.error('Authorizing error:', error.message);
     yield put(fetchLogin.failure(error.error));
   } finally {
     yield put(fetchLogin.fulfill());
-    return true;
   }
 }
 
@@ -47,13 +48,13 @@ export function* logout() {
     console.info('Logging out.');
     yield call(auth.logout);
     yield put(fetchLogout.success());
+    return true;
   } catch (error) {
     console.error('Logout error:', error.message);
     yield put(fetchLogout.error(error.message));
   } finally {
     yield put(fetchLogout.fulfill());
     console.log('Fulfill');
-    return true;
   }
 }
 
@@ -62,20 +63,20 @@ export function* logout() {
  */
 export function* loginFlow() {
   while (true) {
-    let { payload } = yield take(fetchLogin.TRIGGER);
-    let { username, password } = payload;
+    const { payload } = yield take(fetchLogin.TRIGGER);
+    const { username, password, cfUrl } = payload;
 
     // A `LOGOUT` action may happen while the `authorize` effect is going on, which may
     // lead to a race condition. This is unlikely, but just in case, we call `race` which
     // returns the "winner", i.e. the one that finished first
-    let winner = yield race({
-      auth: call(authorize, { username, password }),
+    const winner = yield race({
+      auth: call(authorize, { username, password, cfUrl }),
       logout: take(fetchLogout.SUCCESS),
     });
 
     // If `authorize` was the winner...
     if (winner.auth) {
-      let url: Path = '/';
+      const url: Path = '/';
 
       console.log('Redirecting to:', url);
       yield put(push(url));
@@ -98,7 +99,7 @@ export function* logoutFlow() {
     yield take(fetchLogout.TRIGGER);
 
     yield call(logout);
-    let url: Path = '/login';
+    const url: Path = '/login';
 
     console.log('Redirecting to:', url);
     yield put(push(url));
@@ -118,7 +119,7 @@ export function* root() {
 export default root;
 
 // Little helper function to abstract going to different pages
-function forwardTo(location) {
+function forwardTo(location: string) {
   console.log('forwardTo:', location);
   browserHistory.push(location);
 }

@@ -15,8 +15,9 @@ const loginState = fromJS({
   error: false,
   data: null,
   formState: {
-    username: auth.getSavedUsername(),
-    password: auth.getSavedPassword(),
+    username: auth.getSavedUsername() || '',
+    password: auth.getSavedPassword() || '',
+    cfUrl: auth.getSavedCfUrl() || 'https://api.run.pivotal.io',
   },
   isAuthenticated: auth.isAuthenticated(),
 });
@@ -37,12 +38,6 @@ function loginReducer(state = loginState, action) {
       return state.set('error', action.payload);
     case fetchLogin.FULFILL:
       return state.set('loading', false);
-
-    case CHANGE_FORM:
-      return state.set(
-        'formState',
-        state.get('formState').merge(action.newFormState),
-      );
 
     case fetchLogout.SUCCESS:
       return state.set('isAuthenticated', false);

@@ -8,11 +8,12 @@ let auth = {
   * @param  {string} username The username of the user
   * @param  {string} password The password of the user
   */
-  async login(username, password) {
-    let token = await CfApi.login(username, password);
+  async login(username, password, cfUrl) {
+    let token = await CfApi.login(username, password, cfUrl);
 
     // Save token to local storage
     localStorage.token = token;
+    localStorage.cfUrl = cfUrl;
     localStorage.username = username;
     localStorage.password = password;
 
@@ -35,10 +36,13 @@ let auth = {
   },
 
   getSavedUsername() {
-    return localStorage.username || '';
+    return localStorage.username;
   },
   getSavedPassword() {
-    return localStorage.password || '';
+    return localStorage.password;
+  },
+  getSavedCfUrl() {
+    return localStorage.cfUrl;
   },
   /**
   * Registers a user and then logs them in

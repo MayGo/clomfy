@@ -4,7 +4,11 @@ import 'whatwg-fetch';
 import * as queryString from 'query-string';
 
 export default class CfApi {
-  static apiUrl: any = 'https://api.run.pivotal.io/v2/';
+  static apiUrl: any;
+
+  static setCfApiUrl(url: string) {
+    CfApi.apiUrl = `${url}/v2/`;
+  }
 
   static request(url: string, query: any = {}) {
     const stringified = queryString.stringify(query);
@@ -32,12 +36,22 @@ export default class CfApi {
     return 'Bearer ' + window.localStorage.token;
   }
 
-  static async login(username: string, password: string): Promise<string> {
-    console.log('login');
+  static async findUaaUrl(url: string): Promise<string> {
+    let response = await fetch(url);
+    let jsonData = await response.json();
+    console.log(`Json from ${url}`, jsonData);
+    return jsonData.links.uaa.href;
+  }
 
-    //"authorization_endpoint": "https://login.run.pivotal.io",
-    //const requestURL = 'https://api.run.pivotal.io/v2/info';
-    const uuaEndpoint = 'https://login.run.pivotal.io';
+  static async login(
+    username: string,
+    password: string,
+    cfUrl: string,
+  ): Promise<string> {
+    console.log(`Starting to login to ${cfUrl}`);
+
+    CfApi.setCfApiUrl(cfUrl);
+    const uuaEndpoint = await CfApi.findUaaUrl(cfUrl);
 
     const data = new URLSearchParams();
     data.append('grant_type', 'password');

@@ -1,6 +1,7 @@
 {
   "login": {
     "signIn": "Sign in",
+    "cfUrl": "API url",
     "username": "Username",
     "password": "Password"
   },

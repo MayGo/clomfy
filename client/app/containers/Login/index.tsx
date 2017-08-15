@@ -42,6 +42,7 @@ interface ILoginPageProps {
 
   onChangeUsername?: () => React.EventHandler<React.FormEvent<any>>;
   onChangePassword?: () => React.EventHandler<React.FormEvent<any>>;
+  onChangeCfUrl?: () => React.EventHandler<React.FormEvent<any>>;
 }
 
 const styleSheet = createStyleSheet({
@@ -115,6 +116,13 @@ class LoginPage extends React.Component<ILoginPageProps, {}> {
               <CardContent>
                 <div className={classes.form}>
                   <TextField
+                    label={t('login.cfUrl')}
+                    onChange={this.props.onChangeCfUrl}
+                    value={formState.cfUrl}
+                    margin="normal"
+                    fullWidth
+                  />
+                  <TextField
                     label={t('login.username')}
                     onChange={this.props.onChangeUsername}
                     value={formState.username}
@@ -157,6 +165,7 @@ class LoginPage extends React.Component<ILoginPageProps, {}> {
 export function mapDispatchToProps(dispatch: any, ownProps: any) {
   return {
     ...bindRoutineCreators({ fetchLogin }, dispatch),
+    onChangeCfUrl: evt => dispatch(changeForm({ cfUrl: evt.target.value })),
     onChangeUsername: evt =>
       dispatch(changeForm({ username: evt.target.value })),
     onChangePassword: evt =>
