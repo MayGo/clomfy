@@ -14,16 +14,8 @@ import {
   cancelled,
 } from 'redux-saga/effects';
 import { LOCATION_CHANGE, push } from 'react-router-redux';
-import {
-  LOAD_NOTIFICATIONS,
-  LOAD_NOTIFICATIONS_SUCCESS,
-  LOAD_NOTIFICATIONS_ERROR,
-} from './constants';
-import {
-  loadNotifications,
-  notificationsLoaded,
-  notificationsLoadingError,
-} from './actions';
+
+import { fetchNotifications } from './routines';
 
 import { makeQueryNotifications } from './selectors';
 import { delay } from 'redux-saga';
@@ -32,30 +24,37 @@ import * as withQuery from 'with-query';
 import * as moment from 'moment';
 import { fetchLogin } from 'app/containers/Login/routines';
 
-let localStorage = window.localStorage;
+const localStorage = window.localStorage;
 
 function* bgSync() {
-  let lastTimestamp = moment().toISOString();
-  let delayMs = 5000;
+  let lastTimestamp; // = moment().toISOString();
+  const delayMs = 5000;
   try {
     while (true) {
       yield call(delay, delayMs);
-      yield put(loadNotifications());
+      yield put(fetchNotifications.request());
       //  lastTimestamp = moment().subtract(delayMs, 'milliseconds').toISOString();
+      let query = '';
+      if (lastTimestamp) {
+        query = 'timestamp>' + lastTimestamp;
+      }
+
       const events = yield call(
         CfApi.request,
         withQuery('events', {
           'order-direction': 'desc',
-          q: 'timestamp>' + lastTimestamp,
+          q: query,
         }),
       );
+
       if (events.resources.length > 0) {
         lastTimestamp = events.resources[0].metadata.created_at;
         console.log('Changing lastTimestamp to:', lastTimestamp);
       }
+
       console.log('Loaded notifications:', events);
 
-      yield put(notificationsLoaded(events.resources));
+      yield put(fetchNotifications.success(events));
     }
   } catch (err) {
     if (err instanceof AuthError) {
@@ -63,12 +62,12 @@ function* bgSync() {
       yield put(fetchLogout.trigger());
     } else {
       console.error('Error loading notifications:', err);
-      yield put(notificationsLoadingError(err));
+      yield put(fetchNotifications.failure(err.error));
     }
   } finally {
     if (yield cancelled()) {
       console.info('Loading notifications canceled.');
-      yield put(notificationsLoadingError('Sync cancelled!'));
+      yield put(fetchNotifications.failure('Sync cancelled!'));
     }
   }
 }

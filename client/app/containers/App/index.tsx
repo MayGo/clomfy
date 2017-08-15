@@ -15,8 +15,6 @@ import 'sanitize.css/sanitize.css';
 
 import MenuBar from './MenuBar';
 import Footer from 'app/components/Footer';
-import Notifications from '../Notifications';
-
 import { browserHistory } from 'react-router';
 
 interface IAppProps {
@@ -27,7 +25,6 @@ class App extends React.Component<IAppProps, {}> {
   public render() {
     return (
       <div>
-        <Notifications />
         <MenuBar />
         {this.props.children}
         <Footer />

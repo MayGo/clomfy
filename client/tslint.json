@@ -24,6 +24,7 @@
     "jsx-no-lambda": false,
     "jsx-boolean-value": false,
     "object-literal-sort-keys": false,
+    "object-literal-key-quotes": false,
     "semicolon": [true, "always", "ignore-bound-class-methods"],
     "only-arrow-functions": [true, "allow-declarations"],
     "ordered-imports": [false],

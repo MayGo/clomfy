@@ -1,30 +1,28 @@
 import { fromJS } from 'immutable';
 
-import {
-  LOAD_NOTIFICATIONS, LOAD_NOTIFICATIONS_ERROR, LOAD_NOTIFICATIONS_SUCCESS,
-} from './constants';
+import { fetchNotifications } from './routines';
 
 // The initial state of the App
 const initialState = fromJS({
   list: [],
+  loading: false,
+  error: false,
 });
 
-function notificationsReducer(state = initialState, action) {
+function notificationsReducer(state: any = initialState, action: any) {
   switch (action.type) {
-    case LOAD_NOTIFICATIONS:
-      return state
-        .set('loading', true)
-        .set('error', false)
-        .set('list', []);
-    case LOAD_NOTIFICATIONS_SUCCESS:
-
-      return state
-        .set('list', action.list)
-        .set('loading', false)
-    case LOAD_NOTIFICATIONS_ERROR:
-      return state
-        .set('error', action.error)
-        .set('loading', false);
+    case fetchNotifications.TRIGGER:
+      return state.set('loading', true);
+    case fetchNotifications.SUCCESS:
+      if (action.payload.resources.length > 0) {
+        const newList = state.get('list').merge(action.payload.resources);
+        return state.set('list', newList);
+      }
+      return state;
+    case fetchNotifications.FAILURE:
+      return state.set('error', action.payload);
+    case fetchNotifications.FULFILL:
+      return state.set('loading', false);
     default:
       return state;
   }

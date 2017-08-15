@@ -7,6 +7,10 @@ import { cyan500, pinkA200, red900, deepOrange500 } from 'material-ui/colors';
 
 import { translate } from 'react-i18next';
 
+import List, { ListItem, ListItemText } from 'material-ui/List';
+
+import Avatar from 'material-ui/Avatar';
+import FolderIcon from 'material-ui-icons/Folder';
 import {
   selectError,
   makeQueryNotifications,
@@ -21,6 +25,7 @@ import * as moment from 'moment';
 
 interface IProps {
   events?: any[];
+
   t?: any;
 }
 
@@ -57,7 +62,30 @@ class Notifications extends React.Component<IProps, {}> {
   };
 
   public render() {
-    return null;
+    const { events } = this.props;
+
+    const listItems = events.map(item => {
+      const metadata = item.metadata;
+      const entity = item.entity;
+      return (
+        <ListItem button key={metadata.guid}>
+          <Avatar>
+            <FolderIcon />
+          </Avatar>
+          <ListItemText
+            primary={entity.actee_type}
+            secondary={entity.actee_name}
+          />
+        </ListItem>
+      );
+    });
+    return (
+      <div>
+        <List>
+          {listItems}
+        </List>
+      </div>
+    );
   }
 }
 
