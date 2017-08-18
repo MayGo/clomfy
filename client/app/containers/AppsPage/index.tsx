@@ -6,6 +6,7 @@ import { fetchApps } from './routines';
 import * as React from 'react';
 import AppsList from 'app/components/AppsList';
 import AppsBoard from 'app/components/AppsBoard';
+import toJS from 'app/components/ToJs';
 
 import {
   makeQueryApps,
@@ -99,4 +100,4 @@ const mapStateToProps = createStructuredSelector({
 export default connect<{}, {}, IAppsPageProps>(
   mapStateToProps,
   mapDispatchToProps,
-)(AppsPage);
+)(toJS(AppsPage));

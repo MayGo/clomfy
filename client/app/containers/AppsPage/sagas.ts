@@ -6,6 +6,8 @@ import { default as CfApi } from '../../services/cfApi';
 
 import * as withQuery from 'with-query';
 
+import { delay } from 'redux-saga';
+
 import {
   call,
   cancel,
@@ -14,6 +16,7 @@ import {
   select,
   take,
   takeLatest,
+  cancelled,
 } from 'redux-saga/effects';
 
 import { LOCATION_CHANGE, push } from 'react-router-redux';
@@ -23,9 +26,10 @@ import {
   selectPage,
   selectOrderBy,
   selectOrderDirection,
+  selectApps,
 } from './selectors';
 
-import { fetchApps } from './routines';
+import { fetchAppInstances, fetchApps } from './routines';
 
 /**
  * CF apps request/response handler
@@ -90,7 +94,51 @@ export function* watchForPage(): IterableIterator<any> {
   }
 }
 
+function* bgSyncApps() {
+  const delayMs = 15000;
+  try {
+    while (true) {
+      const apps: Array<any> = yield select(makeQueryApps());
+      //console.log('Loading instances for apps', apps);
+      for (let app of apps) {
+        // console.log('Loading for app', app);
+
+        const guid = app.getIn(['metadata', 'guid']);
+        const instances = yield call(CfApi.request, `apps/${guid}/instances`);
+        // console.log('Loaded instances:', instances);
+        yield put(fetchAppInstances.success({ guid, instances }));
+      }
+      yield call(delay, delayMs);
+    }
+  } catch (err) {
+    if (err instanceof AuthError) {
+      console.error('Auth error, logging out and redirecting to login');
+      yield put(fetchLogout.trigger());
+    } else {
+      console.error('Error loading apps instances:', err);
+    }
+  } finally {
+    if (yield cancelled()) {
+      console.info('Loading apps instances canceled.');
+    }
+  }
+}
+
+function* bgSyncAppsMain() {
+  while (yield take(fetchApps.SUCCESS)) {
+    // starts the task in the background
+    const bgSyncTask = yield fork(bgSyncApps);
+
+    // wait for the user stop action
+    yield take(fetchLogout.SUCCESS);
+    // user clicked stop. cancel the background task
+    // this will cause the forked bgSync task to jump into its finally block
+    yield cancel(bgSyncTask);
+  }
+}
+
 export function* root() {
+  yield fork(bgSyncAppsMain);
   yield fork(appsData);
   yield fork(watchForSort);
   yield fork(watchForPage);

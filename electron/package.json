@@ -22,6 +22,7 @@
   "dependencies": {
     "active-win": "^2.0.0",
     "auto-launch": "^5.0.1",
+    "classnames": "^2.2.5",
     "compare-versions": "^3.0.0",
     "electron-context-menu": " 0.9.1",
     "electron-devtools-installer": "^2.2.0",

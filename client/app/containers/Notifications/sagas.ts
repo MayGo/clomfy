@@ -33,7 +33,7 @@ function* bgSync() {
     while (true) {
       yield call(delay, delayMs);
       yield put(fetchNotifications.request());
-      //  lastTimestamp = moment().subtract(delayMs, 'milliseconds').toISOString();
+
       let query = '';
       if (lastTimestamp) {
         query = 'timestamp>' + lastTimestamp;
@@ -48,7 +48,11 @@ function* bgSync() {
       );
 
       if (events.resources.length > 0) {
-        lastTimestamp = events.resources[0].metadata.created_at;
+        const itemCreatedDate = events.resources[0].metadata.created_at;
+        //Add some time, so this resource would not be in next query result
+        lastTimestamp = moment(itemCreatedDate)
+          .add(delayMs, 'milliseconds')
+          .toISOString();
         console.log('Changing lastTimestamp to:', lastTimestamp);
       }
 

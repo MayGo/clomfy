@@ -1,5 +1,5 @@
 import { CHANGE_PAGE, ORDER } from './constants';
-import { fetchApps } from './routines';
+import { fetchApps, fetchAppInstances } from './routines';
 import { fromJS } from 'immutable';
 import { order } from 'app/containers/AppsPage/actions';
 
@@ -13,6 +13,17 @@ const initialState = fromJS({
   page: 1,
   apps: null,
 });
+
+function updateApp(apps, guid, instances) {
+  const indexOfApp = apps.findIndex(apps => {
+    return apps.getIn('metadata.guid') === guid;
+  });
+
+  const app = apps.get(indexOfApp);
+  const newApp = app.setIn(['instances'], instances);
+  const newApps = apps.update(indexOfApp, val => newApp);
+  return newApps;
+}
 
 function appsReducer(state = initialState, action) {
   switch (action.type) {
@@ -28,13 +39,21 @@ function appsReducer(state = initialState, action) {
       return state.set('loading', true);
     case fetchApps.SUCCESS:
       return state
-        .set('apps', action.payload.resources)
+        .set('apps', fromJS(action.payload.resources))
         .set('total', action.payload.total_pages);
+    case fetchAppInstances.SUCCESS:
+      return state.set(
+        'apps',
+        updateApp(
+          state.get('apps'),
+          action.payload.guid,
+          fromJS(action.payload.instances),
+        ),
+      );
     case fetchApps.FAILURE:
       return state.set('error', action.payload);
     case fetchApps.FULFILL:
       return state.set('loading', false);
-
     default:
       return state;
   }

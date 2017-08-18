@@ -18,28 +18,26 @@ export interface IStore<T> extends Redux.Store<T> {
   runSaga?: (saga: (...args: any[]) => SagaIterator, ...args: any[]) => Task; // TODO: cleanup
   asyncReducers?: Redux.ReducersMapObject;
 }
-declare interface IWindow extends Window {
+interface IWindow extends Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: typeof compose;
 }
 declare const window: IWindow;
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export default function configureStore<T>(initialState: object = {}, history): IStore<T> {
+export default function configureStore<T>(
+  initialState: object = {},
+  history,
+): IStore<T> {
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
-  const middlewares: Middleware[] = [
-    sagaMiddleware,
-    routerMiddleware(history),
-  ];
+  const middlewares: Middleware[] = [sagaMiddleware, routerMiddleware(history)];
 
   const store: IStore<T> = createStore<T>(
     createReducer(),
     fromJS(initialState),
-    composeEnhancers(
-      applyMiddleware(...middlewares),
-    ),
+    composeEnhancers(applyMiddleware(...middlewares)),
   );
 
   sagaMiddleware.run(Sagas);
@@ -51,7 +49,8 @@ export default function configureStore<T>(initialState: object = {}, history): I
   /* istanbul ignore next */
   if (module.hot) {
     module.hot.accept('./reducers', () => {
-      System.import('./reducers').then((reducerModule) => {
+      console.log('Hot reloading reducers');
+      System.import('./reducers').then(reducerModule => {
         const createReducers = reducerModule.default;
         const nextReducers = createReducers(store.asyncReducers);
 

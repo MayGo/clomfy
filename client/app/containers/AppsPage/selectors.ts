@@ -13,7 +13,7 @@ const selectPage = () =>
 const selectTotal = () =>
   createSelector(selectApps, appsState => appsState.get('total'));
 
-const makeQueryApps = () =>
+const makeQueryApps = (): any =>
   createSelector(selectApps, appsState => appsState.get('apps'));
 
 const selectOrderBy = () =>
