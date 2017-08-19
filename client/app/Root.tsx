@@ -33,6 +33,7 @@ import configureStore from './store';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
 import 'typeface-berkshire-swash';
+import 'balloon-css/balloon.css';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router

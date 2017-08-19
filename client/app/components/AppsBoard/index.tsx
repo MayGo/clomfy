@@ -22,6 +22,7 @@ import { LinearProgress } from 'material-ui/Progress';
 import * as bootImage from '../../resources/boot.png';
 
 import TimeAgo from 'timeago-react';
+
 import * as classnames from 'classnames';
 
 const styleSheet = createStyleSheet({
@@ -170,10 +171,13 @@ class AppsBoard extends React.Component<IListProps, IListState> {
 
       return Object.entries(app.instances).map(([key, item]) => {
         const isRunning = item.state === 'RUNNING';
+        const tooltipText = `State: ${item.state} | Uptime: ${item.uptime} | Since: ${item.since}`;
 
         return (
           <div
             key={key}
+            data-balloon={tooltipText}
+            data-balloon-pos="right"
             className={classnames(
               classes.instanceItem,
               isRunning ? classes.green : classes.red,
