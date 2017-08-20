@@ -1,3 +1,4 @@
+import { RESTAGING_APP } from './constants';
 import { createSelector } from 'reselect';
 
 const selectApps = state => state.get('apps');
@@ -16,6 +17,13 @@ const selectTotal = () =>
 const makeQueryApps = (): any =>
   createSelector(selectApps, appsState => appsState.get('apps'));
 
+const makeQueryRestagingApps = (): any =>
+  createSelector(selectApps, appsState =>
+    appsState
+      .get('apps')
+      .filter(item => item.getIn(['entity.state']) === RESTAGING_APP),
+  );
+
 const selectOrderBy = () =>
   createSelector(selectApps, appsState => appsState.get('orderBy'));
 
@@ -25,6 +33,7 @@ const selectOrderDirection = () =>
 export {
   selectApps,
   makeQueryApps,
+  makeQueryRestagingApps,
   selectLoading,
   selectError,
   selectPage,

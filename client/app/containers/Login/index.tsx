@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import compose from 'recompose/compose';
 
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 
 import Avatar from 'material-ui/Avatar';
@@ -45,7 +45,7 @@ interface ILoginPageProps {
   onChangeCfUrl?: () => React.EventHandler<React.FormEvent<any>>;
 }
 
-const styleSheet = createStyleSheet({
+const styleSheet = theme => ({
   main: {
     display: 'flex',
     flexDirection: 'column',
@@ -104,14 +104,14 @@ class LoginPage extends React.Component<ILoginPageProps, {}> {
       <div>
         <div className={classes.main}>
           <Card className={classes.card}>
-            <CardMedia className={classes.avatar}>
+            <div className={classes.avatar}>
               <Avatar>
                 <LockIcon />
               </Avatar>
               <div className={classes.error}>
                 {error}
               </div>
-            </CardMedia>
+            </div>
             <form onSubmit={this.login}>
               <CardContent>
                 <div className={classes.form}>

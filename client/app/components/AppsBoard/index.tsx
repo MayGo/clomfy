@@ -1,10 +1,11 @@
 import * as React from 'react';
 
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Card, { CardContent } from 'material-ui/Card';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
+import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import PlayArrowIcon from 'material-ui-icons/PlayArrow';
 import StopIcon from 'material-ui-icons/Stop';
@@ -25,7 +26,7 @@ import TimeAgo from 'timeago-react';
 
 import * as classnames from 'classnames';
 
-const styleSheet = createStyleSheet({
+const styleSheet = theme => ({
   root: {
     flexGrow: 1,
     marginTop: 30,
@@ -118,7 +119,9 @@ interface IListProps {
   orderBy: string;
   changePage: any;
   onRequestSort: any;
+  restageApp: any;
 }
+
 interface IListState {
   display: number;
 }
@@ -152,6 +155,7 @@ class AppsBoard extends React.Component<IListProps, IListState> {
       orderDirection,
       orderBy,
       classes,
+      restageApp,
     } = this.props;
     if (loading) {
       return <LinearProgress mode="indeterminate" />;
@@ -212,6 +216,7 @@ class AppsBoard extends React.Component<IListProps, IListState> {
                   <IconButton
                     aria-label="Restart"
                     className={classes.controlsBtn}
+                    onClick={() => restageApp(item.metadata.guid)}
                   >
                     <ReplayIcon className={classes.icon} />
                   </IconButton>

@@ -1,7 +1,7 @@
 import { changePage, order } from './actions';
 
 import { bindRoutineCreators } from 'redux-saga-routines';
-import { fetchApps } from './routines';
+import { fetchApps, restageApp } from './routines';
 
 import * as React from 'react';
 import AppsList from 'app/components/AppsList';
@@ -32,6 +32,7 @@ interface IAppsPageProps {
   apps?: any[];
   onRequestSort: any;
   changePage: any;
+  restageApp: any;
 }
 
 export class AppsPage extends React.Component<IAppsPageProps, {}> {
@@ -70,6 +71,7 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
       <div>
         <AppsBoard
           {...appsListProps}
+          restageApp={guid => this.props.restageApp.trigger({ guids: [guid] })}
           changePage={currentPage => this.props.changePage(currentPage)}
         />
       </div>
@@ -80,6 +82,7 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
 export function mapDispatchToProps(dispatch: any) {
   return {
     changePage: (page: number) => dispatch(changePage({ page })),
+    ...bindRoutineCreators({ restageApp }, dispatch),
     ...bindRoutineCreators({ fetchApps }, dispatch),
     onRequestSort: (orderBy: string, orderDirection: string) =>
       dispatch(order({ orderBy, orderDirection })),

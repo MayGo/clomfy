@@ -1,5 +1,5 @@
-import { CHANGE_PAGE, ORDER } from './constants';
-import { fetchApps, fetchAppInstances } from './routines';
+import { CHANGE_PAGE, ORDER, RESTAGING_APP } from './constants';
+import { fetchApps, fetchAppInstances, restageApp } from './routines';
 import { fromJS } from 'immutable';
 import { order } from 'app/containers/AppsPage/actions';
 
@@ -22,6 +22,20 @@ function updateApp(apps, guid, instances) {
   const app = apps.get(indexOfApp);
   const newApp = app.setIn(['instances'], instances);
   const newApps = apps.update(indexOfApp, val => newApp);
+  return newApps;
+}
+
+function restageApps(apps, guids) {
+  let newApps = apps;
+  guids.forEach(guid => {
+    const indexOfApp = newApps.findIndex(apps => {
+      return apps.getIn('metadata.guid') === guid;
+    });
+
+    const app = apps.get(indexOfApp);
+    const newApp = app.setIn(['entity.state'], RESTAGING_APP);
+    newApps = newApps.update(indexOfApp, val => newApp);
+  });
   return newApps;
 }
 
@@ -54,6 +68,12 @@ function appsReducer(state = initialState, action) {
       return state.set('error', action.payload);
     case fetchApps.FULFILL:
       return state.set('loading', false);
+    case restageApp.TRIGGER:
+      return state.set(
+        'apps',
+        restageApps(state.get('apps'), action.payload.guids),
+      );
+
     default:
       return state;
   }

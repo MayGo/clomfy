@@ -27,9 +27,10 @@ import {
   selectOrderBy,
   selectOrderDirection,
   selectApps,
+  makeQueryRestagingApps,
 } from './selectors';
 
-import { fetchAppInstances, fetchApps } from './routines';
+import { fetchAppInstances, fetchApps, restageApp } from './routines';
 
 /**
  * CF apps request/response handler
@@ -87,12 +88,45 @@ export function* watchForSort(): IterableIterator<any> {
     yield put(fetchApps.trigger());
   }
 }
+
 export function* watchForPage(): IterableIterator<any> {
   while (true) {
     yield take(CHANGE_PAGE);
     yield put(fetchApps.trigger());
   }
 }
+
+export function* watchForAppRestage(): IterableIterator<any> {
+  console.log('watchForAppRestage');
+  while (true) {
+    console.log('waiting trigger');
+    yield take(restageApp.TRIGGER);
+    console.log(' triggered');
+    const apps: Array<any> = yield select(makeQueryRestagingApps());
+    if (apps.length == 0) {
+      console.error('No apps to restage');
+    }
+    for (let app of apps) {
+      console.log('Restaging app', app);
+
+      const guid = app.getIn(['metadata', 'guid']);
+      const instances = yield call(
+        CfApi.request,
+        `apps/${guid}/restage`,
+        {},
+        {
+          method: 'POST',
+        },
+      );
+      // console.log('Loaded instances:', instances);
+      yield put(restageApp.success({ apps }));
+    }
+  }
+}
+
+/*
+* Sync each app instances
+*/
 
 function* bgSyncApps() {
   const delayMs = 15000;
@@ -137,11 +171,13 @@ function* bgSyncAppsMain() {
   }
 }
 
+// Fork all sagas
 export function* root() {
   yield fork(bgSyncAppsMain);
   yield fork(appsData);
   yield fork(watchForSort);
   yield fork(watchForPage);
+  yield fork(watchForAppRestage);
 }
 
 // Bootstrap sagas

@@ -10,7 +10,7 @@ export default class CfApi {
     CfApi.apiUrl = `${url}/v2/`;
   }
 
-  static request(url: string, query: any = {}) {
+  static request(url: string, query: any = {}, overrideOptions = {}) {
     const stringified = queryString.stringify(query);
 
     console.log('Requesting ' + url + ' with query ' + stringified);
@@ -23,7 +23,7 @@ export default class CfApi {
       },
     };
 
-    return fetch(CfApi.apiUrl + url, options)
+    return fetch(CfApi.apiUrl + url, Object.assign(options, overrideOptions))
       .then(CfApi.checkStatus)
       .then(CfApi.parseJSON);
   }

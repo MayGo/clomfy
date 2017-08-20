@@ -34,7 +34,7 @@ import { createStructuredSelector } from 'reselect';
 import { translate } from 'react-i18next';
 import { FlatButton } from 'material-ui';
 
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Notifications from '../Notifications';
 
 interface IMenuBarOwnProps {
@@ -58,7 +58,7 @@ interface IMenuBarReactState {
   openNotif: boolean;
 }
 
-const styleSheet = createStyleSheet({
+const styleSheet = theme => ({
   logo: {
     fontFamily: ' "Berkshire Swash", cursive',
     fontWeight: 200,

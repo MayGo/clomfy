@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import NavigationFirstPage from 'material-ui-icons/FirstPage';
 import NavigationLastPage from 'material-ui-icons/LastPage';
 
-const styleSheet = createStyleSheet(theme => ({
+const styleSheet = theme => ({
   root: {
     display: 'flex',
   },
@@ -18,7 +18,7 @@ const styleSheet = createStyleSheet(theme => ({
     margin: 0,
     minWidth: 16,
   },
-}));
+});
 
 const calculateRange = arg => {
   const { total, current, display } = arg;

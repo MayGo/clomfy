@@ -56,9 +56,7 @@
     ],
     "env": {
       "production": {
-        "only": [
-          "app"
-        ],
+        "only": ["app"],
         "plugins": [
           "transform-react-remove-prop-types",
           "transform-react-constant-elements",
@@ -66,9 +64,7 @@
         ]
       },
       "test": {
-        "plugins": [
-          "istanbul"
-        ]
+        "plugins": ["istanbul"]
       }
     }
   },
@@ -81,17 +77,13 @@
       "selector-pseudo-class-no-unknown": [
         true,
         {
-          "ignorePseudoClasses": [
-            "global"
-          ]
+          "ignorePseudoClasses": ["global"]
         }
       ],
       "property-no-unknown": [
         true,
         {
-          "ignoreProperties": [
-            "composes"
-          ]
+          "ignoreProperties": ["composes"]
         }
       ],
       "indentation": 2
@@ -108,11 +100,7 @@
       "minimist",
       "sanitize.css"
     ],
-    "include": [
-      "core-js",
-      "lodash",
-      "eventsource-polyfill"
-    ]
+    "include": ["core-js", "lodash", "eventsource-polyfill"]
   },
   "dependencies": {
     "babel-polyfill": "^6.22.0",
@@ -227,7 +215,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "^2.0.3",
     "lint-staged": "^3.4.0",
-    "material-ui": "v1.0.0-beta.3",
+    "material-ui": "v1.0.0-beta.5",
     "mocha": "^3.2.0",
     "ngrok": "^2.2.6",
     "nps": "^5.4.0",
