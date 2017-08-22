@@ -1,4 +1,9 @@
-import { CHANGE_PAGE, ORDER, RESTAGING_APP } from './constants';
+import {
+  CHANGE_PAGE,
+  ORDER,
+  RESTAGING_APP,
+  RESTAGING_APP_TRIGGERED,
+} from './constants';
 import { fetchApps, fetchAppInstances, restageApp } from './routines';
 import { fromJS } from 'immutable';
 import { order } from 'app/containers/AppsPage/actions';
@@ -25,17 +30,19 @@ function updateApp(apps, guid, instances) {
   return newApps;
 }
 
-function restageApps(apps, guids) {
+function restageApps(apps, guids, state) {
   let newApps = apps;
+
   guids.forEach(guid => {
     const indexOfApp = newApps.findIndex(apps => {
       return apps.getIn('metadata.guid') === guid;
     });
 
     const app = apps.get(indexOfApp);
-    const newApp = app.setIn(['entity.state'], RESTAGING_APP);
+    const newApp = app.setIn(['entity', 'state'], state);
     newApps = newApps.update(indexOfApp, val => newApp);
   });
+
   return newApps;
 }
 
@@ -71,7 +78,16 @@ function appsReducer(state = initialState, action) {
     case restageApp.TRIGGER:
       return state.set(
         'apps',
-        restageApps(state.get('apps'), action.payload.guids),
+        restageApps(
+          state.get('apps'),
+          action.payload.guids,
+          RESTAGING_APP_TRIGGERED,
+        ),
+      );
+    case restageApp.SUCCESS:
+      return state.set(
+        'apps',
+        restageApps(state.get('apps'), action.payload.guids, RESTAGING_APP),
       );
 
     default:

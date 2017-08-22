@@ -31,6 +31,7 @@ import {
 } from './selectors';
 
 import { fetchAppInstances, fetchApps, restageApp } from './routines';
+import { List } from 'immutable/dist/immutable-nonambient';
 
 /**
  * CF apps request/response handler
@@ -102,10 +103,13 @@ export function* watchForAppRestage(): IterableIterator<any> {
     console.log('waiting trigger');
     yield take(restageApp.TRIGGER);
     console.log(' triggered');
-    const apps: Array<any> = yield select(makeQueryRestagingApps());
-    if (apps.length == 0) {
+    const apps: List<any> = yield select(makeQueryRestagingApps());
+    console.log('Apps:', apps);
+    if (apps.size === 0) {
       console.error('No apps to restage');
+      return;
     }
+    let guids = [];
     for (let app of apps) {
       console.log('Restaging app', app);
 
@@ -118,9 +122,10 @@ export function* watchForAppRestage(): IterableIterator<any> {
           method: 'POST',
         },
       );
+      guids.push(guid);
       // console.log('Loaded instances:', instances);
-      yield put(restageApp.success({ apps }));
     }
+    yield put(restageApp.success({ guids: guids }));
   }
 }
 

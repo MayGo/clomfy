@@ -1,3 +1,7 @@
+import {
+  RESTAGING_APP,
+  RESTAGING_APP_TRIGGERED,
+} from '../../containers/AppsPage/constants';
 import * as React from 'react';
 
 import { withStyles } from 'material-ui/styles';
@@ -7,6 +11,9 @@ import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
+
+import { CircularProgress } from 'material-ui/Progress';
+
 import PlayArrowIcon from 'material-ui-icons/PlayArrow';
 import StopIcon from 'material-ui-icons/Stop';
 import ReplayIcon from 'material-ui-icons/Replay';
@@ -52,6 +59,16 @@ const styleSheet = theme => ({
   controlsBtn: {
     height: 30,
   },
+  restageWrapper: {
+    position: 'relative',
+    display: 'inline-flex',
+  },
+  restageProgress: {
+    position: 'absolute',
+    top: 0,
+    left: 8,
+  },
+
   details: {
     display: 'flex',
     flexDirection: 'column',
@@ -87,12 +104,19 @@ const styleSheet = theme => ({
     width: 17,
     paddingBottom: 3,
   },
+  colorGreen: {
+    color: green[300],
+  },
+  colorRed: {
+    color: red[300],
+  },
   green: {
     background: green[300],
   },
   red: {
     background: red[300],
   },
+
   instanceItem: {
     width: 20,
     height: 20,
@@ -193,6 +217,44 @@ class AppsBoard extends React.Component<IListProps, IListState> {
       });
     };
 
+    const controls = item => {
+      let startStopBtn;
+      if (item.entity.state === 'STOPPED') {
+        startStopBtn = <PlayArrowIcon className={classes.icon} />;
+      } else {
+        startStopBtn = <StopIcon className={classes.icon} />;
+      }
+
+      let isRestageTriggered = item.entity.state === RESTAGING_APP_TRIGGERED;
+      let isRestaging =
+        item.entity.state === RESTAGING_APP || isRestageTriggered;
+
+      return (
+        <div className={classes.controls}>
+          <IconButton aria-label="Start/Stop" className={classes.controlsBtn}>
+            {startStopBtn}
+          </IconButton>
+          <div className={classes.restageWrapper}>
+            <IconButton
+              aria-label="Restage"
+              className={classes.controlsBtn}
+              onClick={() => restageApp(item.metadata.guid)}
+            >
+              <ReplayIcon className={classes.icon} />
+            </IconButton>
+            {isRestaging &&
+              <CircularProgress
+                size={30}
+                className={classnames(
+                  classes.restageProgress,
+                  isRestageTriggered ? classes.colorRed : classes.colorGreen,
+                )}
+              />}
+          </div>
+        </div>
+      );
+    };
+
     const listItems = apps.map(item =>
       <Grid item xs={4} key={item.metadata.guid}>
         <Card className={classes.card}>
@@ -204,23 +266,7 @@ class AppsBoard extends React.Component<IListProps, IListState> {
                   {item.entity.name}
                 </Typography>
                 <div className={classes.filler} />
-                <div className={classes.controls}>
-                  <IconButton
-                    aria-label="Start/Stop"
-                    className={classes.controlsBtn}
-                  >
-                    {item.entity.state === 'STOPPED'
-                      ? <PlayArrowIcon className={classes.icon} />
-                      : <StopIcon className={classes.icon} />}
-                  </IconButton>
-                  <IconButton
-                    aria-label="Restart"
-                    className={classes.controlsBtn}
-                    onClick={() => restageApp(item.metadata.guid)}
-                  >
-                    <ReplayIcon className={classes.icon} />
-                  </IconButton>
-                </div>
+                {controls(item)}
               </div>
               <div className={classes.data}>
                 <Typography color="secondary" className={classes.dataItem}>
