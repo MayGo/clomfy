@@ -2,3 +2,4 @@ export const ORDER = 'APPS:ORDER';
 export const CHANGE_PAGE = 'APPS:CHANGE_PAGE';
 export const RESTAGING_APP = 'RESTAGING';
 export const RESTAGING_APP_TRIGGERED = 'RESTAGING_TRIGGERED';
+export const REFRESH_APP = 'REFRESH_APP';

@@ -1,5 +1,7 @@
+import { refreshApp } from './actions';
+import { fetchNotifications } from '../Notifications/routines';
 import { AuthError } from '../../services/auth-error';
-import { CHANGE_PAGE, ORDER } from './constants';
+import { CHANGE_PAGE, ORDER, REFRESH_APP } from './constants';
 import { fetchLogout } from '../Login/routines';
 import { LoginRoute } from '../../RoutePaths';
 import { default as CfApi } from '../../services/cfApi';
@@ -17,6 +19,7 @@ import {
   take,
   takeLatest,
   cancelled,
+  takeEvery,
 } from 'redux-saga/effects';
 
 import { LOCATION_CHANGE, push } from 'react-router-redux';
@@ -31,7 +34,7 @@ import {
 } from './selectors';
 
 import { fetchAppInstances, fetchApps, restageApp } from './routines';
-import { List } from 'immutable/dist/immutable-nonambient';
+import { List, fromJS } from 'immutable';
 
 /**
  * CF apps request/response handler
@@ -103,7 +106,7 @@ export function* watchForAppRestage(): IterableIterator<any> {
     console.log('waiting trigger');
     yield take(restageApp.TRIGGER);
     console.log(' triggered');
-    const apps: List<any> = yield select(makeQueryRestagingApps());
+    const apps: any = yield select(makeQueryRestagingApps());
     console.log('Apps:', apps);
     if (apps.size === 0) {
       console.error('No apps to restage');
@@ -176,9 +179,36 @@ function* bgSyncAppsMain() {
   }
 }
 
+/*
+* Watch for events and refresh app data
+*/
+
+function* bgWatchForEvents(action) {
+  try {
+    const appGuids = fromJS(action.payload.resources)
+      .filter(event => event.getIn(['entity', 'actee_type']) === 'app')
+      .map(event => event.getIn(['entity', 'actee']))
+      .toSet()
+      .toList();
+
+    console.log('appGuids to update:', appGuids);
+    for (let guid of appGuids) {
+      const app = yield call(CfApi.request, `apps/${guid}`);
+      yield put(refreshApp({ app: fromJS(app) }));
+    }
+  } catch (err) {
+    console.error('Error loading apps instances:', err);
+  } finally {
+    if (yield cancelled()) {
+      console.info('Watching events for apps  canceled.');
+    }
+  }
+}
+
 // Fork all sagas
 export function* root() {
   yield fork(bgSyncAppsMain);
+  yield takeEvery(fetchNotifications.SUCCESS, bgWatchForEvents);
   yield fork(appsData);
   yield fork(watchForSort);
   yield fork(watchForPage);

@@ -54,11 +54,10 @@ function* bgSync() {
           .add(delayMs, 'milliseconds')
           .toISOString();
         console.log('Changing lastTimestamp to:', lastTimestamp);
+        yield put(fetchNotifications.success(events));
       }
 
       console.log('Loaded notifications:', events);
-
-      yield put(fetchNotifications.success(events));
     }
   } catch (err) {
     if (err instanceof AuthError) {

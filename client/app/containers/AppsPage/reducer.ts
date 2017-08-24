@@ -1,6 +1,7 @@
 import {
   CHANGE_PAGE,
   ORDER,
+  REFRESH_APP,
   RESTAGING_APP,
   RESTAGING_APP_TRIGGERED,
 } from './constants';
@@ -27,6 +28,15 @@ function updateApp(apps, guid, instances) {
   const app = apps.get(indexOfApp);
   const newApp = app.setIn(['instances'], instances);
   const newApps = apps.update(indexOfApp, val => newApp);
+  return newApps;
+}
+
+function refreshApp(apps, app) {
+  const indexOfApp = apps.findIndex(apps => {
+    return apps.getIn('metadata.guid') === app.getIn('metadata.guid');
+  });
+
+  const newApps = apps.update(indexOfApp, val => app);
   return newApps;
 }
 
@@ -70,6 +80,11 @@ function appsReducer(state = initialState, action) {
           action.payload.guid,
           fromJS(action.payload.instances),
         ),
+      );
+    case REFRESH_APP:
+      return state.set(
+        'apps',
+        refreshApp(state.get('apps'), action.payload.app),
       );
     case fetchApps.FAILURE:
       return state.set('error', action.payload);

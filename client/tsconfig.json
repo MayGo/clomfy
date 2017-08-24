@@ -9,19 +9,15 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "jsx": "preserve",
-    "lib": ["dom","es5","es6","es7","es2017"],
+    "lib": ["dom", "es5", "es6", "es7", "es2017", "es2015.iterable"],
     "allowSyntheticDefaultImports": true,
     "typeRoots": ["node_modules/@types"],
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "*"
-      ]
+      "*": ["*"]
     }
   },
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules"],
   "awesomeTypescriptLoaderOptions": {
     "useBabel": true,
     "forkChecker": true,
