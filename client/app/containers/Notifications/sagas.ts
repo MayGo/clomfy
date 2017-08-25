@@ -49,12 +49,13 @@ function* bgSync() {
 
       if (events.resources.length > 0) {
         const itemCreatedDate = events.resources[0].metadata.created_at;
+        const isFirstLoad = !lastTimestamp;
+        yield put(fetchNotifications.success({ events, isFirstLoad }));
         //Add some time, so this resource would not be in next query result
         lastTimestamp = moment(itemCreatedDate)
           .add(delayMs, 'milliseconds')
           .toISOString();
         console.log('Changing lastTimestamp to:', lastTimestamp);
-        yield put(fetchNotifications.success(events));
       }
 
       console.log('Loaded notifications:', events);

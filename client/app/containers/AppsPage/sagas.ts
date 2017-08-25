@@ -185,7 +185,11 @@ function* bgSyncAppsMain() {
 
 function* bgWatchForEvents(action) {
   try {
-    const appGuids = fromJS(action.payload.resources)
+    if (action.payload.isFirstLoad) {
+      console.log('First load. Not refreshing apps');
+      return;
+    }
+    const appGuids = fromJS(action.payload.events.resources)
       .filter(event => event.getIn(['entity', 'actee_type']) === 'app')
       .map(event => event.getIn(['entity', 'actee']))
       .toSet()

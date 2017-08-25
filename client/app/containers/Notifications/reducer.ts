@@ -14,8 +14,10 @@ function notificationsReducer(state: any = initialState, action: any) {
     case fetchNotifications.TRIGGER:
       return state.set('loading', true);
     case fetchNotifications.SUCCESS:
-      if (action.payload.resources.length > 0) {
-        const newList = state.get('list').merge(action.payload.resources);
+      if (action.payload.events.resources.length > 0) {
+        const newList = state
+          .get('list')
+          .merge(action.payload.events.resources);
         return state.set('list', newList);
       }
       return state;
