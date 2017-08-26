@@ -5,6 +5,7 @@
     "username": "Username",
     "password": "Password"
   },
+  "dateTime": "{{date, YYYY-MM-DD HH:mm:ss}}",
   "notFound": "Page Not Found",
   "routes": {
     "home": "Home",

@@ -7,15 +7,8 @@ import { cyan500, pinkA200, red900, deepOrange500 } from 'material-ui/colors';
 
 import { translate } from 'react-i18next';
 
-import List, {
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-} from 'material-ui/List';
+import NotificationsList from 'app/components/NotificationsList';
 
-import Avatar from 'material-ui/Avatar';
-import CodeIcon from 'material-ui-icons/Code';
-import CloseIcon from 'material-ui-icons/Close';
 import {
   selectError,
   makeQueryNotifications,
@@ -29,6 +22,7 @@ import ReactMaterialUiNotifications from 'react-materialui-notifications';
 import * as moment from 'moment';
 
 import TimeAgo from 'timeago-react';
+import { FormattedDate } from 'react-intl';
 
 interface IProps {
   events?: any[];
@@ -37,10 +31,6 @@ interface IProps {
 }
 
 class Notifications extends React.Component<IProps, {}> {
-  iconForType: any = {
-    'app.crash': <CloseIcon color="error" />,
-    'audit.app.process.crash': <CloseIcon color="error" />,
-  };
   state: any = {
     count: 0,
   };
@@ -73,30 +63,10 @@ class Notifications extends React.Component<IProps, {}> {
   };
 
   public render() {
-    const { events } = this.props;
+    const { events, t } = this.props;
+    const listProps = { events, t };
 
-    const listItems = events.map(item => {
-      const metadata = item.metadata;
-      const entity = item.entity;
-      return (
-        <ListItem dense button key={metadata.guid}>
-          <Avatar>
-            {this.iconForType[entity.type]
-              ? this.iconForType[entity.type]
-              : <CodeIcon />}
-          </Avatar>
-          <ListItemText primary={entity.actee_name} secondary={entity.type} />
-          <TimeAgo datetime={entity.timestamp} />
-        </ListItem>
-      );
-    });
-    return (
-      <div>
-        <List>
-          {listItems}
-        </List>
-      </div>
-    );
+    return <NotificationsList {...listProps} />;
   }
 }
 
