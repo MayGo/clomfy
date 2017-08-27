@@ -1,1 +1,1 @@
-export const ASD = 'notifications/ASd';
+export const MARK_AS_READ = 'NOTIFICATIONS_MARK_AS_READ';

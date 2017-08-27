@@ -1,3 +1,4 @@
+import { markNotificationsAsRead } from '../Notifications/actions';
 import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
@@ -36,10 +37,12 @@ import { FlatButton } from 'material-ui';
 
 import { withStyles } from 'material-ui/styles';
 import Notifications from '../Notifications';
+import { unreadNotificationsSize } from 'app/containers/Notifications/selectors';
 
 interface IMenuBarOwnProps {
   t?: any;
   classes?: any;
+  unreadNotificationsSize?: number;
 }
 interface IMenuBarStateProps {
   location: Location | null;
@@ -48,6 +51,7 @@ interface IMenuBarStateProps {
 interface IMenuBarDispatchProps {
   changeRoute?: (route: string) => void;
   fetchLogout?: any;
+  markNotificationsAsRead?: any;
 }
 type IMenuBarProps = IMenuBarOwnProps &
   IMenuBarStateProps &
@@ -81,7 +85,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
   }
 
   public render(): JSX.Element {
-    const { t, isAuthenticated, classes } = this.props;
+    const { t, isAuthenticated, classes, unreadNotificationsSize } = this.props;
     const fetchLogoutProp = this.props.fetchLogout;
     const MenuItemCustom = (props: {
       name: string;
@@ -93,6 +97,22 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
       >
         {props.name}
       </MenuItem>;
+
+    const notifEl = () => {
+      if (unreadNotificationsSize === 0) {
+        return <NotificationIcon onClick={this.handleNotifToggle} />;
+      }
+
+      return (
+        <Badge
+          badgeContent={unreadNotificationsSize}
+          color="accent"
+          onClick={this.handleNotifToggle}
+        >
+          <NotificationIcon />
+        </Badge>
+      );
+    };
 
     return (
       <div>
@@ -116,14 +136,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
               : <Button href="#login" color="contrast">
                   {t('routes.login')}
                 </Button>}
-
-            <Badge
-              badgeContent={4}
-              color="accent"
-              onClick={this.handleNotifToggle}
-            >
-              <NotificationIcon />
-            </Badge>
+            {notifEl()}
           </Toolbar>
         </AppBar>
         <Drawer
@@ -168,8 +181,11 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
   };
 
   private handleToggle = () => this.setState({ open: !this.state.open });
-  private handleNotifToggle = () =>
+  private handleNotifToggle = () => {
     this.setState({ openNotif: !this.state.openNotif });
+    console.log('Toggling');
+    this.props.markNotificationsAsRead();
+  };
   private handleClose = () => this.setState({ open: false });
   private handleNotifClose = () => this.setState({ openNotif: false });
 }
@@ -177,11 +193,13 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
 const mapStateToProps = createStructuredSelector({
   location: selectLocationState(),
   isAuthenticated: selectIsAuthenticated(),
+  unreadNotificationsSize: unreadNotificationsSize(),
 });
 
 export function mapDispatchToProps(dispatch: any) {
   return {
     ...bindRoutineCreators({ fetchLogout }, dispatch),
+    markNotificationsAsRead: () => dispatch(markNotificationsAsRead({})),
     changeRoute: url => dispatch(push(url)),
   };
 }

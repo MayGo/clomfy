@@ -20,9 +20,17 @@ const makeQueryNotifications = () =>
     notificationsState.get('list').toJS(),
   );
 
+const unreadNotificationsSize = () =>
+  createSelector(
+    selectNotifications,
+    notificationsState =>
+      notificationsState.get('list').filter(item => !item.get('isRead')).size,
+  );
+
 export {
   selectNotifications,
   makeQueryNotifications,
   selectLoading,
   selectError,
+  unreadNotificationsSize,
 };
