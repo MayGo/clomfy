@@ -1,7 +1,5 @@
-import {
-  RESTAGING_APP,
-  RESTAGING_APP_TRIGGERED,
-} from '../../containers/AppsPage/constants';
+import { AppAction } from '../../containers/AppsPage/AppActionEnum';
+
 import * as React from 'react';
 
 import { withStyles } from 'material-ui/styles';
@@ -32,6 +30,7 @@ import * as bootImage from '../../resources/boot.png';
 import TimeAgo from 'timeago-react';
 
 import * as classnames from 'classnames';
+import { AppState } from 'app/containers/AppsPage/AppStateEnum';
 
 const styleSheet = theme => ({
   root: {
@@ -148,6 +147,8 @@ interface IListProps {
   changePage: any;
   onRequestSort: any;
   restageApp: any;
+  startApp: any;
+  stopApp: any;
 }
 
 interface IListState {
@@ -155,26 +156,6 @@ interface IListState {
 }
 
 class AppsBoard extends React.Component<IListProps, IListState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      display: 7,
-    };
-  }
-
-  createSortHandler = (orderBy: string, orderDirection: string) => event => {
-    console.log('Sorting apps:', orderBy, orderDirection);
-    this.props.onRequestSort(
-      orderBy,
-      orderDirection === 'desc' ? 'asc' : 'desc',
-    );
-  };
-
-  handleInstanceClick = event => {
-    alert(1);
-    //this.setState({ open: true, anchorEl: event.currentTarget });
-  };
-
   public render() {
     const {
       loading,
@@ -184,7 +165,10 @@ class AppsBoard extends React.Component<IListProps, IListState> {
       orderBy,
       classes,
       restageApp,
+      startApp,
+      stopApp,
     } = this.props;
+
     if (loading) {
       return <LinearProgress mode="indeterminate" />;
     }
@@ -224,20 +208,34 @@ class AppsBoard extends React.Component<IListProps, IListState> {
     const controls = item => {
       let startStopBtn;
       if (item.entity.state === 'STOPPED') {
-        startStopBtn = <PlayArrowIcon className={classes.icon} />;
+        startStopBtn = (
+          <IconButton
+            aria-label="Start"
+            className={classes.controlsBtn}
+            onClick={() => startApp(item.metadata.guid)}
+          >
+            <PlayArrowIcon className={classes.icon} />
+          </IconButton>
+        );
       } else {
-        startStopBtn = <StopIcon className={classes.icon} />;
+        startStopBtn = (
+          <IconButton
+            aria-label="Stop"
+            className={classes.controlsBtn}
+            onClick={() => stopApp(item.metadata.guid)}
+          >
+            <StopIcon className={classes.icon} />
+          </IconButton>
+        );
       }
 
-      let isRestageTriggered = item.entity.state === RESTAGING_APP_TRIGGERED;
+      let isRestageTriggered = item.entity.state === AppState.RESTAGE_TRIGGERED;
       let isRestaging =
-        item.entity.state === RESTAGING_APP || isRestageTriggered;
+        item.entity.state === AppState.RESTAGING || isRestageTriggered;
 
       return (
         <div className={classes.controls}>
-          <IconButton aria-label="Start/Stop" className={classes.controlsBtn}>
-            {startStopBtn}
-          </IconButton>
+          {startStopBtn}
           <div className={classes.restageWrapper}>
             <IconButton
               aria-label="Restage"

@@ -30,11 +30,11 @@ import {
   selectOrderBy,
   selectOrderDirection,
   selectApps,
-  makeQueryRestagingApps,
 } from './selectors';
 
-import { fetchAppInstances, fetchApps, restageApp } from './routines';
+import { fetchAppInstances, fetchApps, changeAppState } from './routines';
 import { List, fromJS } from 'immutable';
+import { AppAction } from './AppActionEnum';
 
 /**
  * CF apps request/response handler
@@ -100,36 +100,38 @@ export function* watchForPage(): IterableIterator<any> {
   }
 }
 
-export function* watchForAppRestage(): IterableIterator<any> {
-  console.log('watchForAppRestage');
-  while (true) {
-    console.log('waiting trigger');
-    yield take(restageApp.TRIGGER);
-    console.log(' triggered');
-    const apps: any = yield select(makeQueryRestagingApps());
-    console.log('Apps:', apps);
-    if (apps.size === 0) {
-      console.error('No apps to restage');
+export function* watchForAppState(obj): IterableIterator<any> {
+  console.log('watchForAppState', obj.payload);
+
+  let action = obj.payload.action;
+  let guids = obj.payload.action;
+
+  if (guids.length === 0) {
+    console.error('No apps to change state');
+    return;
+  }
+
+  let updatedGuids = [];
+
+  for (let guid of guids) {
+    console.log(`Changing app ${guid} state to ${action}`);
+    let url;
+    if (action == AppAction.RESTAGE) {
+      url = `apps/${guid}/restage`;
+    } else if (action == AppAction.STOP) {
+      url = `apps/${guid}/actions/stop`;
+    } else if (action == AppAction.START) {
+      url = `apps/${guid}/actions/start`;
+    } else {
+      console.error('Unknown appAction');
       return;
     }
-    let guids = [];
-    for (let app of apps) {
-      console.log('Restaging app', app);
+    yield call(CfApi.request, url, {}, { method: 'POST' });
 
-      const guid = app.getIn(['metadata', 'guid']);
-      const instances = yield call(
-        CfApi.request,
-        `apps/${guid}/restage`,
-        {},
-        {
-          method: 'POST',
-        },
-      );
-      guids.push(guid);
-      // console.log('Loaded instances:', instances);
-    }
-    yield put(restageApp.success({ guids: guids }));
+    updatedGuids.push(guid);
+    // console.log('Loaded instances:', instances);
   }
+  yield put(changeAppState.success({ guids: updatedGuids, action }));
 }
 
 /*
@@ -216,7 +218,7 @@ export function* root() {
   yield fork(appsData);
   yield fork(watchForSort);
   yield fork(watchForPage);
-  yield fork(watchForAppRestage);
+  yield takeEvery(changeAppState.TRIGGER, watchForAppState);
 }
 
 // Bootstrap sagas

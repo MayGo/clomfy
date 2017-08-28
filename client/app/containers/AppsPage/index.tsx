@@ -1,7 +1,7 @@
 import { changePage, order } from './actions';
 
 import { bindRoutineCreators } from 'redux-saga-routines';
-import { fetchApps, restageApp } from './routines';
+import { fetchApps, changeAppState } from './routines';
 
 import * as React from 'react';
 import AppsList from 'app/components/AppsList';
@@ -20,6 +20,7 @@ import {
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { AppAction } from 'app/containers/AppsPage/AppActionEnum';
 
 interface IAppsPageProps {
   fetchApps: any;
@@ -32,7 +33,7 @@ interface IAppsPageProps {
   apps?: any[];
   onRequestSort: any;
   changePage: any;
-  restageApp: any;
+  changeAppState: any;
 }
 
 export class AppsPage extends React.Component<IAppsPageProps, {}> {
@@ -54,6 +55,7 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
       orderDirection,
       orderBy,
       onRequestSort,
+      changeAppState,
     } = this.props;
 
     const appsListProps = {
@@ -71,7 +73,21 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
       <div>
         <AppsBoard
           {...appsListProps}
-          restageApp={guid => this.props.restageApp.trigger({ guids: [guid] })}
+          restageApp={guid =>
+            changeAppState.trigger({
+              guids: [guid],
+              action: AppAction.RESTAGE,
+            })}
+          startApp={guid =>
+            changeAppState.trigger({
+              guids: [guid],
+              action: AppAction.START,
+            })}
+          stopApp={guid =>
+            changeAppState.trigger({
+              guids: [guid],
+              action: AppAction.STOP,
+            })}
           changePage={currentPage => this.props.changePage(currentPage)}
         />
       </div>
@@ -82,7 +98,7 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
 export function mapDispatchToProps(dispatch: any) {
   return {
     changePage: (page: number) => dispatch(changePage({ page })),
-    ...bindRoutineCreators({ restageApp }, dispatch),
+    ...bindRoutineCreators({ changeAppState }, dispatch),
     ...bindRoutineCreators({ fetchApps }, dispatch),
     onRequestSort: (orderBy: string, orderDirection: string) =>
       dispatch(order({ orderBy, orderDirection })),

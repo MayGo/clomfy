@@ -1,11 +1,7 @@
-import {
-  CHANGE_PAGE,
-  ORDER,
-  REFRESH_APP,
-  RESTAGING_APP,
-  RESTAGING_APP_TRIGGERED,
-} from './constants';
-import { fetchApps, fetchAppInstances, restageApp } from './routines';
+import { AppAction } from './AppActionEnum';
+import { AppState } from './AppStateEnum';
+import { CHANGE_PAGE, ORDER, REFRESH_APP } from './constants';
+import { fetchApps, fetchAppInstances, changeAppState } from './routines';
 import { fromJS } from 'immutable';
 import { order } from 'app/containers/AppsPage/actions';
 
@@ -40,7 +36,7 @@ function refreshApp(apps, app) {
   return newApps;
 }
 
-function restageApps(apps, guids, state) {
+function restageApps(apps, guids, action, isTriggered) {
   let newApps = apps;
 
   guids.forEach(guid => {
@@ -49,6 +45,15 @@ function restageApps(apps, guids, state) {
     });
 
     const app = apps.get(indexOfApp);
+    let state;
+    if (action == AppAction.RESTAGE) {
+      state = isTriggered ? AppState.RESTAGE_TRIGGERED : AppState.RESTAGING;
+    } else if (action == AppAction.STOP) {
+      state = isTriggered ? AppState.STOP_TRIGGERED : AppState.STOPPING;
+    } else if (action == AppAction.START) {
+      state = isTriggered ? AppState.START_TRIGGERED : AppState.STARTING;
+    }
+
     const newApp = app.setIn(['entity', 'state'], state);
     newApps = newApps.update(indexOfApp, val => newApp);
   });
@@ -90,19 +95,25 @@ function appsReducer(state = initialState, action) {
       return state.set('error', action.payload);
     case fetchApps.FULFILL:
       return state.set('loading', false);
-    case restageApp.TRIGGER:
+    case changeAppState.TRIGGER:
       return state.set(
         'apps',
         restageApps(
           state.get('apps'),
           action.payload.guids,
-          RESTAGING_APP_TRIGGERED,
+          action.payload.action,
+          true,
         ),
       );
-    case restageApp.SUCCESS:
+    case changeAppState.SUCCESS:
       return state.set(
         'apps',
-        restageApps(state.get('apps'), action.payload.guids, RESTAGING_APP),
+        restageApps(
+          state.get('apps'),
+          action.payload.guids,
+          action.payload.action,
+          false,
+        ),
       );
 
     default:

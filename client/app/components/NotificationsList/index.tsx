@@ -1,7 +1,3 @@
-import {
-  RESTAGING_APP,
-  RESTAGING_APP_TRIGGERED,
-} from '../../containers/AppsPage/constants';
 import * as React from 'react';
 
 import { withStyles } from 'material-ui/styles';
