@@ -82,7 +82,7 @@ const styleSheet = theme => ({
     flexDirection: 'row',
   },
   dataItem: {
-    paddingLeft: 5,
+    paddingRight: 5,
   },
   imageContainer: {
     display: 'flex',
@@ -115,6 +115,10 @@ const styleSheet = theme => ({
   },
   red: {
     background: red[300],
+  },
+  instances: {
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
 
   instanceItem: {
@@ -282,7 +286,7 @@ class AppsBoard extends React.Component<IListProps, IListState> {
                   {item.entity.memory}
                 </Typography>
               </div>
-              <div>
+              <div className={classes.instances}>
                 {instancesItems(item)}
               </div>
             </CardContent>
