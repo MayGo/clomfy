@@ -114,6 +114,27 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
       );
     };
 
+    const loginEl = () => {
+      if (isAuthenticated) {
+        return (
+          <Button
+            color="contrast"
+            onClick={() => {
+              fetchLogoutProp.trigger();
+            }}
+          >
+            {t('routes.logout')}
+          </Button>
+        );
+      }
+
+      return (
+        <Button href="#login" color="contrast">
+          {t('routes.login')}
+        </Button>
+      );
+    };
+
     return (
       <div>
         <AppBar position="static">
@@ -124,19 +145,8 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
             <Typography type="title" color="inherit" className={classes.logo}>
               Clomfy
             </Typography>
-            {isAuthenticated
-              ? <Button
-                  color="contrast"
-                  onClick={() => {
-                    fetchLogoutProp.trigger();
-                  }}
-                >
-                  {t('routes.logout')}
-                </Button>
-              : <Button href="#login" color="contrast">
-                  {t('routes.login')}
-                </Button>}
             {notifEl()}
+            {loginEl()}
           </Toolbar>
         </AppBar>
         <Drawer
