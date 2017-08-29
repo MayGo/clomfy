@@ -50,7 +50,7 @@ export function* getApps(): IterableIterator<any> {
   try {
     const apps = yield call(
       CfApi.request,
-      withQuery('apps', {
+      withQuery('v2/apps', {
         page,
         'order-direction': orderDirection,
       }),
@@ -117,11 +117,11 @@ export function* watchForAppState(obj): IterableIterator<any> {
     console.log(`Changing app ${guid} state to ${action}`);
     let url;
     if (action == AppAction.RESTAGE) {
-      url = `apps/${guid}/restage`;
+      url = `v2/apps/${guid}/restage`;
     } else if (action == AppAction.STOP) {
-      url = `apps/${guid}/actions/stop`;
+      url = `v3/apps/${guid}/actions/stop`;
     } else if (action == AppAction.START) {
-      url = `apps/${guid}/actions/start`;
+      url = `v3/apps/${guid}/actions/start`;
     } else {
       console.error('Unknown appAction');
       return;
@@ -148,7 +148,10 @@ function* bgSyncApps() {
         // console.log('Loading for app', app);
 
         const guid = app.getIn(['metadata', 'guid']);
-        const instances = yield call(CfApi.request, `apps/${guid}/instances`);
+        const instances = yield call(
+          CfApi.request,
+          `v2/apps/${guid}/instances`,
+        );
         // console.log('Loaded instances:', instances);
         yield put(fetchAppInstances.success({ guid, instances }));
       }
@@ -199,7 +202,7 @@ function* bgWatchForEvents(action) {
 
     console.log('appGuids to update:', appGuids);
     for (let guid of appGuids) {
-      const app = yield call(CfApi.request, `apps/${guid}`);
+      const app = yield call(CfApi.request, `v2/apps/${guid}`);
       yield put(refreshApp({ app: fromJS(app) }));
     }
   } catch (err) {

@@ -41,7 +41,7 @@ function* bgSync() {
 
       const events = yield call(
         CfApi.request,
-        withQuery('events', {
+        withQuery('v2/events', {
           'order-direction': 'desc',
           q: query,
         }),

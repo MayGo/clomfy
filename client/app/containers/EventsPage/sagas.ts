@@ -32,7 +32,7 @@ export function* getEvents(): IterableIterator<any> {
   try {
     const events = yield call(
       CfApi.request,
-      withQuery('events', {
+      withQuery('v2/events', {
         page,
         'order-direction': orderDirection,
         'order-by': orderBy,

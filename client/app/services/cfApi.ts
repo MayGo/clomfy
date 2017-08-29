@@ -7,7 +7,7 @@ export default class CfApi {
   static apiUrl: any;
 
   static setCfApiUrl(url: string) {
-    CfApi.apiUrl = `${url}/v2/`;
+    CfApi.apiUrl = `${url}/`;
   }
 
   static request(url: string, query: any = {}, overrideOptions = {}) {

@@ -27,7 +27,7 @@ export function* getBuildpacks(): IterableIterator<any> {
   const username = yield select(makeQueryBuildpacks());
   try {
     // Call our request helper (see 'utils/request')
-    const repos = yield call(CfApi.request, 'buildpacks');
+    const repos = yield call(CfApi.request, 'v2/buildpacks');
     console.log(repos);
     yield put(buildpacksLoaded(repos.resources));
   } catch (err) {
