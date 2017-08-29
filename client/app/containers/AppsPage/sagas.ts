@@ -104,7 +104,7 @@ export function* watchForAppState(obj): IterableIterator<any> {
   console.log('watchForAppState', obj.payload);
 
   let action = obj.payload.action;
-  let guids = obj.payload.action;
+  let guids = obj.payload.guids;
 
   if (guids.length === 0) {
     console.error('No apps to change state');
