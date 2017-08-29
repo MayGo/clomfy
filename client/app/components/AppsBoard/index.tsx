@@ -124,7 +124,6 @@ const styleSheet = theme => ({
     width: 20,
     height: 20,
     display: 'flex',
-    position: 'absolute',
     flexWrap: 'wrap',
     fontSize: 12,
     alignItems: 'center',
@@ -275,16 +274,17 @@ class AppsBoard extends React.Component<IListProps, IListState> {
                   <TimerIcon className={classes.miniIcon} />
                   <TimeAgo datetime={item.entity.package_updated_at} />
                 </Typography>
-                <Typography color="secondary" className={classes.dataItem}>
-                  <ComputerIcon className={classes.miniIcon} />
-                  {item.entity.instances}
-                </Typography>
+
                 <Typography color="secondary" className={classes.dataItem}>
                   <MemoryIcon className={classes.miniIcon} />
                   {item.entity.memory}
                 </Typography>
               </div>
               <div className={classes.instances}>
+                <Typography color="secondary" className={classes.dataItem}>
+                  <ComputerIcon className={classes.miniIcon} />
+                  {item.entity.instances}
+                </Typography>
                 {instancesItems(item)}
               </div>
             </CardContent>

@@ -139,9 +139,11 @@ export function* watchForAppState(obj): IterableIterator<any> {
 */
 
 function* bgSyncApps() {
-  const delayMs = 15000;
-  try {
-    while (true) {
+  let delayMs = 500;
+  while (true) {
+    try {
+      yield call(delay, delayMs);
+      delayMs = 10000; //First delay is shorter
       const apps: Array<any> = yield select(makeQueryApps());
       //console.log('Loading instances for apps', apps);
       for (let app of apps) {
@@ -155,18 +157,17 @@ function* bgSyncApps() {
         // console.log('Loaded instances:', instances);
         yield put(fetchAppInstances.success({ guid, instances }));
       }
-      yield call(delay, delayMs);
-    }
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.error('Auth error, logging out and redirecting to login');
-      yield put(fetchLogout.trigger());
-    } else {
-      console.error('Error loading apps instances:', err);
-    }
-  } finally {
-    if (yield cancelled()) {
-      console.info('Loading apps instances canceled.');
+    } catch (err) {
+      if (err instanceof AuthError) {
+        console.error('Auth error, logging out and redirecting to login');
+        yield put(fetchLogout.trigger());
+      } else {
+        console.error('Error loading apps instances:', err);
+      }
+    } finally {
+      if (yield cancelled()) {
+        console.info('Loading apps instances canceled.');
+      }
     }
   }
 }
