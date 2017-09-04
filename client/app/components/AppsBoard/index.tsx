@@ -31,6 +31,7 @@ import TimeAgo from 'timeago-react';
 
 import * as classnames from 'classnames';
 import { AppState } from 'app/containers/AppsPage/AppStateEnum';
+import { Link } from 'react-router';
 
 const styleSheet = theme => ({
   root: {
@@ -264,7 +265,9 @@ class AppsBoard extends React.Component<IListProps, IListState> {
               <div className={classes.header}>
                 <Typography type="headline">
                   <img src={bootImage} className={classes.appIcon} />
-                  {item.entity.name}
+                  <Link to={`/apps/${item.metadata.guid}`}>
+                    {item.entity.name}
+                  </Link>
                 </Typography>
                 <div className={classes.filler} />
                 {controls(item)}

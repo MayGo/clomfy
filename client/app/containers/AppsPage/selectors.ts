@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectApps = state => state.get('apps');
+
 const selectLoading = () =>
   createSelector(selectApps, appsState => appsState.get('loading'));
 
@@ -16,6 +17,15 @@ const selectTotal = () =>
 const makeQueryApps = (): any =>
   createSelector(selectApps, appsState => appsState.get('apps'));
 
+const loadApp = () => (state, props) => {
+  const guid = props.params.guid;
+
+  const app = selectApps(state).get('apps').find(item => {
+    return item.getIn(['metadata', 'guid']) === guid;
+  });
+  return app;
+};
+
 const selectOrderBy = () =>
   createSelector(selectApps, appsState => appsState.get('orderBy'));
 
@@ -28,6 +38,7 @@ export {
   selectLoading,
   selectError,
   selectPage,
+  loadApp,
   selectTotal,
   selectOrderBy,
   selectOrderDirection,

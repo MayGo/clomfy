@@ -6,6 +6,7 @@ import {
   HomeRoute,
   LoginRoute,
   EventsRoute,
+  AppRoute,
 } from './RoutePaths';
 // These are the pages you can go to.
 // They are all wrapped in the App component, which should contain the navbar etc
@@ -14,7 +15,8 @@ import {
 import { getAsyncInjectors } from './utils/asyncInjectors';
 import { Route, RouteProps } from 'react-router';
 import Login from './containers/Login';
-import { HomePage } from 'app/containers/HomePage';
+import HomePage from 'app/containers/HomePage';
+import AppPage from 'app/containers/AppPage';
 
 const errorLoading = err => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
@@ -86,6 +88,11 @@ export default function createRoutes(store): IExtendedRouteProps[] {
       path: AppsRoute,
       name: 'apps',
       component: AppsPage,
+    },
+    {
+      path: AppRoute,
+      name: 'app',
+      component: AppPage,
     },
     {
       path: EventsRoute,
