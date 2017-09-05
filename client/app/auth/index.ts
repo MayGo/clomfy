@@ -15,7 +15,12 @@ let auth = {
     localStorage.token = token;
     localStorage.cfUrl = cfUrl;
     localStorage.username = username;
-    localStorage.password = password;
+
+    // Save password when developing
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Development mode, saving password');
+      localStorage.password = password;
+    }
 
     return { token };
   },

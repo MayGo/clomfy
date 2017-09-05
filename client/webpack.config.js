@@ -126,7 +126,12 @@ module.exports = ({ production = false, server = false, extractCss = false, cove
     // prints more readable module names in the browser console on HMR updates
     new FriendlyErrorsWebpackPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+      }
+    }),
+    
     new TsConfigPathsPlugin(),
     new CheckerPlugin(),
     new HtmlWebpackPlugin({
