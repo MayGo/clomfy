@@ -149,6 +149,7 @@ interface IListProps {
   restageApp: any;
   startApp: any;
   stopApp: any;
+  changeRoute?: (route: string) => void;
 }
 
 interface IListState {
@@ -167,6 +168,7 @@ class AppsBoard extends React.Component<IListProps, IListState> {
       restageApp,
       startApp,
       stopApp,
+      changeRoute,
     } = this.props;
 
     if (loading) {
@@ -265,10 +267,16 @@ class AppsBoard extends React.Component<IListProps, IListState> {
               <div className={classes.header}>
                 <Typography type="headline">
                   <img src={bootImage} className={classes.appIcon} />
-                  <Link to={`/apps/${item.metadata.guid}`}>
+                  <Button
+                    dense
+                    color="accent"
+                    onTouchTap={() =>
+                      changeRoute(`/apps/${item.metadata.guid}`)}
+                  >
                     {item.entity.name}
-                  </Link>
+                  </Button>
                 </Typography>
+
                 <div className={classes.filler} />
                 {controls(item)}
               </div>

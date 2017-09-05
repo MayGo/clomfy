@@ -21,6 +21,7 @@ import {
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { AppAction } from 'app/containers/AppsPage/AppActionEnum';
+import { push } from 'react-router-redux';
 
 interface IAppsPageProps {
   fetchApps: any;
@@ -34,6 +35,7 @@ interface IAppsPageProps {
   onRequestSort: any;
   changePage: any;
   changeAppState: any;
+  changeRoute?: (route: string) => void;
 }
 
 export class AppsPage extends React.Component<IAppsPageProps, {}> {
@@ -56,6 +58,7 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
       orderBy,
       onRequestSort,
       changeAppState,
+      changeRoute,
     } = this.props;
 
     const appsListProps = {
@@ -67,6 +70,7 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
       orderDirection,
       orderBy,
       onRequestSort,
+      changeRoute,
     };
 
     return (
@@ -102,6 +106,7 @@ export function mapDispatchToProps(dispatch: any) {
     ...bindRoutineCreators({ fetchApps }, dispatch),
     onRequestSort: (orderBy: string, orderDirection: string) =>
       dispatch(order({ orderBy, orderDirection })),
+    changeRoute: url => dispatch(push(url)),
   };
 }
 
