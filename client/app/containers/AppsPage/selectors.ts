@@ -20,7 +20,12 @@ const makeQueryApps = (): any =>
 const loadApp = () => (state, props) => {
   const guid = props.params.guid;
 
-  const app = selectApps(state).get('apps').find(item => {
+  const apps = selectApps(state).get('apps');
+  if (!apps) {
+    console.error('No apps when loading app with guid!', guid);
+    return null;
+  }
+  const app = apps.find(item => {
     return item.getIn(['metadata', 'guid']) === guid;
   });
   return app;

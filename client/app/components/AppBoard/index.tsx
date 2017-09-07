@@ -35,10 +35,12 @@ import * as classnames from 'classnames';
 import { AppState } from 'app/containers/AppsPage/AppStateEnum';
 import { Link } from 'react-router';
 
+import AppBar from 'material-ui/AppBar';
+import Tabs, { Tab } from 'material-ui/Tabs';
+
 const styleSheet = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: 30,
   },
   paper: {
     padding: 16,
@@ -155,10 +157,26 @@ interface IListProps {
 }
 
 interface IListState {
-  display: number;
+  value: number;
+}
+
+function TabContainer(props) {
+  return (
+    <div style={{ padding: 20 }}>
+      {props.children}
+    </div>
+  );
 }
 
 class AppBoard extends React.Component<IListProps, IListState> {
+  state = {
+    value: 0,
+  };
+
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
+
   public render() {
     const {
       loading,
@@ -173,6 +191,8 @@ class AppBoard extends React.Component<IListProps, IListState> {
       changeRoute,
     } = this.props;
 
+    const { value } = this.state;
+
     if (loading) {
       return <LinearProgress mode="indeterminate" />;
     }
@@ -183,7 +203,30 @@ class AppBoard extends React.Component<IListProps, IListState> {
 
     return (
       <div className={classes.root}>
-        <ReactJson src={app} />
+        <div>
+          <div>
+            <Typography type="headline">
+              {app.entity.name}
+            </Typography>
+          </div>
+          <Tabs value={value} onChange={this.handleChange}>
+            <Tab label="View" />
+            <Tab label="Json" />
+            <Tab label="Item Three" />
+          </Tabs>
+        </div>
+        {value === 0 &&
+          <TabContainer>
+            {'Item one'}
+          </TabContainer>}
+        {value === 1 &&
+          <TabContainer>
+            <ReactJson src={app} />
+          </TabContainer>}
+        {value === 2 &&
+          <TabContainer>
+            {'Item Three'}
+          </TabContainer>}
       </div>
     );
   }
