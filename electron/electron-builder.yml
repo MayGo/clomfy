@@ -1,5 +1,5 @@
-appId: "ee.trimatech.tockler"
-productName: "Tockler"
+appId: "ee.trimatech.clomfy"
+productName: "Clomfy"
 asar: false
 npmRebuild: false
 directories:

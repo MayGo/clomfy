@@ -1,7 +1,6 @@
 import * as utils from './utils';
 
-xdescribe('Shell', function () {
-
+xdescribe('Shell', function() {
   beforeEach(async () => {
     this.app = utils.createApplication();
     await utils.startApplication(this.app);
@@ -12,7 +11,7 @@ xdescribe('Shell', function () {
     await utils.stopApplication(this.app);
   });
 
-  it("shows an initial window", async () => {
+  it('shows an initial window', async () => {
     const winCount = await this.app.client.getWindowCount();
 
     expect(winCount).toEqual(2);
@@ -35,6 +34,6 @@ xdescribe('Shell', function () {
 
   it('displays app name', async () => {
     const title = await this.app.browserWindow.getTitle();
-    expect(title).toEqual('Tockler');
+    expect(title).toEqual('Clomfy');
   });
 });
