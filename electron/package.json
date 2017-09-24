@@ -36,17 +36,13 @@
     "node-notifier": "^5.0.2",
     "os-locale": "2.0.0",
     "randomcolor": "0.5.3",
-    "requirejs": "^2.3.3",
-    "sequelize": "3.30.4",
-    "sequelize-mock": "^0.8.1",
-    "sqlite3": "^3.1.8"
+    "requirejs": "^2.3.3"
   },
   "peerDependencies": {},
   "devDependencies": {
     "@types/jest": "20.0.2",
     "@types/lodash": "4.14.68",
     "@types/node": "8.0.7",
-    "@types/sequelize": "^4.0.61",
     "@types/webdriverio": "^4.7.1",
     "@types/webpack": "2.2.16",
     "awesome-typescript-loader": "3.2.1",
@@ -76,10 +72,7 @@
       "babel",
       "<rootDir>/node_modules/source-map-support"
     ],
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
+    "moduleFileExtensions": ["ts", "js"],
     "setupTestFrameworkScriptFile": "<rootDir>/util/jest-setup.js",
     "transform": {
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
