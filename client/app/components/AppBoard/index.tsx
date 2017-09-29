@@ -27,7 +27,7 @@ import Badge from 'material-ui/Badge';
 
 import { LinearProgress } from 'material-ui/Progress';
 
-import * as bootImage from '../../resources/boot.png';
+import * as bootImage from './../../resources/boot.png';
 
 import TimeAgo from 'timeago-react';
 
