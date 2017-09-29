@@ -1,4 +1,4 @@
-import { AppAction } from '../../containers/AppsPage/AppActionEnum';
+import { AppAction } from './../../containers/AppsPage/AppActionEnum';
 
 import * as React from 'react';
 
