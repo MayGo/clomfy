@@ -1,40 +1,42 @@
-![Tockler](https://github.com/MayGo/tockler/raw/master/screenshots/tockler-logo.png "Tockler")
+![Clomfy](https://github.com/MayGo/clomfy/raw/master/screenshots/clomfy-logo.png "Clomfy")
 -------
 
-Automatically track applications usage and working time.
+Cloud Foundy manager.
 
-- Windows [Download ver 3.0.4](https://github.com/MayGo/tockler/releases/download/v3.0.4/Tockler-Setup-3.0.4.exe)
-- OS X [Download ver 3.0.4](https://github.com/MayGo/tockler/releases/download/v3.0.4/Tockler-3.0.4.dmg) 
-- Linux [Download ver 3.0.4](https://github.com/MayGo/tockler/releases/download/v3.0.4/Tockler-3.0.4-x86_64.AppImage) 
+!!! Work in progress !!!
+
+- Windows [Download ver 0.0.1](https://github.com/MayGo/clomfy/releases/download/v0.0.1/clomfy-Setup-0.0.1.exe)
+- OS X [Download ver 0.0.1](https://github.com/MayGo/clomfy/releases/download/v0.0.1/clomfy-0.0.1.dmg) 
+- Linux [Download ver 0.0.1](https://github.com/MayGo/clomfy/releases/download/v0.0.1/clomfy-0.0.1-x86_64.AppImage) 
 
 # Features
 
-- Timeline chart
-- Pie charts
-- View application usage and online time in timeline and table
-- Add log items
-- Statistics and summaries
-- Remind user to start new log item.
-- Group log items (e.g 'Working with tockler' or 'JIRA-1234')
+- Apps board
+- Stop/Start/Restart app
+- View app data as JSON
+- View notifications
+- Buildpacks list
 
 # Features to be implemented
 
-- Remind to take a break
+- App board
+- Change app settings (instances/memory)
 
 # Made with
 
 - [Electron](https://electron.atom.io/) with [Webpack](https://webpack.github.io/) and [Typescript](https://www.typescriptlang.org/)
-- [Aurelia](http://aurelia.io/)
-- [D3 v4](https://d3js.org/) and [Britecharts](http://eventbrite.github.io/britecharts/)
-- [Bootstrap 4](https://v4-alpha.getbootstrap.com/) and [Modular Admin theme](http://modularcode.io/modular-admin-html/)
+- [React](https://reactjs.org/)
+- [Material UI](http://www.material-ui.com/) 
 
 # Screenshots
 
-![Timeline](https://github.com/MayGo/tockler/raw/master/screenshots/tockler-timeline.png "Timeline")
-![Changing items color](https://github.com/MayGo/tockler/raw/master/screenshots/tockler-change_color.png "Changing items color")
-![Settings](https://github.com/MayGo/tockler/raw/master/screenshots/tockler-settings.png "Settings")
-![Summary](https://github.com/MayGo/tockler/raw/master/screenshots/tockler-summary.png "Summary")
-![Tray window](https://github.com/MayGo/tockler/raw/master/screenshots/tockler-tray.png "Tray window")
+![Login](https://github.com/MayGo/clomfy/raw/master/screenshots/clomfy-login.png "Login")
+
+![Apps board](https://github.com/MayGo/clomfy/raw/master/screenshots/clomfy-apps-board.png "Apps board")
+
+![View app json data](https://github.com/MayGo/clomfy/raw/master/screenshots/clomfy-app-json.png "View app json data")
+
+![Notifications](https://github.com/MayGo/clomfy/raw/master/screenshots/clomfy-notifications.png "Notifications")
 
 # Donations 
 
@@ -43,9 +45,9 @@ Your donation is highly appreciated. Thank you!
 
 Feel free to make feature requests and 'Star' this project.
 
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=MayGo&url=https://github.com/MayGo/tockler&title=Tockler&language=en_GB&tags=github&category=software)
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=MayGo&url=https://github.com/MayGo/clomfy&title=Clomfy&language=en_GB&tags=github&category=software)
 
-<a href='https://pledgie.com/campaigns/31267'><img alt='Click here to lend your support to: Tockler and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31267.png?skin_name=chrome' border='0' ></a>
+<a href='https://pledgie.com/campaigns/31267'><img alt='Click here to lend your support to: Clomfy and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31267.png?skin_name=chrome' border='0' ></a>
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JAHHBZZCZVDMA)
 
@@ -57,7 +59,7 @@ Development
 > Prerequisites: [Node](https://nodejs.org/), [Git](https://git-scm.com/).
 
 ```bash
-git clone https://github.com/Maygo/tockler.git  # Download this project
+git clone https://github.com/Maygo/clomfy.git  # Download this project
 
 npm install yarn -g     # install yarn or binary from https://yarnpkg.com
 
@@ -76,17 +78,6 @@ cd electron/
 nps run
 ```
 
-
-# Signing
-https://4sysops.com/archives/sign-your-powershell-scripts-to-increase-security/'
-in powershell as admin
-```
-$cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert
-Set-AuthenticodeSignature -FilePath '.\app\get-foreground-window-title.ps1' -Certificate $cert
-```
-```
-Set-AuthenticodeSignature -FilePath '.\app\get-user-idle-time.ps1' -Certificate $cert
-```
 # License
 GNU General Public License v2.0
 2017 MayGo @ [trimatech.ee](http://trimatech.ee)
