@@ -25,7 +25,7 @@ interface IEventsPageProps {
   error?: Error | false;
   page: number;
   total: number;
-  orderDirection: string;
+  orderDirection: 'desc' | 'asc';
   orderBy: string;
   events?: any[];
   onRequestSort: any;
@@ -33,7 +33,7 @@ interface IEventsPageProps {
 }
 
 export class EventsPage extends React.Component<IEventsPageProps, {}> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
   }
   public componentDidMount() {
@@ -75,7 +75,7 @@ export class EventsPage extends React.Component<IEventsPageProps, {}> {
   }
 }
 
-export function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch: any) {
   return {
     ...bindRoutineCreators({ fetchEvents }, dispatch),
     onRequestSort: (orderBy: string, orderDirection: string) =>

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import compose from 'recompose/compose';
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles, StyleRules } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 
 import Avatar from 'material-ui/Avatar';
@@ -16,18 +16,17 @@ import LockIcon from 'material-ui-icons/LockOutline';
 
 import { changeForm } from './actions';
 
-import { red900 } from 'material-ui/colors';
+import { red } from 'material-ui/colors';
 
 import { translate } from 'react-i18next';
 
 import { propTypes, reduxForm, Field } from 'redux-form';
 
-import { makeQueryFormState } from './selectors';
+import { makeQueryFormState, selectLoading } from './selectors';
 import { LinearProgress } from 'material-ui';
 
 import { bindRoutineCreators } from 'redux-saga-routines';
 import { fetchLogin } from './routines';
-import { selectLoading } from './selectors';
 
 interface ILoginPageProps {
   classes: any;
@@ -45,14 +44,14 @@ interface ILoginPageProps {
   onChangeCfUrl?: () => React.EventHandler<React.FormEvent<any>>;
 }
 
-const styleSheet = theme => ({
+const styles: StyleRules = {
   main: {
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: muiTheme.palette.primary1Color,
+    backgroundColor: muiTheme.palette.primary,
   },
   card: {
     minWidth: 300,
@@ -78,10 +77,10 @@ const styleSheet = theme => ({
     width: '100%',
   },
   error: {
-    color: red900,
+    color: red[900],
     paddingTop: 5,
   },
-});
+};
 
 class LoginPage extends React.Component<ILoginPageProps, {}> {
   constructor(props: any) {
@@ -183,4 +182,4 @@ const mapStateToProps = createStructuredSelector({
 export default connect<{}, {}, ILoginPageProps>(
   mapStateToProps,
   mapDispatchToProps,
-)(withStyles(styleSheet)(translate()(LoginPage)));
+)(withStyles(styles)(translate()(LoginPage)));

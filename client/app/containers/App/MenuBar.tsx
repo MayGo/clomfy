@@ -33,11 +33,10 @@ import { fetchLogout } from '../Login/routines';
 import { createStructuredSelector } from 'reselect';
 
 import { translate } from 'react-i18next';
-import { FlatButton } from 'material-ui';
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles, StyleRules } from 'material-ui/styles';
 import Notifications from '../Notifications';
-import { unreadNotificationsSize } from 'app/containers/Notifications/selectors';
+import { unreadNotificationsSizeSelector } from 'app/containers/Notifications/selectors';
 
 interface IMenuBarOwnProps {
   t?: any;
@@ -62,7 +61,7 @@ interface IMenuBarReactState {
   openNotif: boolean;
 }
 
-const styleSheet = theme => ({
+const styles: StyleRules = {
   logo: {
     fontFamily: ' "Berkshire Swash", cursive',
     fontWeight: 200,
@@ -76,7 +75,7 @@ const styleSheet = theme => ({
   menu: {
     width: 250,
   },
-});
+};
 
 class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
   constructor(props: IMenuBarProps, context: any) {
@@ -87,13 +86,10 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
   public render(): JSX.Element {
     const { t, isAuthenticated, classes, unreadNotificationsSize } = this.props;
     const fetchLogoutProp = this.props.fetchLogout;
-    const MenuItemCustom = (props: {
-      name: string;
-      path: string;
-    }): React.ReactElement<MenuItem> =>
+    const MenuItemCustom = (props: { name: string; path: string }) =>
       <MenuItem
         disabled={this.props.location!.pathname === props.path}
-        onTouchTap={this.handleNavigate(props.path)}
+        onClick={this.handleNavigate(props.path)}
       >
         {props.name}
       </MenuItem>;
@@ -149,11 +145,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
             {loginEl()}
           </Toolbar>
         </AppBar>
-        <Drawer
-          docked={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
-        >
+        <Drawer open={this.state.open} onRequestClose={this.handleClose}>
           <div className={classes.menu}>
             <MenuItemCustom name={t('routes.home')} path={HomeRoute} />
             <MenuItemCustom
@@ -167,7 +159,6 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
         </Drawer>
         <Drawer
           anchor="right"
-          docked={false}
           open={this.state.openNotif}
           onRequestClose={this.handleNotifClose}
         >
@@ -203,7 +194,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
 const mapStateToProps = createStructuredSelector({
   location: selectLocationState(),
   isAuthenticated: selectIsAuthenticated(),
-  unreadNotificationsSize: unreadNotificationsSize(),
+  unreadNotificationsSize: unreadNotificationsSizeSelector(),
 });
 
 export function mapDispatchToProps(dispatch: any) {
@@ -219,5 +210,5 @@ export default connect<
   IMenuBarDispatchProps,
   IMenuBarOwnProps
 >(mapStateToProps, mapDispatchToProps)(
-  translate()(withStyles(styleSheet)(MenuBar)),
+  translate()(withStyles(styles)(MenuBar)),
 );

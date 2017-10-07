@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import ReactJson from 'react-json-view';
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles, StyleRules } from 'material-ui/styles';
 import Card, { CardContent } from 'material-ui/Card';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
@@ -12,7 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 
-import { CircularProgress } from 'material-ui/Progress';
+import { CircularProgress, LinearProgress } from 'material-ui/Progress';
 
 import PlayArrowIcon from 'material-ui-icons/PlayArrow';
 import StopIcon from 'material-ui-icons/Stop';
@@ -25,8 +25,6 @@ import { red, green } from 'material-ui/colors';
 
 import Badge from 'material-ui/Badge';
 
-import { LinearProgress } from 'material-ui/Progress';
-
 import * as bootImage from './../../resources/boot.png';
 
 import TimeAgo from 'timeago-react';
@@ -38,7 +36,7 @@ import { Link } from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
-const styleSheet = theme => ({
+const styles: StyleRules = {
   root: {
     flexGrow: 1,
   },
@@ -137,7 +135,7 @@ const styleSheet = theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-});
+};
 
 interface IListProps {
   loading?: boolean;
@@ -145,22 +143,16 @@ interface IListProps {
   app?: any;
   page?: number;
   classes?: any;
-  total?: number;
-  orderDirection: string;
-  orderBy: string;
-  changePage: any;
-  changeRoute: any;
-  onRequestSort: any;
-  restageApp: any;
-  startApp: any;
-  stopApp: any;
+  restageApp?: any;
+  startApp?: any;
+  stopApp?: any;
 }
 
 interface IListState {
   value: number;
 }
 
-function TabContainer(props) {
+function TabContainer(props: any) {
   return (
     <div style={{ padding: 20 }}>
       {props.children}
@@ -169,11 +161,11 @@ function TabContainer(props) {
 }
 
 class AppBoard extends React.Component<IListProps, IListState> {
-  state = {
+  state: any = {
     value: 0,
   };
 
-  handleChange = (event, value) => {
+  handleChange = (event: any, value: any) => {
     this.setState({ value });
   };
 
@@ -182,13 +174,10 @@ class AppBoard extends React.Component<IListProps, IListState> {
       loading,
       error,
       app,
-      orderDirection,
-      orderBy,
       classes,
       restageApp,
       startApp,
       stopApp,
-      changeRoute,
     } = this.props;
 
     const { value } = this.state;
@@ -232,4 +221,4 @@ class AppBoard extends React.Component<IListProps, IListState> {
   }
 }
 
-export default withStyles(styleSheet)(AppBoard);
+export default withStyles(styles)(AppBoard);

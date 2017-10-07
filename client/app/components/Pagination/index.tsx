@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles, StyleRules } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import NavigationFirstPage from 'material-ui-icons/FirstPage';
 import NavigationLastPage from 'material-ui-icons/LastPage';
 
-const styleSheet = theme => ({
+const styles: StyleRules = {
   root: {
     display: 'flex',
   },
@@ -18,7 +18,7 @@ const styleSheet = theme => ({
     margin: 0,
     minWidth: 16,
   },
-});
+};
 
 const calculateRange = arg => {
   const { total, current, display } = arg;
@@ -60,7 +60,7 @@ interface IProps {
   current: number;
   display: number;
   onChange: any;
-  classes: any;
+  classes?: any;
 }
 interface IState {
   current: number;
@@ -74,18 +74,18 @@ const PageBtn = ({ value, isActive, onClick, className }) =>
   <Button
     className={className}
     color={isActive ? 'primary' : 'default'}
-    onTouchTap={onClick}
+    onClick={onClick}
   >
     {value.toString()}
   </Button>;
 
 const FirstPageLink = ({ onClick, className }) =>
-  <Button className={className} onTouchTap={onClick}>
+  <Button className={className} onClick={onClick}>
     <NavigationFirstPage />
   </Button>;
 
 const LastPageLink = ({ onClick, className }) =>
-  <Button className={className} onTouchTap={onClick}>
+  <Button className={className} onClick={onClick}>
     <NavigationLastPage />
   </Button>;
 
@@ -149,4 +149,4 @@ class Pagination extends React.Component<IProps, IState> {
   }
 }
 
-export default withStyles(styleSheet)(Pagination);
+export default withStyles(styles)(Pagination);

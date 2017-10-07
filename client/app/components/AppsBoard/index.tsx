@@ -2,7 +2,7 @@ import { AppAction } from '../../containers/AppsPage/AppActionEnum';
 
 import * as React from 'react';
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles, StyleRules } from 'material-ui/styles';
 import Card, { CardContent } from 'material-ui/Card';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
@@ -33,7 +33,7 @@ import * as classnames from 'classnames';
 import { AppState } from 'app/containers/AppsPage/AppStateEnum';
 import { Link } from 'react-router';
 
-const styleSheet = theme => ({
+const styles: StyleRules = {
   root: {
     flexGrow: 1,
     marginTop: 30,
@@ -133,7 +133,7 @@ const styleSheet = theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-});
+};
 
 interface IListProps {
   loading?: boolean;
@@ -270,8 +270,7 @@ class AppsBoard extends React.Component<IListProps, IListState> {
                   <Button
                     dense
                     color="accent"
-                    onTouchTap={() =>
-                      changeRoute(`/apps/${item.metadata.guid}`)}
+                    onClick={() => changeRoute(`/apps/${item.metadata.guid}`)}
                   >
                     {item.entity.name}
                   </Button>
@@ -314,4 +313,4 @@ class AppsBoard extends React.Component<IListProps, IListState> {
   }
 }
 
-export default withStyles(styleSheet)(AppsBoard);
+export default withStyles(styles)(AppsBoard);

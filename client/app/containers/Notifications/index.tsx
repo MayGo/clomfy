@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import compose from 'recompose/compose';
 
-import { cyan500, pinkA200, red900, deepOrange500 } from 'material-ui/colors';
+import { deepOrange } from 'material-ui/colors';
 
 import { translate } from 'react-i18next';
 
@@ -53,7 +53,7 @@ class Notifications extends React.Component<IProps, {}> {
       title: entity.type,
       additionalText: `${entity.actee_type} ${entity.actee_name}`,
       icon: <Message />,
-      iconBadgeColor: deepOrange500,
+      iconBadgeColor: deepOrange[500],
       timestamp: moment().format('h:mm A'),
     });
     // update notifications count

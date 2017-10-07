@@ -21,10 +21,10 @@ interface IListProps {
   events?: any[];
   page?: number;
   total?: number;
-  orderDirection: string;
-  orderBy: string;
-  changePage: any;
-  onRequestSort: any;
+  orderDirection?: 'asc' | 'desc';
+  orderBy?: string;
+  changePage?: any;
+  onRequestSort?: any;
 }
 interface IListState {
   display: number;

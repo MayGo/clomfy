@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles, StyleRules } from 'material-ui/styles';
 import Card, { CardContent } from 'material-ui/Card';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
@@ -18,7 +18,7 @@ import Avatar from 'material-ui/Avatar';
 import CodeIcon from 'material-ui-icons/Code';
 import CloseIcon from 'material-ui-icons/Close';
 
-import { CircularProgress } from 'material-ui/Progress';
+import { CircularProgress, LinearProgress } from 'material-ui/Progress';
 
 import PlayArrowIcon from 'material-ui-icons/PlayArrow';
 import StopIcon from 'material-ui-icons/Stop';
@@ -31,15 +31,13 @@ import { red, green } from 'material-ui/colors';
 
 import Badge from 'material-ui/Badge';
 
-import { LinearProgress } from 'material-ui/Progress';
-
 import * as bootImage from '../../resources/boot.png';
 
 import TimeAgo from 'timeago-react';
 
 import * as classnames from 'classnames';
 
-const styleSheet = theme => ({
+const styles: StyleRules = {
   timeAgo: {
     fontSize: 11,
   },
@@ -62,7 +60,7 @@ const styleSheet = theme => ({
     flexDirection: 'row',
     width: '100%',
   },
-});
+};
 
 interface IListProps {
   loading?: boolean;
@@ -117,4 +115,4 @@ class NotificationsList extends React.Component<IListProps, IListState> {
   }
 }
 
-export default withStyles(styleSheet)(NotificationsList);
+export default withStyles(styles)(NotificationsList);

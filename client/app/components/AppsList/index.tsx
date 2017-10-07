@@ -21,7 +21,7 @@ interface IListProps {
   apps?: any[];
   page?: number;
   total?: number;
-  orderDirection: string;
+  orderDirection: 'asc' | 'desc';
   orderBy: string;
   changePage: any;
   onRequestSort: any;
@@ -38,7 +38,10 @@ class AppsList extends React.Component<IListProps, IListState> {
     };
   }
 
-  createSortHandler = (orderBy: string, orderDirection: string) => event => {
+  createSortHandler = (
+    orderBy: string,
+    orderDirection: 'asc' | 'desc',
+  ) => event => {
     console.log('Sorting apps:', orderBy, orderDirection);
     this.props.onRequestSort(
       orderBy,
@@ -47,7 +50,7 @@ class AppsList extends React.Component<IListProps, IListState> {
   };
 
   public render() {
-    const { loading, error, apps, orderDirection, orderBy } = this.props;
+    const { loading, error, apps, orderBy, orderDirection } = this.props;
     if (loading) {
       return <LinearProgress mode="indeterminate" />;
     }
