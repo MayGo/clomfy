@@ -17,8 +17,6 @@ import {
 
 import Message from 'material-ui-icons/Message';
 
-import ReactMaterialUiNotifications from 'react-materialui-notifications';
-
 import * as moment from 'moment';
 
 import TimeAgo from 'timeago-react';
@@ -49,13 +47,6 @@ class Notifications extends React.Component<IProps, {}> {
   }
 
   showNotification = (entity: any) => {
-    ReactMaterialUiNotifications.showNotification({
-      title: entity.type,
-      additionalText: `${entity.actee_type} ${entity.actee_name}`,
-      icon: <Message />,
-      iconBadgeColor: deepOrange[500],
-      timestamp: moment().format('h:mm A'),
-    });
     // update notifications count
     this.setState({
       count: ++this.state.count,

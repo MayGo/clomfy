@@ -24,10 +24,12 @@ import muiTheme from './muiTheme';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
+import { Router } from 'react-router';
+import { ConnectedRouter } from 'react-router-redux';
 import * as FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
+
+import createHistory from 'history/createBrowserHistory';
 import configureStore from './store';
 
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
@@ -36,29 +38,13 @@ import 'typeface-berkshire-swash';
 import 'balloon-css/balloon.css';
 
 // Create redux store with history
-// this uses the singleton browserHistory provided by react-router
-// Optionally, this could be changed to leverage a created history
-// e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
 const initialState = {};
-const store = configureStore(initialState, browserHistory);
-
-// Sync history and store, as the react-router-redux reducer
-// is under the non-default key ("routing"), selectLocationState
-// must be provided for resolving how to retrieve the "route" in the state
-import { selectLocationState } from 'app/containers/App/selectors';
-const history = syncHistoryWithStore(browserHistory, store, {
-  selectLocationState: selectLocationState(),
-});
+const history = createHistory();
+const store = configureStore(initialState, history);
 
 // Set up the router, wrapping all Routes in the App component
 import App from 'app/containers/App';
 import { i18nInstance } from './utils/i18n';
-
-import createRoutes from './routes';
-const rootRoute = {
-  component: App,
-  childRoutes: createRoutes(store),
-};
 
 export default class Root extends React.Component<any, any> {
   render() {
@@ -66,11 +52,9 @@ export default class Root extends React.Component<any, any> {
       <Provider store={store}>
         <MuiThemeProvider theme={muiTheme}>
           <I18nextProvider i18n={i18nInstance}>
-            <Router
-              history={history}
-              routes={rootRoute}
-              render={applyRouterMiddleware(useScroll())}
-            />
+            <ConnectedRouter history={history}>
+              <App />
+            </ConnectedRouter>
           </I18nextProvider>
         </MuiThemeProvider>
       </Provider>

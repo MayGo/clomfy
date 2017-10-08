@@ -13,7 +13,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 import NotificationIcon from 'material-ui-icons/Notifications';
 
 import { connect, Dispatch } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { push, RouterAction } from 'react-router-redux';
 import { LocationDescriptor, LocationState } from 'history';
 import { IAppState } from './IAppState';
@@ -27,7 +27,6 @@ import {
 import { selectLocationState } from 'app/containers/App/selectors';
 import { selectIsAuthenticated } from 'app/containers/Login/selectors';
 
-import { bindRoutineCreators } from 'redux-saga-routines';
 import { fetchLogout } from '../Login/routines';
 
 import { createStructuredSelector } from 'reselect';
@@ -199,7 +198,7 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch: any) {
   return {
-    ...bindRoutineCreators({ fetchLogout }, dispatch),
+    fetchLogout,
     markNotificationsAsRead: () => dispatch(markNotificationsAsRead({})),
     changeRoute: url => dispatch(push(url)),
   };

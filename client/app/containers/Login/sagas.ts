@@ -4,7 +4,6 @@
 
 // Sagas help us gather all our side effects (network requests in this case) in one place
 
-import { browserHistory } from 'react-router';
 import { take, call, put, fork, race, select } from 'redux-saga/effects';
 import auth from '../../auth';
 import { fetchLogin, fetchLogout } from './routines';
@@ -117,9 +116,3 @@ export function* root() {
 
 // Bootstrap sagas
 export default root;
-
-// Little helper function to abstract going to different pages
-function forwardTo(location: string) {
-  console.log('forwardTo:', location);
-  browserHistory.push(location);
-}

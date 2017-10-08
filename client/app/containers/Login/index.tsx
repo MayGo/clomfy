@@ -25,7 +25,6 @@ import { propTypes, reduxForm, Field } from 'redux-form';
 import { makeQueryFormState, selectLoading } from './selectors';
 import { LinearProgress } from 'material-ui';
 
-import { bindRoutineCreators } from 'redux-saga-routines';
 import { fetchLogin } from './routines';
 
 interface ILoginPageProps {
@@ -163,7 +162,7 @@ class LoginPage extends React.Component<ILoginPageProps, {}> {
 
 export function mapDispatchToProps(dispatch: any, ownProps: any) {
   return {
-    ...bindRoutineCreators({ fetchLogin }, dispatch),
+    fetchLogin,
     onChangeCfUrl: evt => dispatch(changeForm({ cfUrl: evt.target.value })),
     onChangeUsername: evt =>
       dispatch(changeForm({ username: evt.target.value })),

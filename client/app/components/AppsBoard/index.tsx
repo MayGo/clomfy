@@ -31,7 +31,7 @@ import TimeAgo from 'timeago-react';
 
 import * as classnames from 'classnames';
 import { AppState } from 'app/containers/AppsPage/AppStateEnum';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const styles: StyleRules = {
   root: {

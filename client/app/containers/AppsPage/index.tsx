@@ -1,6 +1,5 @@
 import { changePage, order } from './actions';
 
-import { bindRoutineCreators } from 'redux-saga-routines';
 import { fetchApps, changeAppState } from './routines';
 
 import * as React from 'react';
@@ -102,8 +101,8 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
 export function mapDispatchToProps(dispatch: any) {
   return {
     changePage: (page: number) => dispatch(changePage({ page })),
-    ...bindRoutineCreators({ changeAppState }, dispatch),
-    ...bindRoutineCreators({ fetchApps }, dispatch),
+    changeAppState,
+    fetchApps,
     onRequestSort: (orderBy: string, orderDirection: string) =>
       dispatch(order({ orderBy, orderDirection })),
     changeRoute: url => dispatch(push(url)),

@@ -1,6 +1,5 @@
 import { changePage, order } from '../AppsPage/actions';
 
-import { bindRoutineCreators } from 'redux-saga-routines';
 import * as React from 'react';
 import toJS from 'app/components/ToJs';
 

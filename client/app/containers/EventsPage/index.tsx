@@ -1,6 +1,5 @@
 import { changePage, order } from './actions';
 
-import { bindRoutineCreators } from 'redux-saga-routines';
 import { fetchEvents } from './routines';
 
 import * as React from 'react';
@@ -77,7 +76,7 @@ export class EventsPage extends React.Component<IEventsPageProps, {}> {
 
 export function mapDispatchToProps(dispatch: any) {
   return {
-    ...bindRoutineCreators({ fetchEvents }, dispatch),
+    fetchEvents,
     onRequestSort: (orderBy: string, orderDirection: string) =>
       dispatch(order({ orderBy, orderDirection })),
     changePage: (page: number) => dispatch(changePage({ page })),
