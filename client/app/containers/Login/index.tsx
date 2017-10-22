@@ -26,6 +26,7 @@ import { makeQueryFormState, selectLoading } from './selectors';
 import { LinearProgress } from 'material-ui';
 
 import { fetchLogin } from './routines';
+import { bindActionCreators } from 'redux';
 
 interface ILoginPageProps {
   classes: any;
@@ -91,7 +92,7 @@ class LoginPage extends React.Component<ILoginPageProps, {}> {
   login(e: any) {
     console.log('Login submitted:', this.props.formState);
 
-    this.props.fetchLogin.trigger(this.props.formState);
+    this.props.fetchLogin(this.props.formState);
     e.preventDefault();
   }
 
@@ -162,7 +163,7 @@ class LoginPage extends React.Component<ILoginPageProps, {}> {
 
 export function mapDispatchToProps(dispatch: any, ownProps: any) {
   return {
-    fetchLogin,
+    fetchLogin: bindActionCreators(fetchLogin, dispatch),
     onChangeCfUrl: evt => dispatch(changeForm({ cfUrl: evt.target.value })),
     onChangeUsername: evt =>
       dispatch(changeForm({ username: evt.target.value })),

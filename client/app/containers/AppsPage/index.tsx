@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { AppAction } from 'app/containers/AppsPage/AppActionEnum';
 import { push } from 'react-router-redux';
+import { bindActionCreators } from 'redux';
 
 interface IAppsPageProps {
   fetchApps: any;
@@ -77,17 +78,17 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
         <AppsBoard
           {...appsListProps}
           restageApp={guid =>
-            changeAppState.trigger({
+            changeAppState({
               guids: [guid],
               action: AppAction.RESTAGE,
             })}
           startApp={guid =>
-            changeAppState.trigger({
+            changeAppState({
               guids: [guid],
               action: AppAction.START,
             })}
           stopApp={guid =>
-            changeAppState.trigger({
+            changeAppState({
               guids: [guid],
               action: AppAction.STOP,
             })}
@@ -101,8 +102,8 @@ export class AppsPage extends React.Component<IAppsPageProps, {}> {
 export function mapDispatchToProps(dispatch: any) {
   return {
     changePage: (page: number) => dispatch(changePage({ page })),
-    changeAppState,
-    fetchApps,
+    changeAppState: bindActionCreators(changeAppState, dispatch),
+    fetchApps: bindActionCreators(fetchApps, dispatch),
     onRequestSort: (orderBy: string, orderDirection: string) =>
       dispatch(order({ orderBy, orderDirection })),
     changeRoute: url => dispatch(push(url)),

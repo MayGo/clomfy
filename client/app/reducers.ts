@@ -23,7 +23,7 @@ import globalReducer from 'app/containers/App/reducer';
 
 // Initial routing state
 const routeInitialState = fromJS({
-  locationBeforeTransitions: null,
+  location: null,
 });
 
 /**
@@ -34,9 +34,9 @@ function routeReducer(state = routeInitialState, action) {
     /* istanbul ignore next */
     case LOCATION_CHANGE:
       const mergeState = state.merge({
-        locationBeforeTransitions: action.payload,
+        location: action.payload,
       });
-      console.log('LOCATION_CHANGE', action.payload.pathname);
+      console.log('LOCATION_CHANGE:', action.payload.pathname);
       if (window.swUpdate) {
         console.log('Reoading:swUpdate ');
         window.location.reload();

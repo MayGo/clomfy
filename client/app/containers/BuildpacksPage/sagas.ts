@@ -33,7 +33,7 @@ export function* getBuildpacks(): IterableIterator<any> {
   } catch (err) {
     if (err instanceof AuthError) {
       console.error('Auth error, logging out and redirecting to login');
-      yield put(fetchLogout.trigger());
+      yield put(fetchLogout());
     } else {
       console.error('Error loading buildpacks:', err);
       yield put(buildpacksLoadingError(err));

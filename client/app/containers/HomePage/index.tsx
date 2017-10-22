@@ -36,9 +36,8 @@ export class HomePage extends React.Component<IHomePageProps, {}> {
     return (
       <article>
         <div>
-          <section>
-            {apps}
-          </section>
+          asdasd
+          <section>{apps}</section>
         </div>
       </article>
     );

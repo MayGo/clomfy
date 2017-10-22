@@ -45,7 +45,7 @@ export function* getEvents(): IterableIterator<any> {
   } catch (error) {
     if (error instanceof AuthError) {
       console.error('Auth error, logging out and redirecting to login');
-      yield put(fetchLogout.trigger());
+      yield put(fetchLogout());
     } else {
       console.error('Error loading events:', error);
       yield put(fetchEvents.failure(error.error));
@@ -70,14 +70,14 @@ export function* watchForSort(): IterableIterator<any> {
   while (true) {
     yield take(ORDER);
 
-    yield put(fetchEvents.trigger());
+    yield put(fetchEvents());
   }
 }
 export function* watchForPage(): IterableIterator<any> {
   while (true) {
     yield take(CHANGE_PAGE);
 
-    yield put(fetchEvents.trigger());
+    yield put(fetchEvents());
   }
 }
 

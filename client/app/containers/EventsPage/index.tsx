@@ -17,6 +17,7 @@ import {
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { bindActionCreators } from 'redux';
 
 interface IEventsPageProps {
   fetchEvents: any;
@@ -76,7 +77,7 @@ export class EventsPage extends React.Component<IEventsPageProps, {}> {
 
 export function mapDispatchToProps(dispatch: any) {
   return {
-    fetchEvents,
+    fetchEvents: bindActionCreators(fetchEvents, dispatch),
     onRequestSort: (orderBy: string, orderDirection: string) =>
       dispatch(order({ orderBy, orderDirection })),
     changePage: (page: number) => dispatch(changePage({ page })),

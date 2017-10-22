@@ -35,8 +35,8 @@ class App extends React.Component<IAppProps, {}> {
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path={LoginRoute} component={Login} />
-          <Route path="*index.html" component={Login} />
-          <Route path="" component={NotFoundPage} />
+
+          <Route path="/" component={NotFoundPage} />
         </Switch>
         <Footer />
       </div>

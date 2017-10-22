@@ -4,6 +4,8 @@
  * This is the entry file for the application, only setup and boilerplate
  * code.
  */
+import { LoginRoute } from './RoutePaths';
+import { HomePage } from './containers/HomePage';
 
 // Needed for redux-saga es6 generator support
 import 'babel-polyfill';
@@ -24,13 +26,13 @@ import muiTheme from './muiTheme';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
+import { Router, Switch, Route } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
 import * as FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
 
 import createHistory from 'history/createBrowserHistory';
-import configureStore from './store';
+import configureStore from './configureStore';
 
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
@@ -45,6 +47,9 @@ const store = configureStore(initialState, history);
 // Set up the router, wrapping all Routes in the App component
 import App from 'app/containers/App';
 import { i18nInstance } from './utils/i18n';
+
+import Login from './containers/Login';
+import NotFoundPage from './containers/NotFoundPage';
 
 export default class Root extends React.Component<any, any> {
   render() {

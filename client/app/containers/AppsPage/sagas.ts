@@ -62,7 +62,7 @@ export function* getApps(): IterableIterator<any> {
   } catch (error) {
     if (error instanceof AuthError) {
       console.error('Auth error, logging out and redirecting to login');
-      yield put(fetchLogout.trigger());
+      yield put(fetchLogout());
     } else {
       console.error('Error loading apps:', error);
       yield put(fetchApps.failure(error.error));
@@ -89,14 +89,14 @@ export function* watchForSort(): IterableIterator<any> {
   while (true) {
     yield take(ORDER);
 
-    yield put(fetchApps.trigger());
+    yield put(fetchApps());
   }
 }
 
 export function* watchForPage(): IterableIterator<any> {
   while (true) {
     yield take(CHANGE_PAGE);
-    yield put(fetchApps.trigger());
+    yield put(fetchApps());
   }
 }
 
@@ -160,7 +160,7 @@ function* bgSyncApps() {
     } catch (err) {
       if (err instanceof AuthError) {
         console.error('Auth error, logging out and redirecting to login');
-        yield put(fetchLogout.trigger());
+        yield put(fetchLogout());
       } else {
         console.error('Error loading apps instances:', err);
       }

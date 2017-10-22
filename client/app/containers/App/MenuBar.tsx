@@ -36,6 +36,7 @@ import { translate } from 'react-i18next';
 import { withStyles, StyleRules } from 'material-ui/styles';
 import Notifications from '../Notifications';
 import { unreadNotificationsSizeSelector } from 'app/containers/Notifications/selectors';
+import { bindActionCreators } from 'redux';
 
 interface IMenuBarOwnProps {
   t?: any;
@@ -115,7 +116,7 @@ class MenuBar extends React.Component<IMenuBarProps, IMenuBarReactState> {
           <Button
             color="contrast"
             onClick={() => {
-              fetchLogoutProp.trigger();
+              fetchLogoutProp();
             }}
           >
             {t('routes.logout')}
@@ -198,7 +199,7 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch: any) {
   return {
-    fetchLogout,
+    fetchLogout: bindActionCreators(fetchLogout, dispatch),
     markNotificationsAsRead: () => dispatch(markNotificationsAsRead({})),
     changeRoute: url => dispatch(push(url)),
   };

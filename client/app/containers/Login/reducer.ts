@@ -21,7 +21,7 @@ const loginState = fromJS({
   },
   isAuthenticated: auth.isAuthenticated(),
 });
-
+console.log('loginReducer');
 function loginReducer(state = loginState, action) {
   switch (action.type) {
     case CHANGE_FORM:
@@ -31,6 +31,7 @@ function loginReducer(state = loginState, action) {
       );
 
     case fetchLogin.TRIGGER:
+      console.log('triggered');
       return state.set('loading', true);
     case fetchLogin.SUCCESS:
       return state.set('data', action.payload).set('isAuthenticated', true);
